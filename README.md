@@ -1,4 +1,5 @@
 # AbstractDevelop
 
-DOWNLOAD BINARY | СКАЧАТЬ ИСПОЛНЯЕМЫЙ ФАЙЛ:
+Download binary | 
+Скачать исполняемый файл:
 https://yadi.sk/d/GQ7ogbHBodERx
