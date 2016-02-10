@@ -198,6 +198,16 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
+        ///   Поиск локализованного ресурса типа System.Byte[].
+        /// </summary>
+        internal static byte[] ScintillaNET {
+            get {
+                object obj = ResourceManager.GetObject("ScintillaNET", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap StepBtn {
