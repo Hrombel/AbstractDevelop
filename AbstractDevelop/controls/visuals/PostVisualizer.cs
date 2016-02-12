@@ -43,6 +43,8 @@ namespace AbstractDevelop.controls.visuals
         private int[] _breakPoints;
         private bool _stepInProgress;
 
+        private Timer _timer;
+
         public PostVisualizer()
         {
             InitializeComponent();
@@ -51,10 +53,14 @@ namespace AbstractDevelop.controls.visuals
             _currentMachine = null;
             _breakPoints = null;
             _state = VisualizerState.Stopped;
+            _timer = new Timer();
+            _timer.Interval = 30;
             tapeVisualizer.TapeUpdated += DataChangedHandler;
             tapeVisualizer.PositionChanged += DataChangedHandler;
             codeBox.TextChanged += DataChangedHandler;
             codeBox.BreakPointToggled += BreakPointToggled;
+            _timer.Tick += DelayedCaller;
+            
         }
         ~PostVisualizer()
         {
@@ -62,6 +68,7 @@ namespace AbstractDevelop.controls.visuals
             tapeVisualizer.PositionChanged -= DataChangedHandler;
             codeBox.TextChanged -= DataChangedHandler;
             codeBox.BreakPointToggled -= BreakPointToggled;
+            _timer.Tick -= DelayedCaller;
         }
 
         public DebugWindow Debug { get; set; }
@@ -206,6 +213,17 @@ namespace AbstractDevelop.controls.visuals
                 }
             }
 
+            _timer.Enabled = true;
+        }
+
+        /// <summary>
+        /// Вызывается перед выполнением очередной команды.
+        /// Реализован для отложенного вызова функций.
+        /// </summary>
+        private void DelayedCaller(object sender, EventArgs e)
+        {
+            _timer.Enabled = false;
+
             _stepInProgress = true;
             _currentMachine.Forward();
 
@@ -242,6 +260,7 @@ namespace AbstractDevelop.controls.visuals
 
         private void _currentMachine_OnMachineStopped(object sender, PostMachineStopEventArgs e)
         {
+            _timer.Enabled = false;
             _currentMachine.OnOperationExecuted -= _currentMachine_OnOperationExecuted;
             _currentMachine.OnMachineStopped -= _currentMachine_OnMachineStopped;
             tapeVisualizer.OnNavigationEnd -= tapeVisualizer_OnNavigationEnd;
@@ -322,6 +341,7 @@ namespace AbstractDevelop.controls.visuals
                 _currentMachine.OnMachineStopped += _currentMachine_OnMachineStopped;
                 tapeVisualizer.OnNavigationEnd += tapeVisualizer_OnNavigationEnd;
                 if (ops.Count != 0) codeBox.SetExecutionCommand(1);
+
                 ExecuteNext();
             }
             catch (InvalidOperationTextException ex)
