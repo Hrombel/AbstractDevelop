@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace AbstractDevelop.projects
 {
@@ -153,8 +154,14 @@ namespace AbstractDevelop.projects
                 throw new ArgumentException("Указанное имя файла имеет неверный формат");
             if (data == null)
                 throw new ArgumentNullException("Сохраняемый текст не может быть неопределенным");
+            
+            if (!Directory.Exists(_directory))
+            {
+                Directory.CreateDirectory(_directory);
+                MessageBox.Show("Папка с проектом была удалена или перемещена. Создана новая в той же директории.", "Сохранение проекта", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
 
-            if (!FileExists(fileName))
+            if (!FileExists(fileName)) 
                 AddFile(fileName);
 
             try

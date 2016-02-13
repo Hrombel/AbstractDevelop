@@ -50,6 +50,14 @@ namespace AbstractDevelop.controls
             DisposeStates();
         }
 
+        /// <summary>
+        /// Определяет, сохранено ли состояние программы.
+        /// </summary>
+        public bool HasUnsavedData
+        {
+            get { return _environment.HasUnsavedProject; }
+        }
+
         private void _createProjMenu_ProjectCreate(object sender, ProjectCreateEventArgs e)
         {
             OpenProject(e.Project);

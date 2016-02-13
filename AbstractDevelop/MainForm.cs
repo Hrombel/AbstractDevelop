@@ -30,11 +30,39 @@ namespace AbstractDevelop
             Version ver = Assembly.GetExecutingAssembly().GetName().Version;
 
             Text = string.Format("{0} v{1}.{2}", AssemblyProduct, ver.Major, ver.Minor);
+
+            FormClosing += MainForm_FormClosing;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = !ExitingProcedure();
         }
 
         private void ui_ExitRequest(object sender, EventArgs e)
         {
-            Close();
+            if (ExitingProcedure())
+                Close();
+        }
+
+        /// <summary>
+        /// Вызывается, при подаче сигнала о завершении программы.
+        /// </summary>
+        /// <returns>Истина, если после процедуры следует закрыть программу, иначе - ложь.</returns>
+        private bool ExitingProcedure()
+        {
+            bool res = false;
+
+            if (ui.HasUnsavedData)
+            {
+                DialogResult result = MessageBox.Show("Не все данные сохранены. Вы уверены, что хотите закрыть программу?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (result == DialogResult.Yes)
+                    res = true;
+            }
+            else
+                res = true;
+
+            return res;
         }
 
         private string AssemblyProduct

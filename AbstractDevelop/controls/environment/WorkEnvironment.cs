@@ -49,6 +49,17 @@ namespace AbstractDevelop.controls.environment
             }
         }
 
+        /// <summary>
+        /// Определяет, есть ли среди открытых проектов несохраненные.
+        /// </summary>
+        public bool HasUnsavedProject
+        {
+            get
+            {
+                return visualsCtrl.HasUnsavedData;
+            }
+        }
+
         private void visualsCtrl_CurrentVisualChanged(object sender, CurrentVisualizerChangeEventArgs e)
         {
             if (e.Previous != null)

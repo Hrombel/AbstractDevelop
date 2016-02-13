@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using AbstractDevelop.controls.visuals;
-using AbstractDevelop.projects;
 using AbstractDevelop.machines;
 
 namespace AbstractDevelop.controls.environment.tabcontrol
@@ -48,6 +41,22 @@ namespace AbstractDevelop.controls.environment.tabcontrol
                 throw new ArgumentException("Входная строка имеет неверный формат");
 
             return _machines.Find(x => x.CurrentProject.ProjectDirectory == dir && x.CurrentProject.Name == name);
+        }
+
+        /// <summary>
+        /// Определяет, есть ли среди открытых визуализаторов несохраненные.
+        /// </summary>
+        public bool HasUnsavedData
+        {
+            get
+            {
+                foreach(TabPage page in tabControl.TabPages)
+                {
+                    if (page.Text.Contains("*"))
+                        return true;
+                }
+                return false;
+            }
         }
 
         /// <summary>
