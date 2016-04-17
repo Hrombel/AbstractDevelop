@@ -699,12 +699,12 @@ namespace AbstractDevelop.machines.regmachine
         /// Возвращает идентификатор потока-блокиратора указанного регистра.
         /// </summary>
         /// <param name="register">Номер проверяемого регистра.</param>
-        /// <returns>Неотрицательное число, обозначающее индекс потока, если регистр заблокирован, иначе - -1.</returns>
+        /// <returns>Неотрицательное число, обозначающее индекс потока, если регистр заблокирован, иначе - отрицательное число, побитовое дополнение которого - индек.</returns>
         private int GetRegisterLocker(BigInteger register)
         {
             int i = _locked.BinarySearch(new LockedRegister() { Index = register });
 
-            return i >= 0 ? _locked[i].Thread.Info.Id : -1;
+            return i >= 0 ? _locked[i].Thread.Info.Id : i;
         }
 
         /// <summary>
