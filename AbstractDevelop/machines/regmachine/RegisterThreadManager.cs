@@ -5,9 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AbstractDevelop.machines.regmachine
 {
@@ -218,6 +216,28 @@ namespace AbstractDevelop.machines.regmachine
         }
 
         /// <summary>
+        /// Приостанавливает указанный поток и добавляет его в список приостановленных потоков.
+        /// </summary>
+        /// <param name="thread">Приостанавливаемый поток.</param>
+        private void PauseThread(RegisterThread thread)
+        {
+            lock (_pausedThreads)
+                _pausedThreads.Add(thread);
+
+            thread.Pause();
+        }
+
+        /// <summary>
+        /// Возоновляет работу всех потоков, работа которых приостановлена.
+        /// </summary>
+        private void ReleasePausedThreads()
+        {
+            List<RegisterThread> copy = _pausedThreads.ToList();
+            _pausedThreads.Clear();
+            copy.ForEach(x => x.Resume());
+        }
+
+        /// <summary>
         /// Потокобезопасно выполняет операцию указанным потоком.
         /// </summary>
         /// <param name="thread">Поток, выполняющий операцию.</param>
@@ -237,10 +257,7 @@ namespace AbstractDevelop.machines.regmachine
 
                 if (_debugMode)
                 {
-                    lock (_pausedThreads)
-                        _pausedThreads.Add(thread);
-
-                    thread.Pause();
+                    PauseThread(thread);
                 }
 
                 res = -1;
@@ -444,16 +461,6 @@ namespace AbstractDevelop.machines.regmachine
         }
 
         /// <summary>
-        /// Возоновляет работу всех потоков, работа которых приостановлена.
-        /// </summary>
-        private void ReleasePausedThreads()
-        {
-            List<RegisterThread> copy = _pausedThreads.ToList();
-            _pausedThreads.Clear();
-            copy.ForEach(x => x.Resume());
-        }
-
-        /// <summary>
         /// Выполняет следующий шаг для всех потоков, если система находится в режиме отладки.
         /// </summary>
         /// <returns>Истина, если выполнен не последний шаг алгоритма, иначе - ложь.</returns>
@@ -603,7 +610,7 @@ namespace AbstractDevelop.machines.regmachine
 
         private void ThreadPausedHandler(object sender, EventArgs e)
         {
-            if (_pausedThreads.Count == _threads.Count)
+            if (_pausedThreads.Count + CountAwaiters() == _threads.Count)
             {
                 lock (_sync)
                 {
@@ -623,7 +630,6 @@ namespace AbstractDevelop.machines.regmachine
             lock (_threads)
             {
                 int i = _threads.FindIndex(x => x.Info.Id == thread.Info.Id);
-                Console.WriteLine("Thread " + _threads[i].Info.Id + " stopped");
                 _threads.RemoveAt(i);
             }
             if (_threads.Count == 0)
@@ -678,6 +684,16 @@ namespace AbstractDevelop.machines.regmachine
                 _locked.RemoveAt(i);
             }
         }
+        
+        /// <summary>
+        /// Возвращает общее количество потоков, ожидающих разблокировки регистров.
+        /// </summary>
+        private int CountAwaiters()
+        {
+            int res = 0;
+            _locked.ForEach(x => res += x.Awaiters.Count);
+            return res;
+        }
 
         /// <summary>
         /// Возвращает идентификатор потока-блокиратора указанного регистра.
@@ -688,7 +704,7 @@ namespace AbstractDevelop.machines.regmachine
         {
             int i = _locked.BinarySearch(new LockedRegister() { Index = register });
 
-            return i >= 0 ? i : -1;
+            return i >= 0 ? _locked[i].Thread.Info.Id : -1;
         }
 
         /// <summary>
@@ -698,12 +714,23 @@ namespace AbstractDevelop.machines.regmachine
         /// <param name="register">Регистр, разблокировка которого ожидается.</param>
         private void AddAwaiter(RegisterThread thread, BigInteger register)
         {
-            int i = _locked.BinarySearch(new LockedRegister() { Index = register });
-            if (i < 0) throw new ArgumentException("Регистр не заблокирован");
+            int i;
+            lock(_locked)
+            {
+                i = _locked.BinarySearch(new LockedRegister() { Index = register });
+                if (i < 0) throw new ArgumentException("Регистр не заблокирован");
 
-            int j = _locked[i].Awaiters.BinarySearch(thread);
-            if (j >= 0) throw new ArgumentException("Указанный поток уже ожидает разблокировки регистра");
-            _locked[i].Awaiters.Insert(~j, thread);
+                int j = _locked[i].Awaiters.BinarySearch(thread);
+                if (j >= 0) throw new ArgumentException("Указанный поток уже ожидает разблокировки регистра");
+                _locked[i].Awaiters.Insert(~j, thread);
+            }
+
+            lock(_pausedThreads)
+            {
+                i = _pausedThreads.IndexOf(thread);
+                if (i >= 0)
+                    _pausedThreads.RemoveAt(i);
+            }
         }
 
         /// <summary>

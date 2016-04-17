@@ -654,11 +654,23 @@ namespace AbstractDevelop.controls.visuals
         /// </summary>
         private void UpdateCommandMarkers()
         {
+            Console.WriteLine("Marker Update");
             RemoveCommandMarkers();
-            if(_parallelMode)
-                threadFrame.GetSelected().ForEach(x => SetExecLine(x.Program, x.Command));
+            List<ThreadInfo> selected = threadFrame.GetSelected();
+            int n = selected.Count;
+            if (_parallelMode)
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    if(selected[i].Command != 0) // Если этот поток не подлежит закрытию.
+                        SetExecLine(selected[i].Program, selected[i].Command);
+                }
+            }
             else
-                threadFrame.GetSelected().ForEach(x => SetExecLine(x.Command));
+            {
+                for (int i = 0; i < n; i++)
+                    SetExecLine(selected[i].Command);
+            }
         }
 
         /// <summary>

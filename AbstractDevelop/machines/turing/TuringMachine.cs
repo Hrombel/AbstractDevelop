@@ -60,6 +60,21 @@ namespace AbstractDevelop.machines.turing
             _tapes.TapeUpdated += _tapes_TapeUpdated;
         }
 
+        /// <summary>
+        /// Инициализирует машину Тьюринга заданным количеством лент.
+        /// </summary>
+        /// <param name="tapesCount">Количество создаваемых лент.</param>
+        public TuringMachine(int tapesCount)
+        {
+            if (tapesCount < 1)
+                throw new ArgumentException("Количество лент должно быть положительным");
+
+            _tapes = new TuringTapes(tapesCount);
+            _stateIndex = -1;
+            _states = null;
+            _symbols = new SymbolSet();
+        }
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("t", _tapes, typeof(TuringTapes));
@@ -108,21 +123,6 @@ namespace AbstractDevelop.machines.turing
                 res += _states[i].Converts.Length;
 
             return res;
-        }
-
-        /// <summary>
-        /// Инициализирует машину Тьюринга заданным количеством лент.
-        /// </summary>
-        /// <param name="tapesCount">Количество создаваемых лент.</param>
-        public TuringMachine(int tapesCount)
-        {
-            if (tapesCount < 1)
-                throw new ArgumentException("Количество лент должно быть положительным");
-
-            _tapes = new TuringTapes(tapesCount);
-            _stateIndex = -1;
-            _states = null;
-            _symbols = new SymbolSet();
         }
 
         /// <summary>

@@ -180,8 +180,6 @@ namespace AbstractDevelop.controls.visuals
                 i = _externalSymbolSet.AddChar(value);
 
             _tape.SetValue(cell, (byte)(i + 1));
-
-            Console.WriteLine(_externalSymbolSet);
         }
 
         /// <summary>

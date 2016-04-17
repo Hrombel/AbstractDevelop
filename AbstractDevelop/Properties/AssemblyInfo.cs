@@ -8,12 +8,13 @@ using System.Runtime.InteropServices;
 // связанные со сборкой.
 [assembly: AssemblyTitle("AbstractDevelop")]
 [assembly: AssemblyDescription(
-@"Программа находится в стадии альфа-версии, поэтому возможны сбои в ее работе.
+@"Исполняемый файл программы, а также файлы исходного кода находятся в репозитории GitHub по адресу: https://github.com/Hrombel/AbstractDevelop.
+Программа находится в стадии альфа-версии, поэтому возможны сбои в ее работе.
 По связанным с данной программой вопросам можно обращаться по электронной почте: admin@hrombel.ru
 
 Лицензия MIT (MIT)
 
-Copyright (c) 2015 Максим Куклин, hrombel.ru
+Copyright (c) 2016 Максим Куклин, hrombel.ru
 
 Данная лицензия разрешает лицам, получившим копию данного программного обеспечения и сопутствующей документации (в дальнейшем именуемыми «Программное Обеспечение»), 
 безвозмездно использовать Программное Обеспечение без ограничений, включая неограниченное право на использование, копирование, изменение, добавление, публикацию, 
@@ -28,7 +29,7 @@ Copyright (c) 2015 Максим Куклин, hrombel.ru
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Max Kuklin, hrombel.ru
+Copyright (c) 2016 Max Kuklin, hrombel.ru
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the" + " Software" + @"), to deal
@@ -51,7 +52,7 @@ SOFTWARE."
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ВятГУ, кафедра ЭВМ")]
 [assembly: AssemblyProduct("AbstractDevelop")]
-[assembly: AssemblyCopyright("Куклин Максим ©  2015")]
+[assembly: AssemblyCopyright("Куклин Максим ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -73,5 +74,5 @@ SOFTWARE."
 // Можно задать все значения или принять номера сборки и редакции по умолчанию 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.8.*")]
+[assembly: AssemblyVersion("0.83.*")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

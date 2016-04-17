@@ -84,7 +84,7 @@ namespace AbstractDevelop.controls.visuals.additionals
             if (_alphabet != null)
             {
                 string str = "[ ";
-                Array.ForEach<char>(_alphabet, x => str += x + ", ");
+                Array.ForEach(_alphabet, x => str += x + ", ");
                 if (_alphabet.Length > 0) str.Remove(str.Length - 2);
                 str += ']';
                 alphBox.Text = str;
