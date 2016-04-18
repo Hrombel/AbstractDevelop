@@ -679,8 +679,10 @@ namespace AbstractDevelop.machines.regmachine
                 int i = GetRegisterLocker(register);
                 if (i < 0) throw new ArgumentException("Указанный регистр не заблокирован");
 
-                _locked[i].Awaiters.ForEach(x => x.Resume());
+                i = _locked.FindIndex(x => i == x.Thread.Info.Id);
+                if (i < 0) throw new Exception("Поток с указанным id не ожидает разблокировки регистра");
 
+                _locked[i].Awaiters.ForEach(x => x.Resume());
                 _locked.RemoveAt(i);
             }
         }
