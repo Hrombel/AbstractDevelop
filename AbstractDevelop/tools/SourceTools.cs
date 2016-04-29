@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AbstractDevelop.tools
+namespace AbstractDevelop
 {
     /// <summary>
     /// Предоставляет набор методов для работы с иходными текстами программ.

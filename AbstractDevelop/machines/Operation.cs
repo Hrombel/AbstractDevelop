@@ -1,46 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace AbstractDevelop.machines
+namespace AbstractDevelop.Machines
 {
     /// <summary>
     /// Представляет основу операций абстрактного вычислителя.
     /// Любая операция должна наследовать этот класс.
     /// </summary>
-    public abstract class Operation
+    /// <typeparam name="OperationType">Тип, идентифицирующий операции абстрактного вычислителя</typeparam>
+    /// <typeparam name="ArgumentType">Тип аргумента операции</typeparam>
+    public abstract class Operation<OperationType, ArgumentType>
     {
-        private byte _id;
-        private object[] _args;
+        #region [Свойства]
 
         /// <summary>
-        /// Инициализирует операцию указанными параметрами.
+        /// Идентификатор типа операции
         /// </summary>
-        /// <param name="id">Уникальный идентификатор операции.</param>
-        /// <param name="args">Аргументы операции.</param>
-        public Operation(byte id, object[] args)
-        {
-            _id = id;
-            _args = args;
-        }
+        public virtual OperationType Id { get; protected set; }
 
         /// <summary>
-        /// Получает уникальный идентификатор операции среди операций конкретной машины.
+        /// Аргументы данной операции
         /// </summary>
-        protected byte id
-        {
-            get { return _id; }
-        }
+        public virtual IEnumerable<ArgumentType> Args { get; protected set; }
+
+        #endregion
 
         /// <summary>
-        /// Получает аргументы операции.
+        /// Конструктор по умолчанию для типа операции
         /// </summary>
-        protected object[] Args
+        /// <param name="id">Идентификатор создаваемого экземпляра операции</param>
+        /// <param name="args">Аргументы создаваемого экземпляра операции</param>
+        protected Operation(OperationType id, IEnumerable<ArgumentType> args)
         {
-            get { return _args; }
+            Id = id;
+            Args = args;
         }
-
     }
 }
