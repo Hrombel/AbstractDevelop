@@ -8,14 +8,99 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
 
-namespace AbstractDevelop.machines.post
+namespace AbstractDevelop.Machines.Post
 {
+    using PostOperation = Operation<PostOperationId, BigInteger>;
+
+    /// <summary>
+    /// Кодирует возможные операции машины Поста.
+    /// </summary>
+    public enum PostOperationId : byte
+    {
+        /// <summary>
+        /// Сместить каретку влево.
+        /// </summary>
+        Left,
+        /// <summary>
+        /// Сместить каретку вправо.
+        /// </summary>
+        Right,
+        /// <summary>
+        /// Стереть метку.
+        /// </summary>
+        Erase,
+        /// <summary>
+        /// Установить метку.
+        /// </summary>
+        Place,
+        /// <summary>
+        /// Условный переход.
+        /// </summary>
+        Decision,
+        /// <summary>
+        /// Завершить выполнение программы.
+        /// </summary>
+        Stop
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public partial class PostMachine :
+        AbstractMachine<PostOperationId, BigInteger, Tape>
+    {
+        protected override Dictionary<PostOperationId, Action<BigInteger[]>> OperationHandlers { get; } = new
+            Dictionary<PostOperationId, Action<BigInteger[]>>()
+            {
+                { PostOperationId.Left,     (args) => { Tape.Position--; } },
+                { PostOperationId.Right,    (args) => { } },
+                { PostOperationId.Stop,     (args) => { } },
+
+                { PostOperationId.Place,    (args) => { } },
+                { PostOperationId.Erase,    (args) => { } },
+                { PostOperationId.Decision, (args) => { } }
+            };
+
+
+        /// <summary>
+        /// Лента с даннымми
+        /// </summary>
+        /// <remarks>
+        /// Рекомендуется использовать кеширование при многократном доступе к данному ресурсу
+        /// </remarks> 
+        public Tape Tape { get { return Storages[0]; } }
+
+        public override string Name => "Машина Поста";
+
+        void LeftCommand(BigInteger[] args)
+        {
+            Tape.Position++;
+        }
+
+        public PostMachine()
+        {
+            OperationPostprocess += (operation) => { 
+                // переход к команде, указанной в аргументе 
+                // (все, кроме операции условного перехода)
+                if (operation.Id != PostOperationId.Decision)
+                    //TODO: вместо default должно подставляться текущее значение Operations.Next
+                    Operations.Next = operation.Args.LastOrDefault();
+            };
+
+            Operations.Definitions.Add(PostOperationId.Left, LeftCommand);
+        }
+    }
+}
+
+
     /// <summary>
     /// Представляет модель машины Поста.
     /// </summary>
     [Serializable]
     public class PostMachine : IAbstractMachine
     {
+
+        #region [Обработано]
         /// <summary>
         /// Возникает после выполнения операции.
         /// </summary>
@@ -48,6 +133,8 @@ namespace AbstractDevelop.machines.post
         /// </summary>
         public int CurrentOperation { get { return _opNum; } }
 
+       
+
         /// <summary>
         /// Получает текущее состояние ленты.
         /// </summary>
@@ -67,7 +154,7 @@ namespace AbstractDevelop.machines.post
                 _pos = value;
             }
         }
-
+        #endregion
         /// <summary>
         /// Выполняет операцию машины Поста.
         /// </summary>
@@ -150,18 +237,6 @@ namespace AbstractDevelop.machines.post
                 OnOperationExecuted(this, new PostOperationExecutedEventArgs((operation as PostOperation).Id));
         }
 
-        /// <summary>
-        /// Определяет, существует ли операция под указанным номером.
-        /// </summary>
-        /// <param name="num">Номер(отсчитывая от единицы) проверяемой операции.</param>
-        /// <returns>Истина - операция под указанным номером существует, иначе - не существует.</returns>
-        private bool OperationExists(int num)
-        {
-            if (num < 1) throw new ArgumentException("Номер операции не может быть меньше единицы");
-            if (_ops == null) throw new Exception("Невозможно проверить наличие операции, поскольку не задан их список");
-
-            return num <= _ops.Count;
-        }
 
         /// <summary>
         /// Переводит машину Поста в режим пошагового выполнения операций.
@@ -177,39 +252,6 @@ namespace AbstractDevelop.machines.post
             _ops = ops;
             _opNum = 1;
         }
-
-        /// <summary>
-        /// Выполняет следующую операцию из текущего списка операций.
-        /// </summary>
-        /// <returns>Истина, если операция выполнена успешно и не вызвала остановку машины, иначе - возникла ошибка, которая остановила машину, либо достигнут конец программы.</returns>
-        public bool Forward()
-        {
-            if (_ops == null)
-                throw new Exception("Невозможно выполнить следующую операцию, поскольку машина не запущена");
-
-            bool res = true;
-
-            if (OperationExists(_opNum))
-            {
-                try
-                {
-                    ExecuteOperation(_ops[_opNum - 1]);
-                }
-                catch (ExecutionAbstractException ex)
-                {
-                    res = false;
-                    Stop((PostMachineStopReason)ex.Data[0]);
-                }
-            }
-            else
-            {
-                res = false;
-                Stop(PostMachineStopReason.OUT_OF_OPERATION_NUMBER);
-            }
-
-            return res;
-        }
-
         /// <summary>
         /// Запускает выполнение операций без задержек между ними.
         /// </summary>
@@ -228,13 +270,6 @@ namespace AbstractDevelop.machines.post
             while(_opNum != 0) Forward();
         }
 
-        /// <summary>
-        /// Останавливает работу машины Поста.
-        /// </summary>
-        public void Stop()
-        {
-            Stop(PostMachineStopReason.USER_INTERRUPT);
-        }
 
         private void Stop(PostMachineStopReason reason)
         {

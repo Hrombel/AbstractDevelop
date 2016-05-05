@@ -85,6 +85,8 @@ namespace AbstractDevelop.machines.tape
             get { return _type; }
         }
 
+        public int Position { get; internal set; }
+
         /// <summary>
         /// Стирает все символы, присутствующие на ленте.
         /// </summary>

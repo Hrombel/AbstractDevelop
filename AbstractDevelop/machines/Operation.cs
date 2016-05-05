@@ -10,6 +10,25 @@ namespace AbstractDevelop.Machines
     /// <typeparam name="ArgumentType">Тип аргумента операции</typeparam>
     public abstract class Operation<OperationType, ArgumentType>
     {
+        #region [Фиктивная реализация класса операции (auto-implementation)]
+
+        /// <summary>
+        /// Фиктивный класс операции, используемый для создания объектов типа 
+        /// <see cref="Operation<OperationType, ArgumentType>"/> напрямую, без использования
+        /// сторонних оболочек
+        /// </summary>
+        sealed class FakeOperation : Operation<OperationType, ArgumentType> { }
+      
+        /// <summary>
+        /// Создает экземпляр операции с указанным идетификатором и набором аргументов
+        /// </summary>
+        /// <param name="id">Идентификатор операции</param>
+        /// <param name="arg">Набор аргументов операции</param>
+        /// <returns></returns>
+        public static Operation<OperationType, ArgumentType> Create(OperationType id = default(OperationType), params ArgumentType[] arg) => new FakeOperation() { Id = id, Args = arg };
+
+        #endregion
+
         #region [Свойства]
 
         /// <summary>
@@ -20,19 +39,20 @@ namespace AbstractDevelop.Machines
         /// <summary>
         /// Аргументы данной операции
         /// </summary>
-        public virtual IEnumerable<ArgumentType> Args { get; protected set; }
+        public virtual ArgumentType[] Args { get; protected set; }
 
         #endregion
 
-        /// <summary>
-        /// Конструктор по умолчанию для типа операции
-        /// </summary>
-        /// <param name="id">Идентификатор создаваемого экземпляра операции</param>
-        /// <param name="args">Аргументы создаваемого экземпляра операции</param>
-        protected Operation(OperationType id, IEnumerable<ArgumentType> args)
-        {
-            Id = id;
-            Args = args;
-        }
+        #region [Методы]
+
+        // TODO: переработать список методов класса <Operation>
+
+        #endregion
+
+    }
+
+    public static class OperationHelper
+    {
+
     }
 }
