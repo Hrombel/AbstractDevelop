@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.Serialization;
@@ -14,6 +15,15 @@ namespace AbstractDevelop.machines.tape
     /// </summary>
     public class Tape : ISerializable
     {
+        public class TapeDebugInfo
+        {
+            public bool Enabled { get; set; }
+
+            public StringWriter Output { get; set; }
+
+            public event Action<int, int, TapeDebugInfo> SituationHandler;
+        }
+
         /// <summary>
         /// Возникает после обновления состояния ленты.
         /// </summary>
@@ -86,6 +96,8 @@ namespace AbstractDevelop.machines.tape
         }
 
         public int Position { get; internal set; }
+        public int CurrentValue { get; internal set; }
+        public TapeDebugInfo DebugInfo { get; internal set; }
 
         /// <summary>
         /// Стирает все символы, присутствующие на ленте.

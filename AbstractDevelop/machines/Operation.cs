@@ -14,7 +14,7 @@ namespace AbstractDevelop.Machines
 
         /// <summary>
         /// Фиктивный класс операции, используемый для создания объектов типа 
-        /// <see cref="Operation<OperationType, ArgumentType>"/> напрямую, без использования
+        /// <see cref="T:Operation<OperationType, ArgumentType>"/> напрямую, без использования
         /// сторонних оболочек
         /// </summary>
         sealed class FakeOperation : Operation<OperationType, ArgumentType> { }

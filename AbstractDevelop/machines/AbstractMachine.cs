@@ -5,8 +5,9 @@ using System.Runtime.Serialization;
 namespace AbstractDevelop.Machines
 {
     public abstract class AbstractMachine<OperationCode, ArgumentType, StorageType> :
-        AbstractMachine<Operation<OperationCode, ArgumentType>, OperationCode, ArgumentType, StorageType> { }
-   
+        AbstractMachine<Operation<OperationCode, ArgumentType>, OperationCode, ArgumentType, StorageType>
+    { }
+
     public abstract partial class AbstractMachine<OperationType, OperationCode, ArgumentType, StorageType> :
         ISerializable, IDisposable
         where OperationType : Operation<OperationCode, ArgumentType>
@@ -23,12 +24,13 @@ namespace AbstractDevelop.Machines
         /// <param name="operation"></param>
         public delegate void OperationProcess(OperationType operation);
 
-        #endregion
+        #endregion [Список делегатов]
 
         /// <summary>
         /// Происходит перед запуском абстрактной машины
         /// </summary>
         public event EventHandler OnStart;
+
         /// <summary>
         /// Происходит после запуска абстрактной машины
         /// </summary>
@@ -38,15 +40,17 @@ namespace AbstractDevelop.Machines
         /// Происходит перед остановом абстрактной машины
         /// </summary>
         public event EventHandler OnStop;
+
         /// <summary>
         /// Происходит после останова авбстрактной машины
         /// </summary>
         public event EventHandler OnStopped;
-        
+
         /// <summary>
         /// Происходит после успешного шага в пошаговом режиме исполнения команд
         /// </summary>
         public event OperationEventHandler OnStepCompleted;
+
         /// <summary>
         /// Происходит после неудачного (приведшего к ошибке или завершению) шага в пошаговом режиме исполнения команд
         /// </summary>
@@ -67,40 +71,36 @@ namespace AbstractDevelop.Machines
         /// </summary>
         protected event OperationProcess OperationPreprocess, OperationPostprocess;
 
-        #endregion
+        #endregion [События]
 
         #region [Свойства]
-
-        protected virtual Dictionary<OperationCode, Action<ArgumentType[]>> OperationHandlers { get; }
 
         public virtual ICollection<BreakPoint> BreakPoints { get; } = new BreakPointCollection();
 
         public virtual IOperationCollection Operations { get; } = new OperationCollection();
-        
+
         #region [Состояниие]
 
         public abstract string Name { get; }
 
         public virtual bool IsActive { get; protected set; }
 
-        #endregion
+        #endregion [Состояниие]
 
         /// <summary>
         /// Поддерживаются ли данной абстрактной машиной точки останова
         /// </summary>
         public virtual bool SupportsBreakpoints { get { return true; } }
 
-       
-
         #region [Вспомогательные свойства]
 
-        protected virtual List<StorageType> Storages { get; } // TODO: реализовать хранилище 
+        protected virtual List<StorageType> Storages { get; } // TODO: реализовать хранилище
 
         protected virtual bool IsDisposed { get; set; }
-       
-        #endregion
 
-        #endregion
+        #endregion [Вспомогательные свойства]
+
+        #endregion [Свойства]
 
         #region [Методы]
 
@@ -133,7 +133,8 @@ namespace AbstractDevelop.Machines
                 // во время выполнения возникло исключение, порожденное частью абстрактной машины
                 catch (AbstractMachineExcepton ex) { Stop(StopReason.Exception, ex.Message); }
 
-            if (shouldGenerateEvents) {
+            if (shouldGenerateEvents)
+            {
                 // генерация событий в зависимости от результата
                 if (isSucceded)
                     OnStepCompleted?.Invoke(this, operation);
@@ -152,23 +153,20 @@ namespace AbstractDevelop.Machines
                 OnStopped?.Invoke(this, default(EventArgs));
             }
             else { }
-
         }
 
         #region [Реализация интерфейсов]
 
         public virtual void Dispose() => IsDisposed = true;
-       
+
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            
         }
 
-        #endregion
+        #endregion [Реализация интерфейсов]
 
-        public override string ToString() => $"{Name}: {(IsActive? "Отладки" : "Редактирование")}";
-       
-        #endregion
+        public override string ToString() => $"{Name}: {(IsActive ? "Отладка" : "Редактирование")}";
 
+        #endregion [Методы]
     }
 }
