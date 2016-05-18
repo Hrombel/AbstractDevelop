@@ -1,13 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace AbstractDevelop.controls.visuals.additionals
 {
@@ -26,12 +19,25 @@ namespace AbstractDevelop.controls.visuals.additionals
             InitializeComponent();
             okBtn.Enabled = false;
             okBtn.Click += okBtn_Click;
+
             inputBox.TextChanged += inputBox_TextChanged;
+            inputBox.KeyPress += exitMonitor;
+            KeyPress += exitMonitor;
         }
+
         ~TextInputControl()
         {
             okBtn.Click -= okBtn_Click;
             inputBox.TextChanged -= inputBox_TextChanged;
+
+            inputBox.KeyPress -= exitMonitor;
+            KeyPress -= exitMonitor;
+        }
+
+        private void exitMonitor(object sender, KeyPressEventArgs e)
+        {
+            // при нажатии Enter выход из заполнения
+            if (e.KeyChar == '\r') OKPressed(this, default(EventArgs));
         }
 
         private void inputBox_TextChanged(object sender, EventArgs e)
@@ -48,8 +54,8 @@ namespace AbstractDevelop.controls.visuals.additionals
         /// <summary>
         /// Получает или задает текст строки ввода.
         /// </summary>
-        public string InputText 
-        { 
+        public string InputText
+        {
             get { return inputBox.Text; }
             set { inputBox.Text = value; }
         }

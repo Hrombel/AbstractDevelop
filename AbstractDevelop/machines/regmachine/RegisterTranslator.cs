@@ -42,8 +42,8 @@ namespace AbstractDevelop.machines.regmachine
             if (string.IsNullOrWhiteSpace(src))
                 throw new ArgumentNullException("Исходный текст программы не может быть неопределенным");
 
-            Regex programReg = new Regex(@"(program|(entry))\s*(([a-zA-Z\d]+\.*)+)");
-            Regex linksReg = new Regex(@"[a-zA-Z\d]+(\.[a-zA-Z\d]+)+");
+            Regex programReg = new Regex(@"(program|(entry))\s*(([a-zA-Z\d_]+\.*)+)");
+            Regex linksReg = new Regex(@"[a-zA-Z\d_]+(\.[a-zA-Z\d_]+)+");
 
             RegisterProgramCollection result = new RegisterProgramCollection();
             int n;
@@ -140,8 +140,8 @@ namespace AbstractDevelop.machines.regmachine
 
             Regex unitsReg = new Regex(@"unit\s*(\S*)");
             Regex programsReg = new Regex(@"(program|entry)\s*(\S*)");
-            Regex unitLinksReg = new Regex(@"\((\s*[a-zA-Z\d]+\s*(\.\s*[a-zA-Z\d]*)+)");
-            Regex thisProgsLinksReg = new Regex(@"s\s*\(([a-zA-Z\d]+\s*),"); // Ищет отсылки к программам этого юнита.
+            Regex unitLinksReg = new Regex(@"\((\s*[a-zA-Z\d_]+\s*(\.\s*[a-zA-Z\d_]*)+)");
+            Regex thisProgsLinksReg = new Regex(@"s\s*\(([a-zA-Z\d_]+\s*),"); // Ищет отсылки к программам этого юнита.
             MatchCollection matches;
 
             string unitName;
