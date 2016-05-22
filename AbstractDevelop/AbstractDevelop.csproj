@@ -257,6 +257,8 @@
     <Compile Include="Machines\regmachine\RegisterThreadManager.cs" />
     <Compile Include="Machines\regmachine\RegisterThreadManagerEventArgs.cs" />
     <Compile Include="Machines\regmachine\RegisterTranslator.cs" />
+    <Compile Include="Machines\Risc\DataLink.cs" />
+    <Compile Include="Machines\Risc\RiscMachine.cs" />
     <Compile Include="Machines\SymbolSet.cs" />
     <Compile Include="Machines\ThreadInfo.cs" />
     <Compile Include="Machines\turing\TuringMachineStateChangedEventArgs.cs" />

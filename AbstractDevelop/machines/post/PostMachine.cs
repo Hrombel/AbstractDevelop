@@ -40,7 +40,7 @@ namespace AbstractDevelop.Machines.Post
     /// <summary>
     /// Реализация машины Поста
     /// </summary>
-    public partial class PostMachine :
+    public class PostMachine :
         AbstractMachine<PostOperationId, BigInteger, Tape>
     {
         /// <summary>

@@ -9,6 +9,22 @@ using System.Threading.Tasks;
 
 namespace AbstractDevelop.machines.tape
 {
+
+    public class Tape<ElementType> : Tape
+    {
+        public Tape() : base(TapeType.MultiStated)
+        {
+
+        }
+
+        public bool IsInfinite { get; internal set; }
+
+        internal void Clear(int memorySize)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     [Serializable]
     /// <summary>
     /// Представляет модель ленты, имеющей бесконечное количество ячеек.
