@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using AbstractDevelop.machines.registers;
+using System;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Numerics;
-using AbstractDevelop.machines.registers;
 using System.Drawing.Drawing2D;
+using System.Numerics;
+using System.Windows.Forms;
 
 namespace AbstractDevelop.controls.visuals
 {
@@ -18,92 +12,16 @@ namespace AbstractDevelop.controls.visuals
     /// </summary>
     public partial class InfiniteRegistersVisualizer : UserControl
     {
+        #region [События]
+
         /// <summary>
         /// Возникает, когда изменяется состояние регистров.
         /// </summary>
         public event EventHandler StateChanged;
 
-        public const int MAX_COLUMNS = 15;
+        #endregion
 
-        private const int FRAME_RATE = 40;
-
-        private int _columns = 5;
-
-        private Bitmap _canvas;
-        private BigInteger _pos;
-        private float _velocity;
-
-        private int _blockWidth;
-        private int _margin;
-        private int _blockHeight;
-        private Font _valueFont;
-
-        private Timer _timer;
-        private bool _mouseDown;
-        private bool _mouseMoved;
-        private int _lastPos;
-
-        private InfiniteRegisters _registers;
-
-        private BigInteger _currentRegister;
-        private bool _currentRegisterBig;
-        private BigInteger _currentRegisterWidth;
-
-        public InfiniteRegistersVisualizer()
-        {
-            _velocity = 0;
-            _pos = 0;
-            _currentRegister = -1;
-            _currentRegisterBig = false;
-            _currentRegisterWidth = -1;
-            _mouseMoved = false;
-            _mouseDown = false;
-            CreateCanvas();
-            InitializeComponent();
-
-        }
-        ~InfiniteRegistersVisualizer()
-        {
-            Registers = null;
-
-            DestroyCanvas();
-        }
-
-        /// <summary>
-        /// Инициализирует средства взаимодействия пользователя с компонентом.
-        /// </summary>
-        private void InitControls()
-        {
-            _timer = new Timer();
-            _timer.Interval = (int)Math.Round(1000.0 / (double)FRAME_RATE);
-            _timer.Tick += _timer_Tick;
-            _timer.Enabled = true;
-
-            MouseDown += InfiniteRegistersVisualizer_MouseDown;
-            MouseUp += InfiniteRegistersVisualizer_MouseUp;
-            MouseWheel += InfiniteRegistersVisualizer_MouseWheel;
-            KeyDown += InfiniteRegistersVisualizer_KeyDown;
-            PreviewKeyDown += InfiniteRegistersVisualizer_PreviewKeyDown;
-            KeyPress += InfiniteRegistersVisualizer_KeyPress;
-        }
-
-        /// <summary>
-        /// Уничтожает средства взаимодействия пользователя с компонентом.
-        /// </summary>
-        private void DisposeControls()
-        {
-            MouseDown -= InfiniteRegistersVisualizer_MouseDown;
-            MouseUp -= InfiniteRegistersVisualizer_MouseUp;
-            MouseWheel -= InfiniteRegistersVisualizer_MouseWheel;
-            KeyDown -= InfiniteRegistersVisualizer_KeyDown;
-            PreviewKeyDown -= InfiniteRegistersVisualizer_PreviewKeyDown;
-            KeyPress -= InfiniteRegistersVisualizer_KeyPress;
-
-            _timer.Tick -= _timer_Tick;
-            _timer.Enabled = false;
-            _timer.Dispose();
-            _timer = null;
-        }
+        #region [Свойства]
 
         /// <summary>
         /// Получает или задает количество столбцов визуализатора. Значения могут находиться в диапазоне от 1 до MAX_COLUMNS.
@@ -122,121 +40,6 @@ namespace AbstractDevelop.controls.visuals
             }
         }
 
-        private void InfiniteRegistersVisualizer_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if(_currentRegister != -1)
-            {
-                if (char.IsDigit(e.KeyChar))
-                {
-                    string str = _registers.GetValue(_currentRegister).ToString();
-                    str += e.KeyChar;
-                    _registers.SetValue(BigInteger.Parse(str), _currentRegister);
-                    DispatchStateChanged();
-                }
-            }
-        }
-
-        private void InfiniteRegistersVisualizer_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            if (_currentRegister != -1)
-            {
-                switch (e.KeyCode)
-                {
-                    case Keys.Left:
-                        if (_currentRegister > 0)
-                            _currentRegister--;
-                        break;
-                    case Keys.Right:
-                        _currentRegister++;
-                        break;
-                    case Keys.Up:
-                        if (_currentRegister > _columns)
-                            _currentRegister -= _columns;
-                        break;
-                    case Keys.Down:
-                        _currentRegister += _columns;
-                        break;
-                }
-
-                if (_currentRegister < (_pos / (_blockHeight + _margin) * _columns))
-                    _pos -= _blockHeight + _margin;
-                else if (_currentRegister - _columns > ((_pos + Height) / (_blockHeight + _margin) * _columns))
-                    _pos += _blockHeight + _margin;
-            }
-        }
-
-        private void InfiniteRegistersVisualizer_KeyDown(object sender, KeyEventArgs e)
-        {
-            bool changed = false;
-            switch(e.KeyCode)
-            {
-                case Keys.Add:
-                    if(e.Control)
-                    {
-                        if (_columns < MAX_COLUMNS)
-                            _columns++;
-                    }
-                    else if (_currentRegister != -1)
-                    {
-                        _registers.Increment(_currentRegister);
-                        changed = true;
-                    }
-                    break;
-                case Keys.Subtract:
-
-                    if (e.Control)
-                    {
-                        if (_columns != 1)
-                            _columns--;
-                    }
-                    else if (_currentRegister != -1)
-                    {
-                        _registers.Decrement(_currentRegister);
-                        changed = true;
-                    }
-                    break;
-                case Keys.Back:
-                    if (_currentRegister == -1) break;
-
-                    string str = _registers.GetValue(_currentRegister).ToString();
-                    str = str.Remove(str.Length - 1);
-                    if (str == "") str = "0";
-                    _registers.SetValue(BigInteger.Parse(str), _currentRegister);
-                    changed = true;
-                    break;
-                case Keys.Delete:
-                    if (_currentRegister == -1) break;
-
-                    _registers.SetValue(0, _currentRegister);
-                    changed = true;
-                    break;
-                case Keys.PageDown:
-                    _velocity = 0;
-                    _pos += Height;
-                    break;
-                case Keys.PageUp:
-                    _velocity = 0;
-                    _pos -= Height;
-                    break;
-            }
-
-            if (changed) DispatchStateChanged();
-        }
-
-        /// <summary>
-        /// Генерирует событие изменения состояния регистров.
-        /// </summary>
-        private void DispatchStateChanged()
-        {
-            if (StateChanged != null)
-                StateChanged(this, EventArgs.Empty);
-        }
-
-        private void InfiniteRegistersVisualizer_MouseWheel(object sender, MouseEventArgs e)
-        {
-            _velocity -= e.Delta >> 5;
-        }
-
         /// <summary>
         /// Получает или задает текущие визуализируемые регистры.
         /// </summary>
@@ -245,16 +48,57 @@ namespace AbstractDevelop.controls.visuals
             get { return _registers; }
             set
             {
-                if(_registers != null)
+                if (_registers != null)
                 {
                     DisposeControls();
                 }
                 _registers = value;
-                if(_registers != null)
+                if (_registers != null)
                 {
                     InitControls();
                 }
             }
+        }
+
+        #endregion
+
+        #region [Поля]
+
+        public const int MAX_COLUMNS = 15;
+
+        private const int FRAME_RATE = 40;
+
+        private int _blockHeight;
+        private int _blockWidth;
+        private Bitmap _canvas;
+        private int _columns = 5;
+        private BigInteger _currentRegister;
+        private bool _currentRegisterBig;
+        private BigInteger _currentRegisterWidth;
+        private int _lastPos;
+        private int _margin;
+        private bool _mouseDown;
+        private bool _mouseMoved;
+        private BigInteger _pos;
+        private InfiniteRegisters _registers;
+        private Timer _timer;
+        private Font _valueFont;
+        private float _velocity;
+
+        #endregion
+
+        #region [Методы]
+
+        protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
+        {
+            base.SetBoundsCore(x, y, width, height, specified);
+
+            DestroyCanvas();
+            CreateCanvas();
+
+            ClearView();
+            DrawCells(_pos);
+            UpdateView();
         }
 
         private void _timer_Tick(object sender, EventArgs e)
@@ -279,7 +123,7 @@ namespace AbstractDevelop.controls.visuals
             }
 
             _pos += (int)Math.Round(_velocity);
-            if(_pos < 0)
+            if (_pos < 0)
             {
                 _pos = 0;
                 _velocity = 0;
@@ -290,16 +134,15 @@ namespace AbstractDevelop.controls.visuals
             UpdateView();
         }
 
-        protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
+        /// <summary>
+        /// Очищает отрисованную на полотне графику.
+        /// </summary>
+        private void ClearView()
         {
-            base.SetBoundsCore(x, y, width, height, specified);
-
-            DestroyCanvas();
-            CreateCanvas();
-
-            ClearView();
-            DrawCells(_pos);
-            UpdateView();
+            using (Graphics g = Graphics.FromImage(_canvas))
+            {
+                g.Clear(Color.White);
+            }
         }
 
         /// <summary>
@@ -320,89 +163,30 @@ namespace AbstractDevelop.controls.visuals
         }
 
         /// <summary>
-        /// Вызывает процедуру перерисовки графики.
+        /// Генерирует событие изменения состояния регистров.
         /// </summary>
-        private void UpdateView()
+        private void DispatchStateChanged()
         {
-            Invalidate();
+            if (StateChanged != null)
+                StateChanged(this, EventArgs.Empty);
         }
 
         /// <summary>
-        /// Очищает отрисованную на полотне графику.
+        /// Уничтожает средства взаимодействия пользователя с компонентом.
         /// </summary>
-        private void ClearView()
+        private void DisposeControls()
         {
-            using(Graphics g = Graphics.FromImage(_canvas))
-            {
-                g.Clear(Color.White);
-            }
-        }
+            MouseDown -= InfiniteRegistersVisualizer_MouseDown;
+            MouseUp -= InfiniteRegistersVisualizer_MouseUp;
+            MouseWheel -= InfiniteRegistersVisualizer_MouseWheel;
+            KeyDown -= InfiniteRegistersVisualizer_KeyDown;
+            PreviewKeyDown -= InfiniteRegistersVisualizer_PreviewKeyDown;
+            KeyPress -= InfiniteRegistersVisualizer_KeyPress;
 
-        /// <summary>
-        /// Получает индекс ячейки по ее координатам.
-        /// </summary>
-        /// <param name="x">Точка на горизонтальной оси в СК экрана.</param>
-        /// <param name="y">Точка на вертикальной оси в СК экрана.</param>
-        /// <returns>Индекс указанной ячейки.</returns>
-        private BigInteger GetRegisterIndex(int x, BigInteger y)
-        {
-            return (y / (_blockHeight + _margin)) * _columns + (x / (_blockWidth + _margin));
-        }
-
-        private void InfiniteRegistersVisualizer_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                _mouseDown = false;
-                _velocity = _lastPos - MousePosition.Y;
-                BigInteger index = GetRegisterIndex(e.X, _pos + e.Y);
-                if (!_mouseMoved)
-                {
-                    if (_currentRegister != -1 && _currentRegisterBig)
-                    {
-                        if (index != _currentRegister)
-                        {
-                            _currentRegister = -1;
-                            _currentRegisterWidth = -1;
-                        }
-                    }
-                    else
-                        RegisterClick(index);
-                }
-            }
-        }
-
-        private void InfiniteRegistersVisualizer_MouseDown(object sender, MouseEventArgs e)
-        {
-            if(e.Button == MouseButtons.Left)
-            {
-                _lastPos = MousePosition.Y;
-                _velocity = 0;
-                _mouseDown = true;
-                _mouseMoved = false;
-            }
-        }
-
-        /// <summary>
-        /// Вызывается после клика по ячейке.
-        /// </summary>
-        /// <param name="index">Индекс ячейки, по которой был совершен клик.</param>
-        private void RegisterClick(BigInteger index)
-        {
-            Console.WriteLine(index);
-            _currentRegister = index;
-        }
-
-        /// <summary>
-        /// Преобразует линейную координату в экранные координаты, основываясь на высоте
-        /// блока регистра и отступе между такими регистрами.
-        /// </summary>
-        /// <param name="w">Преобразуемая линейная координата.</param>
-        /// <returns>Структура, представляющая пару координат.</returns>
-        private Point LinearToScreen(int w)
-        {
-            return new Point(w % Width,
-                            (w / Width) * (_blockHeight + _margin));
+            _timer.Tick -= _timer_Tick;
+            _timer.Enabled = false;
+            _timer.Dispose();
+            _timer = null;
         }
 
         /// <summary>
@@ -449,13 +233,13 @@ namespace AbstractDevelop.controls.visuals
                 int y = -(int)(pos % (_blockHeight + _margin));
                 BigInteger c;
                 c = (pos / (_blockHeight + _margin)) * _columns;
-                if(_currentRegister != -1)
+                if (_currentRegister != -1)
                 {
                     BigInteger pw = (pos / (_blockHeight + _margin)) * Width;
                     BigInteger crw = (_currentRegister / _columns) * Width;
-                    if(pw > crw)
+                    if (pw > crw)
                     {
-                        if(pw < crw + _currentRegisterWidth)
+                        if (pw < crw + _currentRegisterWidth)
                         {
                             c = _currentRegister / _columns * _columns;
                             x = (int)((pw - crw) % Width);
@@ -563,9 +347,242 @@ namespace AbstractDevelop.controls.visuals
             g.Transform = new Matrix();
         }
 
+        /// <summary>
+        /// Получает индекс ячейки по ее координатам.
+        /// </summary>
+        /// <param name="x">Точка на горизонтальной оси в СК экрана.</param>
+        /// <param name="y">Точка на вертикальной оси в СК экрана.</param>
+        /// <returns>Индекс указанной ячейки.</returns>
+        private BigInteger GetRegisterIndex(int x, BigInteger y)
+        {
+            return (y / (_blockHeight + _margin)) * _columns + (x / (_blockWidth + _margin));
+        }
+
+        private void InfiniteRegistersVisualizer_KeyDown(object sender, KeyEventArgs e)
+        {
+            bool changed = false;
+            switch (e.KeyCode)
+            {
+                case Keys.Add:
+                    if (e.Control)
+                    {
+                        if (_columns < MAX_COLUMNS)
+                            _columns++;
+                    }
+                    else if (_currentRegister != -1)
+                    {
+                        _registers.Increment(_currentRegister);
+                        changed = true;
+                    }
+                    break;
+
+                case Keys.Subtract:
+
+                    if (e.Control)
+                    {
+                        if (_columns != 1)
+                            _columns--;
+                    }
+                    else if (_currentRegister != -1)
+                    {
+                        _registers.Decrement(_currentRegister);
+                        changed = true;
+                    }
+                    break;
+
+                case Keys.Back:
+                    if (_currentRegister == -1) break;
+
+                    string str = _registers.GetValue(_currentRegister).ToString();
+                    str = str.Remove(str.Length - 1);
+                    if (str == "") str = "0";
+                    _registers.SetValue(BigInteger.Parse(str), _currentRegister);
+                    changed = true;
+                    break;
+
+                case Keys.Delete:
+                    if (_currentRegister == -1) break;
+
+                    _registers.SetValue(0, _currentRegister);
+                    changed = true;
+                    break;
+
+                case Keys.PageDown:
+                    _velocity = 0;
+                    _pos += Height;
+                    break;
+
+                case Keys.PageUp:
+                    _velocity = 0;
+                    _pos -= Height;
+                    break;
+            }
+
+            if (changed) DispatchStateChanged();
+        }
+
+        private void InfiniteRegistersVisualizer_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (_currentRegister != -1)
+            {
+                if (char.IsDigit(e.KeyChar))
+                {
+                    string str = _registers.GetValue(_currentRegister).ToString();
+                    str += e.KeyChar;
+                    _registers.SetValue(BigInteger.Parse(str), _currentRegister);
+                    DispatchStateChanged();
+                }
+            }
+        }
+
+        private void InfiniteRegistersVisualizer_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _lastPos = MousePosition.Y;
+                _velocity = 0;
+                _mouseDown = true;
+                _mouseMoved = false;
+            }
+        }
+
+        private void InfiniteRegistersVisualizer_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                _mouseDown = false;
+                _velocity = _lastPos - MousePosition.Y;
+                BigInteger index = GetRegisterIndex(e.X, _pos + e.Y);
+                if (!_mouseMoved)
+                {
+                    if (_currentRegister != -1 && _currentRegisterBig)
+                    {
+                        if (index != _currentRegister)
+                        {
+                            _currentRegister = -1;
+                            _currentRegisterWidth = -1;
+                        }
+                    }
+                    else
+                        RegisterClick(index);
+                }
+            }
+        }
+
+        private void InfiniteRegistersVisualizer_MouseWheel(object sender, MouseEventArgs e)
+        {
+            _velocity -= e.Delta >> 5;
+        }
+
         private void InfiniteRegistersVisualizer_Paint(object sender, PaintEventArgs e)
         {
             e.Graphics.DrawImageUnscaled(_canvas, 0, 0);
         }
+
+        private void InfiniteRegistersVisualizer_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            if (_currentRegister != -1)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.Left:
+                        if (_currentRegister > 0)
+                            _currentRegister--;
+                        break;
+
+                    case Keys.Right:
+                        _currentRegister++;
+                        break;
+
+                    case Keys.Up:
+                        if (_currentRegister > _columns)
+                            _currentRegister -= _columns;
+                        break;
+
+                    case Keys.Down:
+                        _currentRegister += _columns;
+                        break;
+                }
+
+                if (_currentRegister < (_pos / (_blockHeight + _margin) * _columns))
+                    _pos -= _blockHeight + _margin;
+                else if (_currentRegister - _columns > ((_pos + Height) / (_blockHeight + _margin) * _columns))
+                    _pos += _blockHeight + _margin;
+            }
+        }
+
+        /// <summary>
+        /// Инициализирует средства взаимодействия пользователя с компонентом.
+        /// </summary>
+        private void InitControls()
+        {
+            _timer = new Timer();
+            _timer.Interval = (int)Math.Round(1000.0 / FRAME_RATE);
+            _timer.Tick += _timer_Tick;
+            _timer.Enabled = true;
+
+            MouseDown += InfiniteRegistersVisualizer_MouseDown;
+            MouseUp += InfiniteRegistersVisualizer_MouseUp;
+            MouseWheel += InfiniteRegistersVisualizer_MouseWheel;
+            KeyDown += InfiniteRegistersVisualizer_KeyDown;
+            PreviewKeyDown += InfiniteRegistersVisualizer_PreviewKeyDown;
+            KeyPress += InfiniteRegistersVisualizer_KeyPress;
+        }
+
+        /// <summary>
+        /// Преобразует линейную координату в экранные координаты, основываясь на высоте
+        /// блока регистра и отступе между такими регистрами.
+        /// </summary>
+        /// <param name="w">Преобразуемая линейная координата.</param>
+        /// <returns>Структура, представляющая пару координат.</returns>
+        private Point LinearToScreen(int w)
+        {
+            return new Point(w % Width,
+                            (w / Width) * (_blockHeight + _margin));
+        }
+
+        /// <summary>
+        /// Вызывается после клика по ячейке.
+        /// </summary>
+        /// <param name="index">Индекс ячейки, по которой был совершен клик.</param>
+        private void RegisterClick(BigInteger index)
+        {
+            Console.WriteLine(index);
+            _currentRegister = index;
+        }
+
+        /// <summary>
+        /// Вызывает процедуру перерисовки графики.
+        /// </summary>
+        private void UpdateView()
+        {
+            Invalidate();
+        }
+
+        #endregion
+
+        #region [Конструкторы]
+
+        public InfiniteRegistersVisualizer()
+        {
+            _velocity = 0;
+            _pos = 0;
+            _currentRegister = -1;
+            _currentRegisterBig = false;
+            _currentRegisterWidth = -1;
+            _mouseMoved = false;
+            _mouseDown = false;
+            CreateCanvas();
+            InitializeComponent();
+        }
+
+        ~InfiniteRegistersVisualizer()
+        {
+            Registers = null;
+
+            DestroyCanvas();
+        }
+
+        #endregion
     }
 }

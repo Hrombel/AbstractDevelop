@@ -1,20 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using AbstractDevelop.machines.post;
-using AbstractDevelop.machines;
+﻿using AbstractDevelop.controls.environment.debugwindow;
 using AbstractDevelop.errors.dev;
+using AbstractDevelop.Machines.Post;
+using System;
+using System.Collections.Generic;
 using System.Numerics;
-using AbstractDevelop.projects;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-using AbstractDevelop.controls.environment.debugwindow;
+using System.Windows.Forms;
+
+using PostOperation = AbstractDevelop.Machines.Operation<AbstractDevelop.Machines.Post.PostOperationId, object>;
 
 namespace AbstractDevelop.controls.visuals
 {
@@ -27,10 +19,12 @@ namespace AbstractDevelop.controls.visuals
         /// Возникает после внесения любых изменений пользователем.
         /// </summary>
         public event EventHandler DataChanged;
+
         /// <summary>
         /// Возникает после сохранения всех изменений, совершенных пользователем.
         /// </summary>
         public event EventHandler DataSaved;
+
         /// <summary>
         /// Возникает после смены состояния.
         /// </summary>
@@ -60,8 +54,8 @@ namespace AbstractDevelop.controls.visuals
             codeBox.TextChanged += DataChangedHandler;
             codeBox.BreakPointToggled += BreakPointToggled;
             _timer.Tick += DelayedCaller;
-            
         }
+
         ~PostVisualizer()
         {
             tapeVisualizer.TapeUpdated -= DataChangedHandler;
@@ -84,7 +78,7 @@ namespace AbstractDevelop.controls.visuals
             }
             set
             {
-                if(_currentMachine != null)
+                if (_currentMachine != null)
                 {
                     tapeVisualizer.CurrentTape = null;
                     _currentMachine = null;
@@ -92,7 +86,8 @@ namespace AbstractDevelop.controls.visuals
 
                 if (value != null)
                 {
-                    tapeVisualizer.CurrentTape = value.Tape;
+                    //TODO: переработать механизм отображения лент
+                    //tapeVisualizer.CurrentTape = value.Tape;
                     _currentMachine = value;
                 }
             }
@@ -109,17 +104,17 @@ namespace AbstractDevelop.controls.visuals
             }
             set
             {
-                if(value != null)
+                if (value != null)
                 {
-                    if (value.Machine != MachineId.Post)
+                    if (value.Type != MachineId.Post)
                         throw new Exception("Указан проект, предназначенный не для машины Поста");
                 }
                 _project = value;
-                if(_project != null)
+                if (_project != null)
                 {
                     codeBox.Text = GetProjectCode();
                     CurrentMachine = GetMachineState();
-                    tapeVisualizer.Navigate(CurrentMachine.Position);
+                    tapeVisualizer.Navigate(CurrentMachine.Tape.Position);
                 }
             }
         }
@@ -157,7 +152,11 @@ namespace AbstractDevelop.controls.visuals
         /// </summary>
         private void SaveProjectCode()
         {
-            _project.SaveFile(_project.Name + "Code.pmc", codeBox.Text);
+            string fileName = _project.Name + "Code.pmc";
+            if (!_project.IsAssociated(fileName))
+                _project.Associate(CodeFile.LoadFrom(true, fileName));
+
+           // _project.SaveFile(_project.Name + "Code.pmc", codeBox.Text);
         }
 
         /// <summary>
@@ -168,15 +167,16 @@ namespace AbstractDevelop.controls.visuals
         {
             string name = _project.Name + "Code.pmc";
 
-            if(_project.FileExists(name))
-            {
-                return _project.LoadString(name);
-            }
-            else
-            {
-                SaveProjectCode();
-                return "";
-            }
+            //if (_project.FileExists(name))
+            //{
+            //    return _project.LoadString(name);
+            //}
+            //else
+            //{
+            //    SaveProjectCode();
+            //    return "";
+            //}
+            return null;
         }
 
         /// <summary>
@@ -184,7 +184,7 @@ namespace AbstractDevelop.controls.visuals
         /// </summary>
         private void SaveMachineState()
         {
-            _project.SaveFile(_project.Name + "State.pms", CurrentMachine);
+            //_project.SaveFile(_project.Name + "State.pms", CurrentMachine);
         }
 
         /// <summary>
@@ -195,7 +195,8 @@ namespace AbstractDevelop.controls.visuals
         {
             string name = _project.Name + "State.pms";
 
-            return _project.FileExists(name) ? _project.LoadObject(name) as PostMachine : new PostMachine();
+            // return _project.FileExists(name) ? _project.LoadObject(name) as PostMachine : new PostMachine();
+            return null;
         }
 
         /// <summary>
@@ -206,11 +207,11 @@ namespace AbstractDevelop.controls.visuals
         {
             if (_state == VisualizerState.Executing && !ignoreBreakPoint)
             {
-                if (Array.FindIndex<int>(_breakPoints, x => x == _currentMachine.CurrentOperation) != -1)
-                {
-                    ChangeState(VisualizerState.Paused);
-                    return;
-                }
+                //if (Array.FindIndex<int>(_breakPoints, x => x == _currentMachine.Operations.Current) != -1)
+                //{
+                //    ChangeState(VisualizerState.Paused);
+                //    return;
+                //}
             }
 
             _timer.Enabled = true;
@@ -225,30 +226,31 @@ namespace AbstractDevelop.controls.visuals
             _timer.Enabled = false;
 
             _stepInProgress = true;
-            _currentMachine.Forward();
+            _currentMachine.Step();
 
             codeBox.RemoveAllExecLines();
-            if (_currentMachine.CurrentOperation != -1)
-                codeBox.SetExecutionCommand(_currentMachine.CurrentOperation);
+            if (!_currentMachine.Operations.Current.Equals(default(PostOperation)))
+                codeBox.SetExecutionCommand(0);//_currentMachine.Operations.Current);
         }
 
-        private void _currentMachine_OnOperationExecuted(object sender, PostOperationExecutedEventArgs e)
-        {
-            switch(e.Operation)
-            {
-                case PostOperationId.Right:
-                case PostOperationId.Left:
-                    tapeVisualizer.Navigate(_currentMachine.Position, tapeVisualizer.RecommendedNavigationSpeed);
-                    break;
-                case PostOperationId.Decision:
-                case PostOperationId.Erase:
-                case PostOperationId.Place:
-                    _stepInProgress = false;
-                    if (_state == VisualizerState.Paused) return;
-                    ExecuteNext();
-                    break;
-            }
-        }
+        //private void _currentMachine_OnOperationExecuted(object sender, PostOperationExecutedEventArgs e)
+        //{
+        //    switch (e.Operation)
+        //    {
+        //        case PostOperationId.Right:
+        //        case PostOperationId.Left:
+        //            tapeVisualizer.Navigate(_currentMachine.Position, tapeVisualizer.RecommendedNavigationSpeed);
+        //            break;
+
+        //        case PostOperationId.Decision:
+        //        case PostOperationId.Erase:
+        //        case PostOperationId.Place:
+        //            _stepInProgress = false;
+        //            if (_state == VisualizerState.Paused) return;
+        //            ExecuteNext();
+        //            break;
+        //    }
+        //}
 
         private void tapeVisualizer_OnNavigationEnd(object sender, EventArgs e)
         {
@@ -258,20 +260,20 @@ namespace AbstractDevelop.controls.visuals
             ExecuteNext();
         }
 
-        private void _currentMachine_OnMachineStopped(object sender, PostMachineStopEventArgs e)
-        {
-            _timer.Enabled = false;
-            _currentMachine.OnOperationExecuted -= _currentMachine_OnOperationExecuted;
-            _currentMachine.OnMachineStopped -= _currentMachine_OnMachineStopped;
-            tapeVisualizer.OnNavigationEnd -= tapeVisualizer_OnNavigationEnd;
-            tapeVisualizer.InputMode = true;
-            codeBox.RemoveAllExecLines();
-            _breakPoints = null;
-            codeBox.ReadOnly = false;
-            ChangeState(VisualizerState.Stopped);
-            if (Debug != null)
-                Debug.AddMessage(_project.Name + " - Машина Поста", string.Format("Работа машины остановлена. Причина: \"{0}\"", DecodeReason(e.Reason)));
-        }
+        //private void _currentMachine_OnMachineStopped(object sender, PostMachineStopEventArgs e)
+        //{
+        //    _timer.Enabled = false;
+        //    _currentMachine.OnOperationExecuted -= _currentMachine_OnOperationExecuted;
+        //    _currentMachine.OnMachineStopped -= _currentMachine_OnMachineStopped;
+        //    tapeVisualizer.OnNavigationEnd -= tapeVisualizer_OnNavigationEnd;
+        //    tapeVisualizer.InputMode = true;
+        //    codeBox.RemoveAllExecLines();
+        //    _breakPoints = null;
+        //    codeBox.ReadOnly = false;
+        //    ChangeState(VisualizerState.Stopped);
+        //    if (Debug != null)
+        //        Debug.AddMessage(_project.Name + " - Машина Поста", string.Format("Работа машины остановлена. Причина: \"{0}\"", DecodeReason(e.Reason)));
+        //}
 
         /// <summary>
         /// Изменяет текущее состояние визуализатора и генерирует соответствующее событие.
@@ -289,34 +291,39 @@ namespace AbstractDevelop.controls.visuals
         /// Возвращает строковую интерпретацию кода причины останова машины Поста.
         /// </summary>
         /// <param name="reason">Код причины останова машины Поста.</param>
-        private string DecodeReason(PostMachineStopReason reason)
-        {
-            string res;
+        //private string DecodeReason(PostMachineStopReason reason)
+        //{
+        //    string res;
 
-            switch (reason)
-            {
-                case PostMachineStopReason.OUT_OF_OPERATION_NUMBER:
-                    res = "Переход к несуществующей операции";
-                    break;
-                case PostMachineStopReason.REMOVE_NULL_LABEL:
-                    res = "Попытка стирания несуществующей метки";
-                    break;
-                case PostMachineStopReason.SET_EXISTING_LABEL:
-                    res = "Попытка установки метки в ячейку с меткой";
-                    break;
-                case PostMachineStopReason.STOP_OPERATION:
-                    res = "Вызвана команда останова";
-                    break;
-                case PostMachineStopReason.USER_INTERRUPT:
-                    res = "Вмешательство пользователя";
-                    break;
-                default:
-                    res = "Причина неизвестна";
-                    break;
-            }
+        //    switch (reason)
+        //    {
+        //        case PostMachineStopReason.OUT_OF_OPERATION_NUMBER:
+        //            res = "Переход к несуществующей операции";
+        //            break;
 
-            return res;
-        }
+        //        case PostMachineStopReason.REMOVE_NULL_LABEL:
+        //            res = "Попытка стирания несуществующей метки";
+        //            break;
+
+        //        case PostMachineStopReason.SET_EXISTING_LABEL:
+        //            res = "Попытка установки метки в ячейку с меткой";
+        //            break;
+
+        //        case PostMachineStopReason.STOP_OPERATION:
+        //            res = "Вызвана команда останова";
+        //            break;
+
+        //        case PostMachineStopReason.USER_INTERRUPT:
+        //            res = "Вмешательство пользователя";
+        //            break;
+
+        //        default:
+        //            res = "Причина неизвестна";
+        //            break;
+        //    }
+
+        //    return res;
+        //}
 
         /// <summary>
         /// Производит попытку запуска работы абстрактного вычислителя.
@@ -328,26 +335,26 @@ namespace AbstractDevelop.controls.visuals
                 if (_state == VisualizerState.Executing)
                     throw new Exception("Машина уже запущена");
 
-                List<Operation> ops = PostTranslator.Translate(codeBox.Text);
-                _currentMachine.StartManual(ops);
+                //List<Operation> ops = PostTranslator.Translate(codeBox.Text);
+                //_currentMachine.StartManual(ops);
                 ChangeState(VisualizerState.Executing);
                 BigInteger cell = tapeVisualizer.GetCurrentCell();
                 tapeVisualizer.Navigate(cell);
                 tapeVisualizer.InputMode = false;
-                _currentMachine.Position = cell;
+                //_currentMachine.Position = cell;
                 _breakPoints = codeBox.GetCommandBreakPoints();
                 codeBox.ReadOnly = true;
-                _currentMachine.OnOperationExecuted += _currentMachine_OnOperationExecuted;
-                _currentMachine.OnMachineStopped += _currentMachine_OnMachineStopped;
+                //_currentMachine.OnOperationExecuted += _currentMachine_OnOperationExecuted;
+                //_currentMachine.OnMachineStopped += _currentMachine_OnMachineStopped;
                 tapeVisualizer.OnNavigationEnd += tapeVisualizer_OnNavigationEnd;
-                if (ops.Count != 0) codeBox.SetExecutionCommand(1);
+                //if (ops.Count != 0) codeBox.SetExecutionCommand(1);
 
                 ExecuteNext();
             }
             catch (InvalidOperationTextException ex)
             {
                 ChangeState(VisualizerState.Stopped);
-                if(Debug != null)
+                if (Debug != null)
                 {
                     Debug.AddMessage(_project.Name + " - Машина Поста", "При запуске машины возникли ошибки");
                     int n = ex.Data.Count;
@@ -367,7 +374,7 @@ namespace AbstractDevelop.controls.visuals
                 _currentMachine.Stop();
                 ChangeState(VisualizerState.Stopped);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new InvalidOperationException(string.Format("Невозможно остановить машину: \"{0}\"", ex.Message), ex);
             }
@@ -381,9 +388,8 @@ namespace AbstractDevelop.controls.visuals
                     throw new Exception("Машина не запущена");
 
                 ChangeState(VisualizerState.Paused);
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new InvalidOperationException(string.Format("Невозможно приостановить работу машины: \"{0}\"", ex.Message), ex);
             }
@@ -399,7 +405,7 @@ namespace AbstractDevelop.controls.visuals
                 ChangeState(VisualizerState.Executing);
                 ExecuteNext(true);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new InvalidOperationException(string.Format("Невозможно возобновить работу машины: \"{0}\"", ex.Message), ex);
             }
@@ -434,16 +440,15 @@ namespace AbstractDevelop.controls.visuals
                 if (_state != VisualizerState.Stopped) return;
 
                 SaveProjectCode();
-                _currentMachine.Position = tapeVisualizer.GetCurrentCell();
+
+                _currentMachine.Tape.Position = (int)tapeVisualizer.GetCurrentCell();
                 SaveMachineState();
-                if (DataSaved != null)
-                    DataSaved(this, EventArgs.Empty);
+                DataSaved?.Invoke(this, EventArgs.Empty);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new InvalidOperationException(string.Format("Невозможно сохранить состояние: \"{0}\"", ex.Message), ex);
             }
-            
         }
     }
 }

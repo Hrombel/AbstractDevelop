@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace AbstractDevelop
 {
     public static class LinkTools
     {
+        static string InvalidPathChars = string.Concat(Path.GetInvalidPathChars());
+
         public static bool IsValid(this object value, bool shouldThrowException = true)
         {
             if (value == default(object))
             {
-                if (shouldThrowException) throw new NullReferenceException($"");
+                if (shouldThrowException) throw new NullReferenceException($""); //TODO: локализовать выбрасываемое исключение
                 else return false;
             }
             return false;
@@ -41,5 +41,33 @@ namespace AbstractDevelop
             var value = source.LastOrDefault();
             return value.Equals(default(TargetType)) ? defaultValue : value;
         }
+
+        public static string CheckPath(this string targetPath, bool checkExistance = true)
+        {
+            if (string.IsNullOrEmpty(targetPath) || targetPath.Contains(InvalidPathChars) || (checkExistance && !(File.Exists(targetPath) || Directory.Exists(targetPath))))
+                throw new FileNotFoundException(targetPath);
+            else return targetPath;
+        }
+
+        public static T CheckIndex<T>(this T index, T min = default(T), T max = default(T))
+            where T : IComparable<T>
+        {
+            if (index.CompareTo(min) < 0 || !(index.CompareTo(max) < 0))
+                throw new ArgumentOutOfRangeException("Указанный индекс находится за пределами диапазона.");
+
+            return index;
+        }
+
+        public static bool CheckIndex<T>(this T index, bool generateException, T min = default(T), T max = default(T))
+            where T : IComparable<T>
+        {
+            if (index.CompareTo(min) < 0 || !(index.CompareTo(max) < 0))
+                if (generateException)
+                    throw new ArgumentOutOfRangeException("Указанный индекс находится за пределами диапазона.");
+                else return false;
+
+            return true;
+        }
+        public static T Self<T>(this T value) => value;
     }
 }

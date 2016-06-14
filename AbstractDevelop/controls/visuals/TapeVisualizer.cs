@@ -1,16 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Numerics;
+﻿using AbstractDevelop.machines;
+using AbstractDevelop.Machines;
 using AbstractDevelop.Properties;
-using AbstractDevelop.machines.tape;
-using AbstractDevelop.machines;
+using System;
+using System.Drawing;
+using System.Numerics;
+using System.Windows.Forms;
 
 namespace AbstractDevelop.controls.visuals
 {
@@ -19,107 +13,36 @@ namespace AbstractDevelop.controls.visuals
     /// </summary>
     public partial class TapeVisualizer : UserControl
     {
-        /// <summary>
-        /// Возникает после сдвига каждой ячейки через левый край компонента.
-        /// </summary>
-        public event EventHandler PositionChanged;
-        /// <summary>
-        /// Возникает после изменения состояния ленты.
-        /// </summary>
-        public event EventHandler TapeUpdated;
+        #region [События]
+
         /// <summary>
         /// Возникает после остановки анимации навигации к ячейке.
         /// </summary>
         public event EventHandler OnNavigationEnd;
 
-        private const int FRAME_RATE = 40;
-
-        private Bitmap _cell;
-        private Bitmap _cellChecked;
-        private Bitmap _cellFocused;
-        private int _numHeight;
-
-        private Bitmap _canvas;
-        private Timer _timer;
-
-        private double _velocity;
-        private BigInteger _pos;
-        private BigInteger _lastIndex;
-        private int _mouseX;
-        private bool _dragging;
-        private bool _mouseMoved;
-
-        private bool _navigating;
-        private BigInteger _target;
-
-        private Tape _tape;
-
-        private BigInteger _focusCell;
-        private bool _focusedExists;
-
-        private SymbolSet _chars;
-        private SymbolSet _externalSymbolSet;
-
-        public TapeVisualizer()
-        {
-            CreateCanvas();
-            ClearCanvas();
-            CreateCellBitmap();
-            InitializeComponent();
-            _velocity = 0;
-            _pos = 0;
-            _dragging = false;
-            _mouseMoved = false;
-            _timer = new Timer();
-            _timer.Interval = (int)Math.Round(1000.0 / (double)FRAME_RATE);
-            _timer.Tick += _timer_Tick;
-            _timer.Enabled = true;
-            Navigate(0);
-
-            InputMode = true;
-
-            _focusCell = 0;
-            _focusedExists = false;
-            _lastIndex = GetCellIndex(_pos);
-
-            _chars = new SymbolSet();
-        }
-        ~TapeVisualizer()
-        {
-            _timer.Tick -= _timer_Tick;
-            _timer.Enabled = false;
-            _timer.Dispose();
-            _timer = null;
-            DisposeCanvas();
-            DisposeCellBitmap();
-        }
+        /// <summary>
+        /// Возникает после сдвига каждой ячейки через левый край компонента.
+        /// </summary>
+        public event EventHandler PositionChanged;
 
         /// <summary>
-        /// Получает рекомендуемую скорость прокрутки ленты на одну ячейку.
+        /// Возникает после изменения состояния ленты.
         /// </summary>
-        public int RecommendedNavigationSpeed { get{return CellWidth >> 3;} }
+        public event EventHandler TapeUpdated;
+
+        #endregion
+        //TODO: реализовать поведение для ленты МП
+        #region [Свойства]
 
         /// <summary>
-        /// Устанавливает или задает внешнее множество символов. Если оно установлено, то символы, вводимые на ленту, кодируются в 
-        /// соответствии с указанным множеством. При любых изменениях значения этого поля состояние ленты обнуляется.
-        /// Изменения, внесенные во множество данной лентой, не отменяются.
+        /// Получает ширину одной ячейки.
         /// </summary>
-        public SymbolSet ExternalSymbolSet
-        {
-            get { return _externalSymbolSet; }
-            set
-            {
-                if(_tape != null) _tape.Clear();
-                _chars.Clear();
-                _externalSymbolSet = value;
-            }
-        }
-
+        public int CellWidth { get { return _cell.Width; } }
 
         /// <summary>
         /// Получает или задает текущую визуализируемую ленту.
         /// </summary>
-        public Tape CurrentTape
+        public Tape<char> CurrentTape
         {
             get
             {
@@ -127,7 +50,7 @@ namespace AbstractDevelop.controls.visuals
             }
             set
             {
-                if(_tape != null)
+                if (_tape != null)
                 {
                     _tape.Update -= _tape_Update;
                     this.MouseDown -= TapeVisualizer_MouseDown;
@@ -141,7 +64,7 @@ namespace AbstractDevelop.controls.visuals
                 DisposeCellBitmap();
                 CreateCellBitmap();
 
-                if(_tape != null)
+                if (_tape != null)
                 {
                     this.MouseDown += TapeVisualizer_MouseDown;
                     this.MouseUp += TapeVisualizer_MouseUp;
@@ -153,55 +76,20 @@ namespace AbstractDevelop.controls.visuals
             }
         }
 
-        private void _tape_Update(object sender, EventArgs e)
-        {
-            Redraw();
-            if (TapeUpdated != null)
-                TapeUpdated(this, EventArgs.Empty);
-        }
-
         /// <summary>
-        /// Устанавливает указанное значение в необходимую ячейку и производит контроль над
-        /// внутренним алфавитом ленты.
+        /// Устанавливает или задает внешнее множество символов. Если оно установлено, то символы, вводимые на ленту, кодируются в
+        /// соответствии с указанным множеством. При любых изменениях значения этого поля состояние ленты обнуляется.
+        /// Изменения, внесенные во множество данной лентой, не отменяются.
         /// </summary>
-        /// <param name="cell">Индекс ячейки.</param>
-        /// <param name="value">Устанавливаемое значение.</param>
-        private void SetChar(BigInteger cell, char value)
+        public SymbolSet ExternalSymbolSet
         {
-            if (_tape.Type == TapeType.TwoStated)
-                throw new Exception("Попытка установки символа на ленту, ячейки которой могут иметь только два состояния");
-
-            RemoveChar(cell);
-
-            int i;
-            if(_externalSymbolSet == null)
-                i = _chars.AddChar(value);
-            else
-                i = _externalSymbolSet.AddChar(value);
-
-            _tape.SetValue(cell, (byte)(i + 1));
-        }
-
-        /// <summary>
-        /// Удаляет символ из указанной ячейки и производит контроль над
-        /// внутренним алфавитом ленты.
-        /// </summary>
-        /// <param name="cell">Индекс ячейки, символ из которой удаляется.</param>
-        private void RemoveChar(BigInteger cell)
-        {
-            if (_tape.Type == TapeType.TwoStated)
-                throw new Exception("Попытка удаления символа с ленты, ячейки которой могут иметь только два состояния");
-
-            int val = _tape.GetValue(cell);
-            if (val == 0) return;
-            val--;
-
-            if (_externalSymbolSet == null)
-                _chars.RemoveCharAt(val);
-            else
-                _externalSymbolSet.RemoveCharAt(val);
-
-            _tape.SetValue(cell, 0);
+            get { return _externalSymbolSet; }
+            set
+            {
+                if (_tape != null) _tape.Clear();
+                _chars.Clear();
+                _externalSymbolSet = value;
+            }
         }
 
         /// <summary>
@@ -211,31 +99,48 @@ namespace AbstractDevelop.controls.visuals
         public bool InputMode { get; set; }
 
         /// <summary>
-        /// Получает ширину одной ячейки.
+        /// Получает рекомендуемую скорость прокрутки ленты на одну ячейку.
         /// </summary>
-        public int CellWidth { get { return _cell.Width; } }
+        public int RecommendedNavigationSpeed { get { return CellWidth >> 3; } }
 
-        protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
+        #endregion
+
+        #region [Поля]
+
+        private const int FRAME_RATE = 40;
+
+        private Bitmap _canvas;
+        private Bitmap _cell;
+        private Bitmap _cellChecked;
+        private Bitmap _cellFocused;
+        private SymbolSet _chars;
+        private bool _dragging;
+        private SymbolSet _externalSymbolSet;
+        private BigInteger _focusCell;
+        private bool _focusedExists;
+        private BigInteger _lastIndex;
+        private bool _mouseMoved;
+        private int _mouseX;
+        private bool _navigating;
+        private int _numHeight;
+        private BigInteger _pos;
+        private Tape<char> _tape;
+        private BigInteger _target;
+        private Timer _timer;
+
+        private double _velocity;
+
+        #endregion
+
+        #region [Методы]
+
+        /// <summary>
+        /// Получает индекс ячейки, в данный момент находящейся в центре компонента.
+        /// </summary>
+        public BigInteger GetCurrentCell()
         {
-            BigInteger index = GetCellIndex(_pos - GetCursorOffset());
-            BigInteger targetIndex = 0;
-
-            if (_navigating)
-            {
-                targetIndex = GetCellIndex(_target - GetCursorOffset());
-            }
-
-            base.SetBoundsCore(x, y, width, height, specified);
-
-            DisposeCanvas();
-            CreateCanvas();
-            CreateCellBitmap();
-
-            Redraw();
-
-            Navigate(index);
-            if (_navigating)
-                Navigate(targetIndex, (int)Math.Abs(_velocity));
+            BigInteger res = GetCellIndex(_pos - GetCursorOffset());
+            return res;
         }
 
         /// <summary>
@@ -268,14 +173,254 @@ namespace AbstractDevelop.controls.visuals
             _navigating = true;
         }
 
-        /// <summary>
-        /// Получает индекс ячейки, в данный момент находящейся в центре компонента.
-        /// </summary>
-        public BigInteger GetCurrentCell()
+        protected override void SetBoundsCore(int x, int y, int width, int height, BoundsSpecified specified)
         {
-            BigInteger res = GetCellIndex(_pos - GetCursorOffset());
+            BigInteger index = GetCellIndex(_pos - GetCursorOffset());
+            BigInteger targetIndex = 0;
 
-            return res;
+            if (_navigating)
+            {
+                targetIndex = GetCellIndex(_target - GetCursorOffset());
+            }
+
+            base.SetBoundsCore(x, y, width, height, specified);
+
+            DisposeCanvas();
+            CreateCanvas();
+            CreateCellBitmap();
+
+            Redraw();
+
+            Navigate(index);
+            if (_navigating)
+                Navigate(targetIndex, (int)Math.Abs(_velocity));
+        }
+
+        private void _tape_Update(object sender, EventArgs e)
+        {
+            Redraw();
+            if (TapeUpdated != null)
+                TapeUpdated(this, EventArgs.Empty);
+        }
+
+        private void _timer_Tick(object sender, EventArgs e)
+        {
+            if (_dragging)
+            {
+                _velocity = MousePosition.X - _mouseX;
+                _mouseX = MousePosition.X;
+
+                if (!_mouseMoved)
+                {
+                    if (Math.Abs(_velocity) > 0)
+                        _mouseMoved = true;
+                }
+            }
+            else
+            {
+                if (_velocity != 0)
+                {
+                    if (_navigating)
+                    {
+                        _pos += (int)_velocity;
+                        if (_velocity > 0)
+                        {
+                            if (_pos >= _target)
+                            {
+                                _pos = _target;
+                                _velocity = 0;
+                                _navigating = false;
+                                Redraw();
+                                if (OnNavigationEnd != null)
+                                    OnNavigationEnd(this, new EventArgs());
+                            }
+                        }
+                        else
+                        {
+                            if (_pos < _target)
+                            {
+                                _pos = _target;
+                                _velocity = 0;
+                                _navigating = false;
+                                Redraw();
+                                if (OnNavigationEnd != null)
+                                    OnNavigationEnd(this, new EventArgs());
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (Math.Abs(_velocity) < 1.0)
+                            _velocity = 0;
+                        else
+                            _velocity *= 0.9;
+                    }
+                }
+
+                if (_mouseMoved)
+                    _mouseMoved = false;
+            }
+
+            if (_velocity != 0)
+                Redraw();
+        }
+
+        /// <summary>
+        /// Вызывается по клику на ячейку ленты.
+        /// </summary>
+        /// <param name="index">Индекс ячейки, по которой был произведен клик.</param>
+        private void CellClick(BigInteger index)
+        {
+            CurrentTape.IsValid();
+
+            _focusedExists = true;
+            _focusCell = index;
+
+
+            //if (_tape.Type == TapeType.TwoStated)
+            //{
+            //    if (_tape.GetValue(index) != 0)
+            //        _tape.SetValue(index, 0);
+            //    else
+            //        _tape.SetValue(index, 1);
+            //}
+        }
+
+        /// <summary>
+        /// Стирает отрисованную на холсте графику.
+        /// </summary>
+        private void ClearCanvas()
+        {
+            using (Graphics g = Graphics.FromImage(_canvas))
+            {
+                g.Clear(Color.White);
+            }
+        }
+
+        /// <summary>
+        /// Создает холст для компонента с его размерами.
+        /// </summary>
+        private void CreateCanvas()
+        {
+            _canvas = new Bitmap(Size.Width, Size.Height);
+        }
+
+        /// <summary>
+        /// Обновляет текущее изображение ячейки, исходя из размеров компонента.
+        /// </summary>
+        private void CreateCellBitmap()
+        {
+            CurrentTape.IsValid();
+
+            int height = (int)((double)Size.Height * 0.8);
+            if (height == 0) height = 1;
+
+            _cell = ScaleByHeight(Resources.TapeCell, height);
+            _numHeight = Size.Height - height;
+
+            //_cellChecked = ScaleByHeight(Resources.TapeCellChecked, height);
+            _cellFocused = ScaleByHeight(Resources.TapeCellFocused, height);
+        }
+
+        /// <summary>
+        /// Удаляет холст компонента.
+        /// </summary>
+        private void DisposeCanvas()
+        {
+            _canvas.Dispose();
+            _canvas = null;
+        }
+
+        /// <summary>
+        /// Освобождает ресурсы, связанные с изображением ячейки.
+        /// </summary>
+        private void DisposeCellBitmap()
+        {
+            if (_cell == null)
+                throw new Exception("Попытка освобождения ресурсов несуществующего изображения ячейки.");
+
+            _cell.Dispose();
+            _cell = null;
+        }
+
+        /// <summary>
+        /// Отрисовывает ячейки в компоненте.
+        /// </summary>
+        /// <param name="offset">Смещение ячеек относительно текущего положения ленты (в пикселях).</param>
+        private void DrawCells(int offset)
+        {
+            CurrentTape.IsValid();
+
+            _pos += offset;
+
+            BigInteger i = GetCellIndex(_pos);
+            if (i != _lastIndex)
+            {
+                PositionChanged?.Invoke(this, EventArgs.Empty);
+                _lastIndex = i;
+            }
+
+            int p = (int)(_pos % _cell.Width);
+            if (p > 0)
+                p -= _cell.Width;
+
+            Font indexFont = new Font(FontFamily.GenericSerif, _numHeight > 1 ? _numHeight >> 1 : 1);
+            SolidBrush indexBrush = new SolidBrush(Color.Black);
+            RectangleF indexTextRect = new RectangleF((float)p, _cell.Height, _cell.Width, _numHeight);
+
+            Font valueFont = new Font(FontFamily.GenericSerif, _cell.Height > 1 ? _cell.Height >> 1 : 1);
+            SolidBrush valueBrush = new SolidBrush(Color.White);
+            RectangleF valueTextRect = new RectangleF((float)p, 0, _cell.Width, _cell.Height);
+
+            StringFormat format = new StringFormat();
+            format.Alignment = StringAlignment.Center;
+            format.LineAlignment = StringAlignment.Center;
+
+            SymbolSet currentSet = ExternalSymbolSet != null ? ExternalSymbolSet : _chars;
+            using (Graphics g = Graphics.FromImage(_canvas))
+            {
+                var value = char.MinValue;
+                while (p < Size.Width)
+                {
+                    if (_tape != null)
+                    {
+                        if (_focusedExists)
+                        {
+                            if (i == _focusCell)
+                                g.DrawImageUnscaled(_cellFocused, p, 0);
+                            else
+                                g.DrawImageUnscaled(_cell, p, 0);
+                        }
+                        else
+                            g.DrawImageUnscaled(_cell, p, 0);
+
+                        if ((value = CurrentTape[i]) != 0)
+                        {
+                            //TODO: разобраться в процессе работы данной строки
+                            g.DrawString(currentSet.GetChar(value - 1).ToString(), valueFont, valueBrush, valueTextRect, format);
+                        }
+
+                        //if (_tape.Type == TapeType.TwoStated)
+                        //{
+                        //    if (_tape.GetValue(i) == 0)
+                        //        g.DrawImageUnscaled(_cell, p, 0);
+                        //    else
+                        //        g.DrawImageUnscaled(_cellChecked, p, 0);
+                        //}
+                    }
+                    else
+                        g.DrawImageUnscaled(_cell, p, 0);
+
+                    g.DrawString(i.ToString(), indexFont, indexBrush, indexTextRect, format);
+
+                    indexTextRect.X += _cell.Width;
+                    valueTextRect.X += _cell.Width;
+                    p += _cell.Width;
+                    i++;
+                }
+                p = GetCursorOffset();
+                g.DrawLine(new Pen(Color.Red), p, 0, p, _cell.Height);
+            }
         }
 
         /// <summary>
@@ -317,61 +462,13 @@ namespace AbstractDevelop.controls.visuals
             return this.Width >> 1;
         }
 
-        private void TapeVisualizer_KeyDown(object sender, KeyEventArgs e)
+        /// <summary>
+        /// Снимает курсор фокуса с текущей выделенной ячейки.
+        /// </summary>
+        private void HideFocus()
         {
-            if(_tape.Type == TapeType.MultiStated)
-            {
-                if (_focusedExists)
-                {
-                    switch (e.KeyCode)
-                    {
-                        case Keys.Escape:
-                            HideFocus();
-                            break;
-                        case Keys.Back:
-                            if(_tape.GetValue(_focusCell) != 0)
-                            {
-                                RemoveChar(_focusCell);
-                                if (_tape.GetValue(_focusCell - 1) != 0)
-                                {
-                                    MoveFocusLeft();
-                                }
-                            }
-                            break;
-                        case Keys.Delete:
-                            if(_tape.GetValue(_focusCell) != 0)
-                            {
-                                RemoveChar(_focusCell);
-                                if (_tape.GetValue(_focusCell + 1) != 0)
-                                {
-                                    MoveFocusRight();
-                                }
-                            }
-                            break;
-                        case Keys.V:
-                            if (e.Control)
-                            {
-                                string data = Clipboard.GetText();
-                                if(data.Length == 1)
-                                    SetChar(_focusCell, data.ToCharArray()[0]);
-                            }
-
-                            break;
-                    }
-                }
-            }
-        }
-
-        private void TapeVisualizer_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            if(_tape.Type == TapeType.MultiStated)
-            {
-                if (_focusedExists)
-                {
-                    if (!IsInputKey(e.KeyChar))
-                        SetChar(_focusCell, e.KeyChar);
-                }
-            }
+            _focusedExists = false;
+            Redraw();
         }
 
         /// <summary>
@@ -388,19 +485,6 @@ namespace AbstractDevelop.controls.visuals
                    code == 27 || // Esc
                    code == 32 || // Space
                    code == 22; // Ctrl + V
-        }
-
-        private void TapeVisualizer_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
-        {
-            switch(e.KeyCode)
-            {
-                case Keys.Left:
-                    MoveFocusLeft();
-                    break;
-                case Keys.Right:
-                    MoveFocusRight();
-                    break;
-            }
         }
 
         /// <summary>
@@ -434,135 +518,6 @@ namespace AbstractDevelop.controls.visuals
         }
 
         /// <summary>
-        /// Снимает курсор фокуса с текущей выделенной ячейки.
-        /// </summary>
-        private void HideFocus()
-        {
-            _focusedExists = false;
-            Redraw();
-        }
-
-        private void TapeVisualizer_MouseUp(object sender, MouseEventArgs e)
-        {
-            if (!InputMode) return;
-
-            _navigating = false;
-            _dragging = false;
-
-            if(!_mouseMoved) // Событие клика...
-            {
-                if(e.Button == MouseButtons.Left) //...по ячейке.
-                {
-                    CellClick(GetCellIndex(_pos - PointToClient(MousePosition).X));
-
-                    Redraw();
-                }
-            }
-        }
-
-        private void TapeVisualizer_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (!InputMode) return;
-
-            _navigating = false;
-            _focusedExists = false;
-
-            if (e.Button == MouseButtons.Left)
-            {
-                _mouseX = MousePosition.X;
-                _dragging = true;
-                _velocity = 0;
-            }
-        }
-
-        /// <summary>
-        /// Вызывается по клику на ячейку ленты.
-        /// </summary>
-        /// <param name="index">Индекс ячейки, по которой был произведен клик.</param>
-        private void CellClick(BigInteger index)
-        {
-            if (_tape != null)
-            {
-                if (_tape.Type == TapeType.TwoStated)
-                {
-                    if (_tape.GetValue(index) != 0)
-                        _tape.SetValue(index, 0);
-                    else
-                        _tape.SetValue(index, 1);
-                }
-                else if(_tape.Type == TapeType.MultiStated)
-                {
-                    _focusedExists = true;
-                    _focusCell = index;
-                }
-            }
-            else
-                MessageBox.Show("Невозможно установить метку на ленту, поскольку она не определена");
-        }
-
-        private void _timer_Tick(object sender, EventArgs e)
-        {
-            if(_dragging)
-            {
-                _velocity = MousePosition.X - _mouseX;
-                _mouseX = MousePosition.X;
-
-                if(!_mouseMoved)
-                {
-                    if (Math.Abs(_velocity) > 0)
-                        _mouseMoved = true;
-                }
-            }
-            else
-            {
-                if(_velocity != 0)
-                {
-                    if(_navigating)
-                    {
-                        _pos += (int)_velocity;
-                        if(_velocity > 0)
-                        {
-                            if(_pos >= _target)
-                            {
-                                _pos = _target;
-                                _velocity = 0;
-                                _navigating = false;
-                                Redraw();
-                                if (OnNavigationEnd != null)
-                                    OnNavigationEnd(this, new EventArgs());
-                            }
-                        }
-                        else
-                        {
-                            if (_pos < _target)
-                            {
-                                _pos = _target;
-                                _velocity = 0;
-                                _navigating = false;
-                                Redraw();
-                                if (OnNavigationEnd != null)
-                                    OnNavigationEnd(this, new EventArgs());
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (Math.Abs(_velocity) < 1.0)
-                            _velocity = 0;
-                        else
-                            _velocity *= 0.9;
-                    }
-                }
-
-                if (_mouseMoved)
-                    _mouseMoved = false;
-            }
-
-            if (_velocity != 0)
-                Redraw();
-        }
-
-        /// <summary>
         /// Вызывает процедуру перерисовки текущего состояния.
         /// </summary>
         private void Redraw()
@@ -573,51 +528,25 @@ namespace AbstractDevelop.controls.visuals
         }
 
         /// <summary>
-        /// Создает холст для компонента с его размерами.
+        /// Удаляет символ из указанной ячейки и производит контроль над
+        /// внутренним алфавитом ленты.
         /// </summary>
-        private void CreateCanvas()
+        /// <param name="cell">Индекс ячейки, символ из которой удаляется.</param>
+        private void RemoveChar(BigInteger cell)
         {
-            _canvas = new Bitmap(Size.Width, Size.Height);
-        }
+            //if (_tape.Type == TapeType.TwoStated)
+            //    throw new Exception("Попытка удаления символа с ленты, ячейки которой могут иметь только два состояния");
 
-        /// <summary>
-        /// Удаляет холст компонента.
-        /// </summary>
-        private void DisposeCanvas()
-        {
-            _canvas.Dispose();
-            _canvas = null;
-        }
+            int val = CurrentTape[cell];
+            if (val == 0) return;
+            val--;
 
-        /// <summary>
-        /// Отображает графику, находящуюся на холсте.
-        /// </summary>
-        private void UpdateGraphics()
-        {
-            Invalidate();
-        }
+            if (_externalSymbolSet == null)
+                _chars.RemoveCharAt(val);
+            else
+                _externalSymbolSet.RemoveCharAt(val);
 
-        /// <summary>
-        /// Стирает отрисованную на холсте графику.
-        /// </summary>
-        private void ClearCanvas()
-        {
-            using (Graphics g = Graphics.FromImage(_canvas))
-            {
-                g.Clear(Color.White);
-            }
-        }
-
-        /// <summary>
-        /// Освобождает ресурсы, связанные с изображением ячейки.
-        /// </summary>
-        private void DisposeCellBitmap()
-        {
-            if (_cell == null)
-                throw new Exception("Попытка освобождения ресурсов несуществующего изображения ячейки.");
-
-            _cell.Dispose();
-            _cell = null;
+            CurrentTape[cell] = (char)0;
         }
 
         /// <summary>
@@ -642,104 +571,105 @@ namespace AbstractDevelop.controls.visuals
         }
 
         /// <summary>
-        /// Обновляет текущее изображение ячейки, исходя из размеров компонента.
+        /// Устанавливает указанное значение в необходимую ячейку и производит контроль над
+        /// внутренним алфавитом ленты.
         /// </summary>
-        private void CreateCellBitmap()
+        /// <param name="cell">Индекс ячейки.</param>
+        /// <param name="value">Устанавливаемое значение.</param>
+        private void SetChar(BigInteger cell, char value)
         {
-            int height = (int)((double)Size.Height * 0.8);
-            if (height == 0) height = 1;
+            //if (_tape.Type == TapeType.TwoStated)
+            //    throw new Exception("Попытка установки символа на ленту, ячейки которой могут иметь только два состояния");
 
-            _cell = ScaleByHeight(Resources.TapeCell, height);
-            _numHeight = Size.Height - height;
-            if(_tape != null)
+            RemoveChar(cell);
+
+            int i;
+            if (_externalSymbolSet == null)
+                i = _chars.AddChar(value);
+            else
+                i = _externalSymbolSet.AddChar(value);
+            CurrentTape[cell] = (char)(i + 1);
+        }
+
+        private void TapeVisualizer_KeyDown(object sender, KeyEventArgs e)
+        {
+
+            if (_focusedExists)
             {
-                if(_tape.Type == TapeType.TwoStated)
+                switch (e.KeyCode)
                 {
-                    _cellChecked = ScaleByHeight(Resources.TapeCellChecked, height);
-                }
-                else if(_tape.Type == TapeType.MultiStated)
-                {
-                    _cellFocused = ScaleByHeight(Resources.TapeCellFocused, height);
+                    case Keys.Escape:
+                        HideFocus();
+                        break;
+
+                    case Keys.Back:
+                        if (CurrentTape[_focusCell] != 0)
+                        {
+                            RemoveChar(_focusCell);
+                            if (CurrentTape[_focusCell - 1] != 0) MoveFocusLeft();
+                        }
+                        break;
+
+                    case Keys.Delete:
+                        if (CurrentTape[_focusCell] != 0)
+                        {
+                            RemoveChar(_focusCell);
+                            if (CurrentTape[_focusCell + 1] != 0) MoveFocusRight();
+                        }
+                        break;
+
+                    case Keys.V:
+                        if (e.Control)
+                        {
+                            string data = Clipboard.GetText();
+                            if (data.Length == 1)
+                                SetChar(_focusCell, data.ToCharArray()[0]);
+                        }
+
+                        break;
                 }
             }
         }
 
-        /// <summary>
-        /// Отрисовывает ячейки в компоненте.
-        /// </summary>
-        /// <param name="offset">Смещение ячеек относительно текущего положения ленты (в пикселях).</param>
-        private void DrawCells(int offset)
+        private void TapeVisualizer_KeyPress(object sender, KeyPressEventArgs e)
         {
-            _pos += offset;
-
-            BigInteger i = GetCellIndex(_pos);
-            if(i != _lastIndex)
+            if (_focusedExists)
             {
-                if (PositionChanged != null)
-                    PositionChanged(this, EventArgs.Empty);
-                _lastIndex = i;
+                if (!IsInputKey(e.KeyChar))
+                    SetChar(_focusCell, e.KeyChar);
             }
-            
-            int p = (int)(_pos % _cell.Width);
-            if (p > 0)
-                p -= _cell.Width;
+        }
 
-            Font indexFont = new Font(FontFamily.GenericSerif, _numHeight > 1 ? _numHeight >> 1 : 1);
-            SolidBrush indexBrush = new SolidBrush(Color.Black);
-            RectangleF indexTextRect = new RectangleF((float)p, _cell.Height, _cell.Width, _numHeight);
+        private void TapeVisualizer_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (!InputMode) return;
 
-            Font valueFont = new Font(FontFamily.GenericSerif, _cell.Height > 1 ? _cell.Height >> 1 : 1);
-            SolidBrush valueBrush = new SolidBrush(Color.White);
-            RectangleF valueTextRect = new RectangleF((float)p, 0, _cell.Width, _cell.Height);
+            _navigating = false;
+            _focusedExists = false;
 
-            StringFormat format = new StringFormat();
-            format.Alignment = StringAlignment.Center;
-            format.LineAlignment = StringAlignment.Center;
-
-            SymbolSet currentSet = ExternalSymbolSet != null ? ExternalSymbolSet : _chars;
-            using(Graphics g = Graphics.FromImage(_canvas))
+            if (e.Button == MouseButtons.Left)
             {
-                while(p < Size.Width)
+                _mouseX = MousePosition.X;
+                _dragging = true;
+                _velocity = 0;
+            }
+        }
+
+        private void TapeVisualizer_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (!InputMode) return;
+
+            _navigating = false;
+            _dragging = false;
+
+            if (!_mouseMoved) // Событие клика...
+            {
+                if (e.Button == MouseButtons.Left) //...по ячейке.
                 {
-                    if(_tape != null)
-                    {
-                        if(_tape.Type == TapeType.TwoStated)
-                        {
-                            if (_tape.GetValue(i) == 0)
-                                g.DrawImageUnscaled(_cell, p, 0);
-                            else
-                                g.DrawImageUnscaled(_cellChecked, p, 0);
-                        }
-                        else if(_tape.Type == TapeType.MultiStated)
-                        {
-                            if(_focusedExists)
-                            {
-                                if (i == _focusCell)
-                                    g.DrawImageUnscaled(_cellFocused, p, 0);
-                                else
-                                    g.DrawImageUnscaled(_cell, p, 0);
-                            }
-                            else
-                                g.DrawImageUnscaled(_cell, p, 0);
+                    CellClick(GetCellIndex(_pos - PointToClient(MousePosition).X));
 
-                            if(_tape.GetValue(i) != 0)
-                            {
-                                g.DrawString(currentSet.GetChar(_tape.GetValue(i) - 1).ToString(), valueFont, valueBrush, valueTextRect, format);
-                            }
-                        }
-                    }
-                    else
-                        g.DrawImageUnscaled(_cell, p, 0);
-
-                    g.DrawString(i.ToString(), indexFont, indexBrush, indexTextRect, format);
-
-                    indexTextRect.X += _cell.Width;
-                    valueTextRect.X += _cell.Width;
-                    p += _cell.Width;
-                    i++;
+                    Redraw();
                 }
-                p = GetCursorOffset();
-                g.DrawLine(new Pen(Color.Red), p, 0, p, _cell.Height);
             }
         }
 
@@ -748,5 +678,72 @@ namespace AbstractDevelop.controls.visuals
             e.Graphics.DrawImageUnscaled(_canvas, Point.Empty);
             e.Dispose();
         }
+
+        private void TapeVisualizer_PreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            switch (e.KeyCode)
+            {
+                case Keys.Left:
+                    MoveFocusLeft();
+                    break;
+
+                case Keys.Right:
+                    MoveFocusRight();
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Отображает графику, находящуюся на холсте.
+        /// </summary>
+        private void UpdateGraphics()
+        {
+            Invalidate();
+        }
+
+        #endregion
+
+        #region [Конструкторы]
+
+        public TapeVisualizer()
+        {
+            CreateCanvas();
+            ClearCanvas();
+            CreateCellBitmap();
+            InitializeComponent();
+            _velocity = 0;
+            _pos = 0;
+            _dragging = false;
+            _mouseMoved = false;
+            _timer = new Timer();
+            _timer.Interval = (int)Math.Round(1000.0 / (double)FRAME_RATE);
+            _timer.Tick += _timer_Tick;
+            _timer.Enabled = true;
+            Navigate(0);
+
+            InputMode = true;
+
+            _focusCell = 0;
+            _focusedExists = false;
+            _lastIndex = GetCellIndex(_pos);
+
+            _chars = new SymbolSet();
+        }
+
+        ~TapeVisualizer()
+        {
+            //TODO: разобраться в причинах караша студии в этой строке
+            //DisposeCanvas();
+            //DisposeCellBitmap();
+
+            //if (_timer == null) return;
+            //_timer.Tick -= _timer_Tick;
+            //_timer.Enabled = false;
+            //_timer.Dispose();
+            //_timer = null;
+            
+        }
+
+        #endregion
     }
 }

@@ -1,23 +1,5 @@
-﻿using AbstractDevelop.controls.ui.ceditor;
-using AbstractDevelop.controls.visuals;
-using AbstractDevelop.machines;
-using AbstractDevelop.machines.post;
-using AbstractDevelop.machines.registers;
-using AbstractDevelop.machines.regmachine;
-using AbstractDevelop.machines.tape;
-using AbstractDevelop.machines.turing;
-using ScintillaNET;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Numerics;
+﻿using System;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace AbstractDevelop

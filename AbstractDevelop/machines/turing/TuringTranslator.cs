@@ -1,10 +1,7 @@
 ﻿using AbstractDevelop.errors.dev;
-using AbstractDevelop.tools;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AbstractDevelop.machines.turing
 {
@@ -18,7 +15,7 @@ namespace AbstractDevelop.machines.turing
         /// </summary>
         /// <param name="operations">Список операций для машины Тьюринга.</param>
         /// <returns>Алфавит.</returns>
-        public static SymbolSet GetAlphabet(List<Operation> operations)
+        public static SymbolSet GetAlphabet(List<TuringOperation> operations)
         {
             List<TuringOperation> ops = operations.Cast<TuringOperation>().ToList();
 
@@ -26,10 +23,10 @@ namespace AbstractDevelop.machines.turing
 
             int i, j, n, m;
             n = ops.Count;
-            for(i = 0; i < n; i++)
+            for (i = 0; i < n; i++)
             {
                 m = ops[i].State.Converts.Length;
-                for(j = 0; j < m; j++)
+                for (j = 0; j < m; j++)
                 {
                     try
                     {
@@ -54,9 +51,9 @@ namespace AbstractDevelop.machines.turing
         private static void AddChars(SymbolSet al, char[] chars)
         {
             int n = chars.Length;
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
-                if(!al.CharExists(chars[i]))
+                if (!al.CharExists(chars[i]))
                 {
                     al.AddChar(chars[i]);
                 }
@@ -68,7 +65,7 @@ namespace AbstractDevelop.machines.turing
         /// </summary>
         /// <param name="source">Исходный текст программы.</param>
         /// <returns>Список сформированных команд для машины Тьюринга.</returns>
-        public static List<Operation> Translate(string source)
+        public static List<TuringOperation> Translate(string source)
         {
             if (source == null)
                 throw new ArgumentException("Исходный текст не может быть неопределенным");
@@ -77,7 +74,7 @@ namespace AbstractDevelop.machines.turing
 
             List<TuringOperation> result = GetOperations(source);
 
-            return result.Cast<Operation>().ToList();
+            return result.Cast<TuringOperation>().ToList();
         }
 
         /// <summary>
@@ -86,7 +83,7 @@ namespace AbstractDevelop.machines.turing
         /// <param name="src">Исходный текст программы.</param>
         private static List<TuringOperation> GetOperations(string src)
         {
-            return GetStates(src).ConvertAll<TuringOperation>(x => new TuringOperation(TuringOperationId.StateDefinition, x));
+            return GetStates(src).ConvertAll(x => TuringOperation.Create(TuringOperationId.StateDefinition, x) as TuringOperation);
         }
 
         /// <summary>
@@ -100,7 +97,7 @@ namespace AbstractDevelop.machines.turing
             int tapesCount = -1;
             int ptr = 0;
             TuringState st;
-            while(NextSymbol(src, ref ptr))
+            while (NextSymbol(src, ref ptr))
             {
                 st = GetState(src, ref ptr);
                 if (tapesCount != -1)
@@ -148,11 +145,11 @@ namespace AbstractDevelop.machines.turing
             NextSymbol(src, ref t);
             bool stateLeftBracket = src[t] == '{';
             if (stateLeftBracket) ptr = t;
-            
-            while(true)
+
+            while (true)
             {
                 ptr++;
-                if(!NextSymbol(src, ref ptr)) break;
+                if (!NextSymbol(src, ref ptr)) break;
 
                 if (src[ptr] == '}') break;
 
@@ -160,7 +157,7 @@ namespace AbstractDevelop.machines.turing
                 t = ptr + 1;
                 if (!NextSymbol(src, ref t))
                 {
-                    if(t == src.Length)
+                    if (t == src.Length)
                     {
                         if (stateLeftBracket)
                         {
@@ -170,7 +167,7 @@ namespace AbstractDevelop.machines.turing
                     }
                 }
 
-                if(src[t] == '}')
+                if (src[t] == '}')
                 {
                     if (!stateLeftBracket)
                         throw new InvalidOperationTextException("\"}\" не ожидается");
@@ -188,7 +185,7 @@ namespace AbstractDevelop.machines.turing
                         }
                         break;
                     }
-                    if(src[t] == ':')
+                    if (src[t] == ':')
                     {
                         if (stateLeftBracket)
                             throw new InvalidOperationTextException("\"}\" ожидалось");
@@ -249,19 +246,22 @@ namespace AbstractDevelop.machines.turing
             char[] dirs = GetSymbols(src, ref ptr);
             directions = new TuringPenDir[dirs.Length];
             int n = dirs.Length;
-            for (int i = 0; i < n; i++ )
+            for (int i = 0; i < n; i++)
             {
                 switch (char.ToUpper((char)dirs[i]))
                 {
                     case 'L':
                         directions[i] = TuringPenDir.Left;
                         break;
+
                     case 'R':
                         directions[i] = TuringPenDir.Right;
                         break;
+
                     case 'S':
                         directions[i] = TuringPenDir.Stay;
                         break;
+
                     default:
                         throw new InvalidOperationTextException("Неверная команда для читающей/пишущей головки");
                 }
@@ -360,6 +360,5 @@ namespace AbstractDevelop.machines.turing
             ptr = end - 1;
             return int.Parse(t);
         }
-
     }
 }

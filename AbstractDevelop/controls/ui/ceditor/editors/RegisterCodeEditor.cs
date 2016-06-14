@@ -13,105 +13,35 @@ namespace AbstractDevelop.controls.ui.ceditor.editors
     /// </summary>
     public class RegisterCodeEditor : CodeEditor
     {
+        #region [Свойства]
+
+        /// <summary>
+        /// Определяет, предназначен ли редактируемый код для параллельной МБР.
+        /// </summary>
+        public bool IsParallel
+        {
+            get { return _isParallel; }
+            set
+            {
+                if (_isParallel == value) return;
+
+                _isParallel = value;
+                if (_isParallel)
+                    SetParallel();
+                else
+                    SetClassic();
+            }
+        }
+
+        #endregion
+
+        #region [Поля]
+
         private bool _isParallel;
 
-        public RegisterCodeEditor()
-        {
-            _isParallel = false;
-            SetClassic();
+        #endregion
 
-            ScintillaInstance.Margins[0].Sensitive = true;
-
-            ScintillaInstance.TextChanged += TextChangedHandler;
-            ScintillaInstance.MarginClick += MarginClickHandler;
-        }
-        ~RegisterCodeEditor()
-        {
-            ScintillaInstance.TextChanged -= TextChangedHandler;
-            ScintillaInstance.MarginClick -= MarginClickHandler;
-        }
-
-        private void MarginClickHandler(object sender, MarginClickEventArgs e)
-        {
-            int i = ScintillaInstance.LineFromPosition(e.Position);
-
-            ToggleBreakPoint(i);
-        }
-
-        private void TextChangedHandler(object sender, EventArgs e)
-        {
-            MarkupLines(_isParallel);
-        }
-
-        /// <summary>
-        /// Возвращает список указанных пользователем точек останова ПМБР.
-        /// </summary>
-        /// <returns>Массив точек останова.</returns>
-        public List<RegisterBreakPoint> GetParallelBreakPoints()
-        {
-            if (!_isParallel) throw new InvalidOperationException("Редактор не находится в режиме ПМБР");
-
-            Scintilla scintilla = ScintillaInstance;
-
-            Regex regex = new Regex(@"unit\s+([a-zA-Z\d]+)");
-            Match match = regex.Match(scintilla.Text);
-            if (!match.Success) throw new Exception("Определение модуля не найдено");
-
-            int[] lines = base.GetBreakPoints();
-            int n = lines.Length;
-            List<RegisterBreakPoint> result = new List<RegisterBreakPoint>(n);
-
-            string unit = match.Groups[1].Value;
-            string name;
-            int cmd;
-            for(int i = 0; i < n; i++)
-            {
-                name = GetProgramNameFromLine(lines[i]);
-                cmd = int.Parse(scintilla.Lines[lines[i]].MarginText);
-
-                result.Add(new RegisterBreakPoint() { Program = unit + '.' + name, Command = cmd });
-            }
-            
-            return result;
-        }
-
-        /// <summary>
-        /// Возвращает массив указанных пользователем точек останова классической МБР.
-        /// </summary>
-        /// <returns>Массив номеров команд, в которых установлены точки останова.</returns>
-        public int[] GetClassicBreakPoints()
-        {
-            if (_isParallel) throw new InvalidOperationException("Редактор находится не в режиме классической МБР");
-
-            int[] result = base.GetBreakPoints();
-
-            Scintilla scintilla = ScintillaInstance;
-
-            return Array.ConvertAll<int, int>(result, x => int.Parse(scintilla.Lines[x].MarginText));
-        }
-
-        /// <summary>
-        /// Возвращает название программы, тело которой содержит указанную строку.
-        /// </summary>
-        /// <param name="line">Индекс строки.</param>
-        /// <returns>Строка, представляющая название программы.</returns>
-        private string GetProgramNameFromLine(int line)
-        {
-            Regex regex = new Regex(@"(program|entry)\s+([a-zA-Z\d]+)");
-
-            Scintilla scintilla = ScintillaInstance;
-            Match m;
-            while(line > 0)
-            {
-                line--;
-
-                m = regex.Match(scintilla.Lines[line].Text);
-                if(m.Success)
-                    return m.Groups[2].Value;
-            }
-
-            throw new Exception("Указанная строка не принадлежит ни одной программе");
-        }
+        #region [Методы]
 
         /// <summary>
         /// Выполняет поиск строки, содержащей указанную команду для ПМБР.
@@ -140,7 +70,7 @@ namespace AbstractDevelop.controls.ui.ceditor.editors
             e = scintilla.LineFromPosition(e);
 
             string str = command.ToString();
-            for(int i = s; i <= e; i++)
+            for (int i = s; i <= e; i++)
             {
                 if (scintilla.Lines[i].MarginText == str)
                     return i;
@@ -163,9 +93,86 @@ namespace AbstractDevelop.controls.ui.ceditor.editors
 
             string txt = command.ToString();
             int i = ScintillaInstance.Lines.ToList().FindIndex(x => x.MarginText == txt);
-            if(i == -1) throw new ArgumentException("Указанной команды не существует");
+            if (i == -1) throw new ArgumentException("Указанной команды не существует");
 
             return i;
+        }
+
+        /// <summary>
+        /// Возвращает массив указанных пользователем точек останова классической МБР.
+        /// </summary>
+        /// <returns>Массив номеров команд, в которых установлены точки останова.</returns>
+        public int[] GetClassicBreakPoints()
+        {
+            if (_isParallel) throw new InvalidOperationException("Редактор находится не в режиме классической МБР");
+
+            int[] result = base.GetBreakPoints();
+
+            Scintilla scintilla = ScintillaInstance;
+
+            return Array.ConvertAll<int, int>(result, x => int.Parse(scintilla.Lines[x].MarginText));
+        }
+
+        /// <summary>
+        /// Возвращает список указанных пользователем точек останова ПМБР.
+        /// </summary>
+        /// <returns>Массив точек останова.</returns>
+        public List<RegisterBreakPoint> GetParallelBreakPoints()
+        {
+            if (!_isParallel) throw new InvalidOperationException("Редактор не находится в режиме ПМБР");
+
+            Scintilla scintilla = ScintillaInstance;
+
+            Regex regex = new Regex(@"unit\s+([a-zA-Z\d]+)");
+            Match match = regex.Match(scintilla.Text);
+            if (!match.Success) throw new Exception("Определение модуля не найдено");
+
+            int[] lines = base.GetBreakPoints();
+            int n = lines.Length;
+            List<RegisterBreakPoint> result = new List<RegisterBreakPoint>(n);
+
+            string unit = match.Groups[1].Value;
+            string name;
+            int cmd;
+            for (int i = 0; i < n; i++)
+            {
+                name = GetProgramNameFromLine(lines[i]);
+                cmd = int.Parse(scintilla.Lines[lines[i]].MarginText);
+
+                result.Add(new RegisterBreakPoint() { Program = unit + '.' + name, Command = cmd });
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Возвращает название программы, тело которой содержит указанную строку.
+        /// </summary>
+        /// <param name="line">Индекс строки.</param>
+        /// <returns>Строка, представляющая название программы.</returns>
+        private string GetProgramNameFromLine(int line)
+        {
+            Regex regex = new Regex(@"(program|entry)\s+([a-zA-Z\d]+)");
+
+            Scintilla scintilla = ScintillaInstance;
+            Match m;
+            while (line > 0)
+            {
+                line--;
+
+                m = regex.Match(scintilla.Lines[line].Text);
+                if (m.Success)
+                    return m.Groups[2].Value;
+            }
+
+            throw new Exception("Указанная строка не принадлежит ни одной программе");
+        }
+
+        private void MarginClickHandler(object sender, MarginClickEventArgs e)
+        {
+            int i = ScintillaInstance.LineFromPosition(e.Position);
+
+            ToggleBreakPoint(i);
         }
 
         /// <summary>
@@ -176,11 +183,11 @@ namespace AbstractDevelop.controls.ui.ceditor.editors
         {
             Scintilla scintilla = ScintillaInstance;
 
-            if(parallel)
+            if (parallel)
             {
                 int c = 1;
                 int n = scintilla.Lines.Count;
-                for(int i = 0; i < n; i++)
+                for (int i = 0; i < n; i++)
                 {
                     scintilla.Lines[i].MarginStyle = Style.LineNumber;
                     if (scintilla.Lines[i].Text.Contains(")"))
@@ -270,22 +277,32 @@ namespace AbstractDevelop.controls.ui.ceditor.editors
             scintilla.SetKeywords(1, "Z S T J s G P I O");
         }
 
-        /// <summary>
-        /// Определяет, предназначен ли редактируемый код для параллельной МБР.
-        /// </summary>
-        public bool IsParallel
+        private void TextChangedHandler(object sender, EventArgs e)
         {
-            get { return _isParallel; }
-            set
-            {
-                if (_isParallel == value) return;
-
-                _isParallel = value;
-                if (_isParallel)
-                    SetParallel();
-                else
-                    SetClassic();
-            }
+            MarkupLines(_isParallel);
         }
+
+        #endregion
+
+        #region [Конструкторы]
+
+        public RegisterCodeEditor()
+        {
+            _isParallel = false;
+            SetClassic();
+
+            ScintillaInstance.Margins[0].Sensitive = true;
+
+            ScintillaInstance.TextChanged += TextChangedHandler;
+            ScintillaInstance.MarginClick += MarginClickHandler;
+        }
+
+        ~RegisterCodeEditor()
+        {
+            ScintillaInstance.TextChanged -= TextChangedHandler;
+            ScintillaInstance.MarginClick -= MarginClickHandler;
+        }
+
+        #endregion
     }
 }

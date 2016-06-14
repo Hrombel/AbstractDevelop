@@ -1,14 +1,6 @@
-﻿using System;
+﻿using AbstractDevelop.Properties;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using AbstractDevelop.machines;
-using AbstractDevelop.Properties;
 
 namespace AbstractDevelop.controls.menus.project.items
 {
@@ -33,7 +25,7 @@ namespace AbstractDevelop.controls.menus.project.items
             get { return MachineId.Turing; }
         }
 
-        public Dictionary<string, bool> Settings
+        public Dictionary<string, object> Settings
         {
             get { return null; }
         }

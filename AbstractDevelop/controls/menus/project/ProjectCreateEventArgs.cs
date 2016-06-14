@@ -1,10 +1,4 @@
-﻿using AbstractDevelop.controls.visuals;
-using AbstractDevelop.projects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace AbstractDevelop.controls.menus.project
 {
@@ -14,7 +8,7 @@ namespace AbstractDevelop.controls.menus.project
     public class ProjectCreateEventArgs : EventArgs
     {
         private AbstractProject _project;
-             
+
         /// <summary>
         /// Инициализирует новый экземпляр аргумента указанными параметрами.
         /// </summary>

@@ -1,7 +1,4 @@
-﻿using AbstractDevelop.machines.tape;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Numerics;
 
 namespace AbstractDevelop.Machines.Post
@@ -41,7 +38,7 @@ namespace AbstractDevelop.Machines.Post
     /// Реализация машины Поста
     /// </summary>
     public class PostMachine :
-        AbstractMachine<PostOperationId, BigInteger, Tape>
+        AbstractMachine<PostOperationId, BigInteger, Tape<bool>>
     {
         /// <summary>
         /// Лента с даннымми
@@ -49,31 +46,31 @@ namespace AbstractDevelop.Machines.Post
         /// <remarks>
         /// Рекомендуется использовать кеширование при многократном доступе к данному ресурсу
         /// </remarks> 
-        public Tape Tape { get { return Storages[0]; } }
+        public Tape<bool> Tape { get { return Storages[0]; } }
 
         public override string Name => "Машина Поста";
 
-        public PostMachine() : base()
+        public PostMachine(bool debugMode = true) : base()
         {
             OperationPostprocess += (operation) => {
                 // переход к команде, указанной в аргументе 
                 // (кроме операции условного перехода)
                 if (operation.Id != PostOperationId.Decision && operation.Args.Length > 0)
-                    Operations.Next = operation.Args.Last();
+                    Operations.Goto((int)operation.Args.Last());
             };
 
             Operations.Definitions.
                 AddChain(PostOperationId.Left,      (args) => Tape.Position--).
                 AddChain(PostOperationId.Right,     (args) => Tape.Position++).
-                AddChain(PostOperationId.Place,     (args) => Tape.CurrentValue = 0).
-                AddChain(PostOperationId.Erase,     (args) => Tape.CurrentValue = 1).
+                AddChain(PostOperationId.Place,     (args) => Tape.Current = true).
+                AddChain(PostOperationId.Erase,     (args) => Tape.Current = false).
                 AddChain(PostOperationId.Stop,      (args) => Stop(StopReason.Result)).
-                AddChain(PostOperationId.Decision,  (args) => Tape.Position = (int)args.TryGetArg(Tape.CurrentValue));
+                AddChain(PostOperationId.Decision,  (args) => Tape.Position = args[Tape.Current? 1 : 0]);
 
-            Tape.DebugInfo.Enabled = true;
+            Tape.DebugInfo.Enabled = debugMode;
             Tape.DebugInfo.SituationHandler += (o, n, info) =>  // o = old, n = new
             {                                                   // info = TapeDebugInfo
-                if (o == n) info.Output.WriteLine(n == 1? 
+                if (o == n) info.Output.WriteLine(n == true? 
                     "Попытка установки метки в отмеченную ячейку" :
                     "Попытка стирания несуществующей метки");
             };

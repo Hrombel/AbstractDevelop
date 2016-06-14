@@ -6,7 +6,12 @@ namespace AbstractDevelop.Machines
 {
     public abstract class AbstractMachine<OperationCode, ArgumentType, StorageType> :
         AbstractMachine<Operation<OperationCode, ArgumentType>, OperationCode, ArgumentType, StorageType>
-    { }
+    {
+        public override ISourceTranslator<Operation<OperationCode, ArgumentType>, OperationCode, ArgumentType> SourceTranslator { get; protected set; }
+            
+    }
+
+    
 
     public abstract partial class AbstractMachine<OperationType, OperationCode, ArgumentType, StorageType> :
         ISerializable, IDisposable
@@ -25,6 +30,15 @@ namespace AbstractDevelop.Machines
         public delegate void OperationProcess(OperationType operation);
 
         #endregion [Список делегатов]
+
+        public class ValueEventArgs
+        {
+            public ArgumentType Value { get; set; }
+        }
+
+        public delegate void ValueEventHandler(object sender, ValueEventArgs e);
+
+        public event ValueEventHandler ValueIn, ValueOut;
 
         /// <summary>
         /// Происходит перед запуском абстрактной машины
@@ -87,6 +101,8 @@ namespace AbstractDevelop.Machines
 
         #endregion [Состояниие]
 
+        public abstract ISourceTranslator<OperationType, OperationCode, ArgumentType> SourceTranslator { get; protected set; }
+
         /// <summary>
         /// Поддерживаются ли данной абстрактной машиной точки останова
         /// </summary>
@@ -106,29 +122,43 @@ namespace AbstractDevelop.Machines
 
         public virtual void Start(bool byStepMode = false)
         {
+            IsActive = true;
             if (byStepMode)
                 Step();
             else
                 while (Step()) ; //TODO: добавить автообработку перехода на следующую операцию
+
+        }
+
+        public virtual void Pause() 
+        {
+        }
+
+        public virtual void Continue()
+        {
         }
 
         public virtual bool Step(bool shouldGenerateEvents = true)
         {
+            Operations.MoveNext();
+
             var isSucceded = false;
-            var operation = default(OperationType); //TODO: реализовать выборку операций
+            var operation = Operations.Current; //TODO: реализовать выборку операций
 
             if (IsActive)
                 try
                 {
-                    // вызов преобработки выполняемой операции
-                    OperationPreprocess?.Invoke(operation);
                     // проверка на возможность выполнения
                     if (operation == default(OperationType))
-                        Stop(StopReason.WrongCommand, "Неизвестная операция (null-ref)");
+                        Stop(StopReason.WrongCommand, "Команды выполнены");
                     else
+                    {
+                        // вызов преобработки выполняемой операции
+                        OperationPreprocess?.Invoke(operation);
                         isSucceded = Operations.Execute(operation);
-                    // вызов постобработки выполненной операции
-                    OperationPostprocess?.Invoke(operation);
+                        // вызов постобработки выполненной операции
+                        OperationPostprocess?.Invoke(operation);
+                    }
                 }
                 // во время выполнения возникло исключение, порожденное частью абстрактной машины
                 catch (AbstractMachineExcepton ex) { Stop(StopReason.Exception, ex.Message); }
@@ -152,7 +182,23 @@ namespace AbstractDevelop.Machines
                 // TODO: доделать операцию останова
                 OnStopped?.Invoke(this, default(EventArgs));
             }
-            else { }
+            else {
+                // TODO: случай, когда машина уже остановлена
+            }
+        }
+
+        public ArgumentType ReadInput()
+        {
+            var reference = new ValueEventArgs();
+            ValueIn?.Invoke(this, reference);
+
+            return reference.Value;
+        }
+
+        public void WriteOutput(ArgumentType value)
+        {
+            var reference = new ValueEventArgs() { Value = value };
+            ValueOut?.Invoke(this, reference);
         }
 
         #region [Реализация интерфейсов]

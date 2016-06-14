@@ -1,14 +1,7 @@
-﻿using System;
+﻿using AbstractDevelop.Properties;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using AbstractDevelop.machines;
-using AbstractDevelop.Properties;
 
 namespace AbstractDevelop.controls.menus.project.items
 {
@@ -17,11 +10,11 @@ namespace AbstractDevelop.controls.menus.project.items
     /// </summary>
     public partial class RegisterMachineProjectItem : UserControl, IProjectMenuItem
     {
-        private Dictionary<string, bool> _settings;
+        private Dictionary<string, object> _settings;
 
         public RegisterMachineProjectItem()
         {
-            _settings = new Dictionary<string, bool>();
+            _settings = new Dictionary<string, object>();
             InitializeComponent();
             browser.DocumentText = Resources.RegisterInfo;
 
@@ -29,6 +22,7 @@ namespace AbstractDevelop.controls.menus.project.items
             classicBtn.CheckedChanged += CheckedHandler;
             parallelBtn.CheckedChanged += CheckedHandler;
         }
+
         ~RegisterMachineProjectItem()
         {
             classicBtn.CheckedChanged -= CheckedHandler;
@@ -50,7 +44,7 @@ namespace AbstractDevelop.controls.menus.project.items
             get { return MachineId.Register; }
         }
 
-        public Dictionary<string, bool> Settings
+        public Dictionary<string, object> Settings
         {
             get { return _settings; }
         }

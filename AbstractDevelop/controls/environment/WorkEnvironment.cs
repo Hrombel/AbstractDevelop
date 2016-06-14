@@ -1,28 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using AbstractDevelop.controls.environment.toolpanel;
-using AbstractDevelop.machines.post;
+﻿using AbstractDevelop.controls.environment.toolpanel;
 using AbstractDevelop.controls.visuals;
-using AbstractDevelop.machines.turing;
-using AbstractDevelop.machines.regmachine;
-using AbstractDevelop.projects;
-using AbstractDevelop.machines;
+using System;
+using System.Windows.Forms;
 
 namespace AbstractDevelop.controls.environment
 {
     /// <summary>
     /// Представляет рабочую среду пользователя для взаимодействия с абстрактными вычислителями.
     /// </summary>
-    public partial class WorkEnvironment : UserControl
+    public partial class WorkEnvironment :
+        UserControl
     {
-
         public WorkEnvironment()
         {
             InitializeComponent();
@@ -31,6 +19,7 @@ namespace AbstractDevelop.controls.environment
             toolPanel.OnButtonPressed += toolPanel_OnButtonPressed;
             visualsCtrl.CurrentVisualChanged += visualsCtrl_CurrentVisualChanged;
         }
+
         ~WorkEnvironment()
         {
             visualsCtrl.CurrentVisualChanged -= visualsCtrl_CurrentVisualChanged;
@@ -42,11 +31,16 @@ namespace AbstractDevelop.controls.environment
         /// </summary>
         public void Save()
         {
-            if(visualsCtrl.CurrentVisualizer != null)
+            if (visualsCtrl.CurrentVisualizer != null)
             {
                 visualsCtrl.CurrentVisualizer.SaveState();
                 visualsCtrl.CurrentVisualizer.CurrentProject.Save();
             }
+        }
+
+        public void Load()
+        {
+            (visualsCtrl.CurrentVisualizer as RiscVisualizer)?.LoadCode();
         }
 
         /// <summary>
@@ -67,7 +61,7 @@ namespace AbstractDevelop.controls.environment
 
             UpdateToolState();
 
-            if(visualsCtrl.CurrentVisualizer != null)
+            if (visualsCtrl.CurrentVisualizer != null)
                 visualsCtrl.CurrentVisualizer.OnStateChanged += CurrentVisualizer_OnStateChanged;
         }
 
@@ -76,7 +70,7 @@ namespace AbstractDevelop.controls.environment
         /// </summary>
         private void UpdateToolState()
         {
-            if(visualsCtrl.CurrentVisualizer != null)
+            if (visualsCtrl.CurrentVisualizer != null)
             {
                 toolPanel.Enabled = true;
                 switch (visualsCtrl.CurrentVisualizer.State)
@@ -84,9 +78,11 @@ namespace AbstractDevelop.controls.environment
                     case VisualizerState.Paused:
                         toolPanel.PerformClick(ToolPanelButton.Pause);
                         break;
+
                     case VisualizerState.Executing:
                         toolPanel.PerformClick(ToolPanelButton.Play);
                         break;
+
                     case VisualizerState.Stopped:
                         toolPanel.PerformClick(ToolPanelButton.Stop);
                         break;
@@ -128,11 +124,11 @@ namespace AbstractDevelop.controls.environment
             if (project == null)
                 throw new ArgumentNullException("Открываемый проект не может быть неопределенным");
 
-            IMachineVisualizer vis = visualsCtrl.GetOpenedProject(project.ProjectDirectory, project.Name);
+            IMachineVisualizer vis = visualsCtrl.GetOpenedProject(project.ParentFolder, project.Name);
             if (vis != null)
                 visualsCtrl.CloseVisualizer(vis);
-            
-            switch(project.Machine)
+
+            switch (project.Type)
             {
                 case MachineId.Post:
                     {
@@ -149,6 +145,12 @@ namespace AbstractDevelop.controls.environment
                         visualsCtrl.AddVisualizer(new RegisterMachineVisualizer() { CurrentProject = project, Debug = debug });
                         break;
                     }
+                case MachineId.Risc:
+                    {
+                        visualsCtrl.AddVisualizer(new RiscVisualizer() { CurrentProject = project, Debug = debug });
+                        break;
+                    }
+
                 default:
                     throw new ArgumentException("Невозможно открыть проект, поскольку он имеет неизвестный тип абстрактной машины");
             }
@@ -187,7 +189,7 @@ namespace AbstractDevelop.controls.environment
                         }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 e.Success = false;
             }

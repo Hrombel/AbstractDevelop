@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using AbstractDevelop.controls.menus.project;
+﻿using AbstractDevelop.controls.menus.project;
 using AbstractDevelop.controls.menus.project.items;
-using AbstractDevelop.projects;
-using AbstractDevelop.machines;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
+using System.Windows.Forms;
 
 namespace AbstractDevelop.controls.menus
 {
@@ -45,7 +38,7 @@ namespace AbstractDevelop.controls.menus
             _folderDialog.Dispose();
             _folderDialog = null;
             _selected = null;
-            while(_projects.Count > 0)
+            while (_projects.Count > 0)
             {
                 _projects.RemoveAt(0);
                 (itemsHolder.Controls[0] as Button).Click -= btn_Click;
@@ -70,6 +63,7 @@ namespace AbstractDevelop.controls.menus
             AddProject(new PostMachineProjectItem());
             AddProject(new TuringMachineProjectItem());
             AddProject(new RegisterMachineProjectItem());
+            AddProject(new RiscMachineProjectItem());
         }
 
         /// <summary>
@@ -116,12 +110,12 @@ namespace AbstractDevelop.controls.menus
         {
             if (item == _selected) return;
 
-            if(_selected != null)
+            if (_selected != null)
             {
                 infoHolder.Controls.RemoveAt(0);
             }
             _selected = item;
-            if(_selected != null)
+            if (_selected != null)
             {
                 infoHolder.Controls.Add(item as UserControl);
                 (item as UserControl).Dock = DockStyle.Fill;
@@ -144,20 +138,20 @@ namespace AbstractDevelop.controls.menus
         /// <param name="machine">Тип абстрактной машины, под который создается проект.</param>
         /// <param name="settings">Начальные установки визуализатора.</param>
         /// <returns>Созданный проект.</returns>
-        private AbstractProject CreateProject(string name, MachineId machine, Dictionary<string, bool> settings = null)
+        private AbstractProject CreateProject(string name, MachineId machine, Dictionary<string, object> settings = null)
         {
             string fileName = nameBox.Text;
             string folder = newFolderBox.Checked ? Path.Combine(_folderDialog.SelectedPath, fileName) : _folderDialog.SelectedPath;
 
             AbstractProject result = new AbstractProject(name, machine, folder);
-            result.VisualizerSettings = settings;
+            result.Settings = settings;
 
             return result;
         }
 
         private void createBtn_Click(object sender, EventArgs e)
         {
-            if(_folderDialog.ShowDialog() == DialogResult.OK)
+            if (_folderDialog.ShowDialog() == DialogResult.OK)
             {
                 AbstractProject proj = CreateProject(nameBox.Text, _selected.Machine, (infoHolder.Controls[0] as IProjectMenuItem).Settings);
                 proj.Save();
@@ -169,8 +163,8 @@ namespace AbstractDevelop.controls.menus
 
         private void nameBox_TextChanged(object sender, EventArgs e)
         {
-            createBtn.Enabled = AbstractProject.CheckName(nameBox.Text);
+            try { nameBox.Text.CheckPath(false); createBtn.Enabled = true; }
+            catch { createBtn.Enabled = false; }
         }
-
     }
 }

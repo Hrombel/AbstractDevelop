@@ -1,10 +1,8 @@
-﻿using AbstractDevelop.machines.tape;
+﻿using AbstractDevelop.Machines;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AbstractDevelop.machines.turing
 {
@@ -12,7 +10,7 @@ namespace AbstractDevelop.machines.turing
     /// <summary>
     /// Представляет модель машины Тьюринга.
     /// </summary>
-    public class TuringMachine : IAbstractMachine, ISerializable
+    public class TuringMachine : ISerializable
     {
         /// <summary>
         /// Возникает после изменения состояния одной из лент машины Тьюринга.
@@ -235,7 +233,7 @@ namespace AbstractDevelop.machines.turing
         /// Запускает выполнение операций без задержек между ними.
         /// </summary>
         /// <param name="ops">Список операций для машины Тьюринга.</param>
-        public void Start(List<Operation> ops)
+        public void Start(List<Operation<object, TuringState>> ops)
         {
             if (ops == null)
                 throw new ArgumentNullException("Список операций не может быть неопределенным");
@@ -264,7 +262,7 @@ namespace AbstractDevelop.machines.turing
         /// Переводит машину Тьюринга в режим пошагового выполнения операций.
         /// </summary>
         /// <param name="ops">Список операций для машины Тьюринга.</param>
-        public void StartManual(List<Operation> ops)
+        public void StartManual(List<Operation<object, TuringState>> ops)
         {
             if (ops == null)
                 throw new ArgumentNullException("Список операций не может быть неопределенным");

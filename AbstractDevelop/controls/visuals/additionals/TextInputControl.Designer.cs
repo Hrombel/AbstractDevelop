@@ -40,6 +40,7 @@
             this.inputBox.Name = "inputBox";
             this.inputBox.Size = new System.Drawing.Size(181, 20);
             this.inputBox.TabIndex = 0;
+            this.inputBox.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.inputBox_KeyPress);
             // 
             // okBtn
             // 

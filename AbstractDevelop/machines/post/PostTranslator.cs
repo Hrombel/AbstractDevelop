@@ -1,10 +1,11 @@
 ﻿using AbstractDevelop.errors.dev;
-using AbstractDevelop.tools;
+using AbstractDevelop.Machines;
+using AbstractDevelop.Machines.Post;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using PostOperation = AbstractDevelop.Machines.Operation<AbstractDevelop.Machines.Post.PostOperationId, object>;
 
 namespace AbstractDevelop.machines.post
 {
@@ -13,14 +14,14 @@ namespace AbstractDevelop.machines.post
     /// </summary>
     public sealed class PostTranslator
     {
-        public static List<Operation> Translate(string source)
+        public static List<PostOperation> Translate(string source)
         {
             if (source == null)
                 throw new ArgumentNullException("Исходный текст не может быть неопределенным");
 
             source = SourceTools.RemoveComments(source);
 
-            List<Operation> result = new List<Operation>();
+            List<PostOperation> result = new List<PostOperation>();
             List<string> errors = new List<string>();
 
             string[] lines = source.Split('\n');
@@ -31,7 +32,7 @@ namespace AbstractDevelop.machines.post
 
             string word;
             int c = 0;
-            for (int i = 0; i < n; i++ )
+            for (int i = 0; i < n; i++)
             {
                 if (string.IsNullOrWhiteSpace(lines[i])) continue;
                 c++;
@@ -43,7 +44,7 @@ namespace AbstractDevelop.machines.post
                     word = word.Substring(1);
                     curArgs = GetArguments(word, curId);
 
-                    result.Add(new PostOperation(curId, curArgs));
+                    result.Add(PostOperation.Create(curId, curArgs));
                 }
                 catch (InvalidOperationTextException ex)
                 {
@@ -51,7 +52,7 @@ namespace AbstractDevelop.machines.post
                 }
             }
 
-            if(errors.Count > 0)
+            if (errors.Count > 0)
             {
                 InvalidOperationTextException ex = new InvalidOperationTextException("Во время трансляции возникли ошибки");
                 n = errors.Count;
@@ -73,20 +74,26 @@ namespace AbstractDevelop.machines.post
         /// <returns>Идентификатор операции.</returns>
         private static PostOperationId GetId(string cmd)
         {
-            switch(cmd.ToLower())
+            switch (cmd.ToLower())
             {
                 case "l":
                     return PostOperationId.Left;
+
                 case "r":
                     return PostOperationId.Right;
+
                 case "p":
                     return PostOperationId.Place;
+
                 case "e":
                     return PostOperationId.Erase;
+
                 case "j":
                     return PostOperationId.Decision;
+
                 case "s":
                     return PostOperationId.Stop;
+
                 default:
                     throw new InvalidOperationTextException("Неизвестная операция.");
             }
@@ -136,13 +143,13 @@ namespace AbstractDevelop.machines.post
                         ThrowInvalidNumParamsException();
 
                     result = new int[t.Count];
-                    if(result.Length == 1)
+                    if (result.Length == 1)
                     {
                         result[0] = int.Parse(t[0]);
                     }
                 }
             }
-            catch(InvalidOperationTextException ex)
+            catch (InvalidOperationTextException ex)
             {
                 throw ex;
             }

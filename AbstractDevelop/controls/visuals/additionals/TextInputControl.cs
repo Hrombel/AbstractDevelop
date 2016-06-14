@@ -27,6 +27,8 @@ namespace AbstractDevelop.controls.visuals.additionals
             okBtn.Enabled = false;
             okBtn.Click += okBtn_Click;
             inputBox.TextChanged += inputBox_TextChanged;
+            okBtn.KeyPress += inputBox_KeyPress;
+            KeyPress += inputBox_KeyPress;
         }
         ~TextInputControl()
         {
@@ -74,6 +76,11 @@ namespace AbstractDevelop.controls.visuals.additionals
             if (!m.Success) return false;
 
             return name.Replace(m.Value, "").Length == 0;
+        }
+
+        private void inputBox_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return) OKPressed(this, new EventArgs());
         }
     }
 }

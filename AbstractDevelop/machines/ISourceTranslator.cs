@@ -6,7 +6,10 @@ using System.Threading.Tasks;
 
 namespace AbstractDevelop.Machines
 {
-    public interface ISourceTranslator
+    public interface ISourceTranslator<OperationType, OperationCode, ArgumentType>
+        where OperationType : Operation<OperationCode, ArgumentType>
     {
+        IEnumerable<OperationType> Translate(IEnumerable<string> input);
+
     }
 }

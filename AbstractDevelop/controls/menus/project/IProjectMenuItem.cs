@@ -26,6 +26,6 @@ namespace AbstractDevelop.controls.menus.project
         /// <summary>
         /// Получает начальные настройки проекта.
         /// </summary>
-        Dictionary<string, bool> Settings { get; }
+        Dictionary<string, object> Settings { get; }
     }
 }

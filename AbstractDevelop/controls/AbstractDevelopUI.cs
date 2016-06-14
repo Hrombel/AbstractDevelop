@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using AbstractDevelop.controls.menus;
 using AbstractDevelop.controls.environment;
-using AbstractDevelop.projects;
 using AbstractDevelop.controls.menus.project;
 using AbstractDevelop.controls.menus.about;
 using AbstractDevelop.controls.menus.help;
@@ -69,7 +68,7 @@ namespace AbstractDevelop.controls
             {
                 try
                 {
-                    OpenProject(AbstractProject.LoadFrom(_openDialog.FileName));
+                    OpenProject(AbstractProject.Load(_openDialog.FileName));
                 }
                 catch(Exception ex)
                 {

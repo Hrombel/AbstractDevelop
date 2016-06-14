@@ -76,6 +76,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\CodeFile.cs" />
     <Compile Include="controls\AbstractDevelopUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -146,6 +147,12 @@
     <Compile Include="controls\menus\project\items\RegisterMachineProjectItem.Designer.cs">
       <DependentUpon>RegisterMachineProjectItem.cs</DependentUpon>
     </Compile>
+    <Compile Include="controls\menus\project\items\RiscMachineProjectItem.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\menus\project\items\RiscMachineProjectItem.Designer.cs">
+      <DependentUpon>RiscMachineProjectItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="controls\menus\project\items\TuringMachineProjectItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -160,6 +167,9 @@
       <DependentUpon>CodeEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="controls\ui\ceditor\editors\PostCodeEditor.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\ui\ceditor\editors\RiscCodeEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="controls\ui\ceditor\editors\RegisterCodeEditor.cs">
@@ -199,6 +209,12 @@
       <DependentUpon>TuringInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="controls\visuals\IMachineVisualizer.cs" />
+    <Compile Include="controls\visuals\RiscRegistersVisualizer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\visuals\RiscRegistersVisualizer.Designer.cs">
+      <DependentUpon>RiscRegistersVisualizer.cs</DependentUpon>
+    </Compile>
     <Compile Include="controls\visuals\InfiniteRegistersVisualizer.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -217,6 +233,12 @@
     </Compile>
     <Compile Include="controls\visuals\RegisterMachineVisualizer.Designer.cs">
       <DependentUpon>RegisterMachineVisualizer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="controls\visuals\RiscVisualizer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="controls\visuals\RiscVisualizer.Designer.cs">
+      <DependentUpon>RiscVisualizer.cs</DependentUpon>
     </Compile>
     <Compile Include="controls\visuals\TapeVisualizer.cs">
       <SubType>UserControl</SubType>
@@ -248,7 +270,6 @@
     <Compile Include="Machines\regmachine\RegisterMachineStoppedEventArgs.cs" />
     <Compile Include="Machines\regmachine\RegisterMachineValueInEventArgs.cs" />
     <Compile Include="Machines\regmachine\RegisterMachineValueOutEventArgs.cs" />
-    <Compile Include="Machines\regmachine\RegisterOperation.cs" />
     <Compile Include="Machines\regmachine\RegisterOperationId.cs" />
     <Compile Include="Machines\regmachine\RegisterProgram.cs" />
     <Compile Include="Machines\regmachine\RegisterProgramCollection.cs" />
@@ -257,7 +278,6 @@
     <Compile Include="Machines\regmachine\RegisterThreadManager.cs" />
     <Compile Include="Machines\regmachine\RegisterThreadManagerEventArgs.cs" />
     <Compile Include="Machines\regmachine\RegisterTranslator.cs" />
-    <Compile Include="Machines\Risc\DataLink.cs" />
     <Compile Include="Machines\Risc\RiscMachine.cs" />
     <Compile Include="Machines\SymbolSet.cs" />
     <Compile Include="Machines\ThreadInfo.cs" />
@@ -279,16 +299,20 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Machines\MachineId.cs" />
+    <Compile Include="Common\MachineId.cs" />
     <Compile Include="Machines\Operation.cs" />
     <Compile Include="Machines\Post\PostMachine.cs" />
     <Compile Include="Machines\Post\PostTranslator.cs" />
-    <Compile Include="Machines\tape\Tape.cs" />
-    <Compile Include="Machines\tape\TapeBlock.cs" />
-    <Compile Include="Machines\tape\TapeType.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="projects\AbstractProject.cs" />
+    <Compile Include="Machines\Tape.cs" />
+    <Compile Include="Common\Program.cs" />
+    <Compile Include="Common\AbstractProject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RiscForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RiscForm.Designer.cs">
+      <DependentUpon>RiscForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="tools\LinkTools.cs" />
     <Compile Include="tools\SourceTools.cs" />
     <EmbeddedResource Include="controls\AbstractDevelopUI.resx">
@@ -330,6 +354,9 @@
     <EmbeddedResource Include="controls\ui\ceditor\CodeEditor.resx">
       <DependentUpon>CodeEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="controls\ui\ceditor\editors\RiscCodeEditor.resx">
+      <DependentUpon>RiscCodeEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="controls\visuals\additionals\TapeToolUnit.resx">
       <DependentUpon>TapeToolUnit.cs</DependentUpon>
     </EmbeddedResource>
@@ -342,6 +369,9 @@
     <EmbeddedResource Include="controls\visuals\additionals\TuringInfo.resx">
       <DependentUpon>TuringInfo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="controls\visuals\RiscRegistersVisualizer.resx">
+      <DependentUpon>RiscRegistersVisualizer.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="controls\visuals\InfiniteRegistersVisualizer.resx">
       <DependentUpon>InfiniteRegistersVisualizer.cs</DependentUpon>
     </EmbeddedResource>
@@ -350,6 +380,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="controls\visuals\RegisterMachineVisualizer.resx">
       <DependentUpon>RegisterMachineVisualizer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="controls\visuals\RiscVisualizer.resx">
+      <DependentUpon>RiscVisualizer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="controls\visuals\TapeVisualizer.resx">
       <DependentUpon>TapeVisualizer.cs</DependentUpon>
@@ -370,6 +403,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="RiscForm.resx">
+      <DependentUpon>RiscForm.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="controls\ui\ceditor\SciLexer.exp" />
     <None Include="lib\ScintillaNET\LICENSE" />
     <None Include="packages.config" />

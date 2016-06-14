@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using RegisterOperation = AbstractDevelop.Machines.Operation<AbstractDevelop.machines.regmachine.RegisterOperationId, System.Numerics.BigInteger>;
 
 namespace AbstractDevelop.machines.regmachine
 {

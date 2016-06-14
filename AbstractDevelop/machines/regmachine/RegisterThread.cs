@@ -1,12 +1,7 @@
-﻿using AbstractDevelop.machines.registers;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
+﻿using System;
 using System.Numerics;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
+using RegisterOperation = AbstractDevelop.Machines.Operation<AbstractDevelop.machines.regmachine.RegisterOperationId, System.Numerics.BigInteger>;
 
 namespace AbstractDevelop.machines.regmachine
 {
@@ -20,6 +15,7 @@ namespace AbstractDevelop.machines.regmachine
         /// Возникает после остановки работы потока.
         /// </summary>
         public event EventHandler<RegisterThreadEventArgs> OnThreadStop;
+
         /// <summary>
         /// Возникает после засыпания потока.
         /// </summary>
@@ -74,7 +70,6 @@ namespace AbstractDevelop.machines.regmachine
             _prog = program;
             _out = outRegister;
             _info = new ThreadInfo(id, program.Name, 0);
-
         }
 
         /// <summary>
@@ -123,7 +118,7 @@ namespace AbstractDevelop.machines.regmachine
                 _systemThread = Thread.CurrentThread;
 
                 if (_out != -1)
-                    _parent.ExecuteOperation(this, new RegisterOperation(RegisterOperationId.Erase, new BigInteger[] { _out }));
+                    _parent.ExecuteOperation(this, RegisterOperation.Create(RegisterOperationId.Erase, new BigInteger[] { _out }));
                 _info.Command = 1;
                 int cmd;
 
@@ -141,7 +136,7 @@ namespace AbstractDevelop.machines.regmachine
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
@@ -185,8 +180,8 @@ namespace AbstractDevelop.machines.regmachine
             _info.Command = 0;
             if (_out != -1)
             {
-                _parent.ExecuteOperation(this, new RegisterOperation(RegisterOperationId.Erase, new BigInteger[] { _out }));
-                _parent.ExecuteOperation(this, new RegisterOperation(RegisterOperationId.Inc, new BigInteger[] { _out }));
+                _parent.ExecuteOperation(this, RegisterOperation.Create(RegisterOperationId.Erase, new BigInteger[] { _out }));
+                _parent.ExecuteOperation(this, RegisterOperation.Create(RegisterOperationId.Inc, new BigInteger[] { _out }));
             }
         }
 
@@ -201,7 +196,7 @@ namespace AbstractDevelop.machines.regmachine
             _info.Command = 0;
             if (Paused) Resume();
             _systemThread.Abort();
-            if(_systemThread != null)
+            if (_systemThread != null)
                 _systemThread.Join();
         }
 

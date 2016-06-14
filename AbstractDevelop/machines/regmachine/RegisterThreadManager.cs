@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Numerics;
 using System.Threading;
+using RegisterOperation = AbstractDevelop.Machines.Operation<AbstractDevelop.machines.regmachine.RegisterOperationId, System.Numerics.BigInteger>;
 
 namespace AbstractDevelop.machines.regmachine
 {
@@ -40,18 +41,22 @@ namespace AbstractDevelop.machines.regmachine
         /// Происходит после завершения выполнения всех потоков.
         /// </summary>
         public event EventHandler<RegisterThreadManagerEventArgs> OnComplete;
+
         /// <summary>
         /// Происходит после записи значения на устройство вывода.
         /// </summary>
         public event EventHandler ValueOut;
+
         /// <summary>
         /// Происходит перед чтением очередного значения из устройства ввода.
         /// </summary>
         public event EventHandler ValueIn;
+
         /// <summary>
         /// Происходит после достижения точки останова и приостановки всех потоков.
         /// </summary>
         public event EventHandler BreakPointReached;
+
         /// <summary>
         /// Происходит после выполнения одного шага всеми в отладочном режиме.
         /// </summary>
@@ -126,7 +131,7 @@ namespace AbstractDevelop.machines.regmachine
                 _debugMode = value;
                 _breakPointReached = false;
 
-                if(!_debugMode)
+                if (!_debugMode)
                     ReleasePausedThreads();
             }
         }
@@ -209,8 +214,8 @@ namespace AbstractDevelop.machines.regmachine
         {
             if (BreakPoints == null) return false;
 
-            if(_isParallel)
-                return Array.FindIndex<RegisterBreakPoint>(BreakPoints, x => x.Command == cmd && x.Program == program ) != -1;
+            if (_isParallel)
+                return Array.FindIndex<RegisterBreakPoint>(BreakPoints, x => x.Command == cmd && x.Program == program) != -1;
             else
                 return Array.FindIndex<RegisterBreakPoint>(BreakPoints, x => x.Command == cmd) != -1;
         }
@@ -264,179 +269,179 @@ namespace AbstractDevelop.machines.regmachine
 
                 Monitor.Enter(_registers);
                 int i;
-                switch (op.Id)
-                {
-                    case RegisterOperationId.Erase:
-                        {
-                            i = GetRegisterLocker(op.Arguments[0]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[0]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
-                            _registers.SetValue(0, op.Arguments[0]);
-                            res = thread.Info.Command + 1;
-                            if (!_registersChanged)
-                                _registersChanged = true;
-                            break;
-                        }
-                    case RegisterOperationId.Inc:
-                        {
-                            i = GetRegisterLocker(op.Arguments[0]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[0]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
+                //switch (op.Id)
+                //{
+                //    case RegisterOperationId.Erase:
+                //        {
+                //            i = GetRegisterLocker(op.Arguments[0]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[0]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
+                //            _registers.SetValue(0, op.Arguments[0]);
+                //            res = thread.Info.Command + 1;
+                //            if (!_registersChanged)
+                //                _registersChanged = true;
+                //            break;
+                //        }
+                //    case RegisterOperationId.Inc:
+                //        {
+                //            i = GetRegisterLocker(op.Arguments[0]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[0]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
 
-                            _registers.Increment(op.Arguments[0]);
-                            res = thread.Info.Command + 1;
-                            if (!_registersChanged)
-                                _registersChanged = true;
-                            break;
-                        }
-                    case RegisterOperationId.Copy:
-                        {
-                            i = GetRegisterLocker(op.Arguments[0]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[0]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
-                            i = GetRegisterLocker(op.Arguments[1]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[1]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
+                //            _registers.Increment(op.Arguments[0]);
+                //            res = thread.Info.Command + 1;
+                //            if (!_registersChanged)
+                //                _registersChanged = true;
+                //            break;
+                //        }
+                //    case RegisterOperationId.Copy:
+                //        {
+                //            i = GetRegisterLocker(op.Arguments[0]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[0]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
+                //            i = GetRegisterLocker(op.Arguments[1]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[1]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
 
-                            _registers.SetValue(_registers.GetValue(op.Arguments[0]), op.Arguments[1]);
-                            res = thread.Info.Command + 1;
-                            if (!_registersChanged)
-                                _registersChanged = true;
-                            break;
-                        }
-                    case RegisterOperationId.Decision:
-                        {
-                            i = GetRegisterLocker(op.Arguments[0]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[0]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
-                            i = GetRegisterLocker(op.Arguments[1]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[1]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
+                //            _registers.SetValue(_registers.GetValue(op.Arguments[0]), op.Arguments[1]);
+                //            res = thread.Info.Command + 1;
+                //            if (!_registersChanged)
+                //                _registersChanged = true;
+                //            break;
+                //        }
+                //    case RegisterOperationId.Decision:
+                //        {
+                //            i = GetRegisterLocker(op.Arguments[0]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[0]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
+                //            i = GetRegisterLocker(op.Arguments[1]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[1]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
 
-                            if (_registers.GetValue(op.Arguments[0]) == _registers.GetValue(op.Arguments[1]))
-                                res = op.Arguments[2];
-                            else
-                                res = thread.Info.Command + 1;
-                            break;
-                        }
-                    case RegisterOperationId.Start:
-                        {
-                            if (_stoppingProcess) break;
+                //            if (_registers.GetValue(op.Arguments[0]) == _registers.GetValue(op.Arguments[1]))
+                //                res = op.Arguments[2];
+                //            else
+                //                res = thread.Info.Command + 1;
+                //            break;
+                //        }
+                //    case RegisterOperationId.Start:
+                //        {
+                //            if (_stoppingProcess) break;
 
-                            try
-                            {
-                                RunProgram((int)op.Arguments[0], op.Arguments[1]);
-                                res = thread.Info.Command + 1;
-                            }
-                            catch(ThreadAbortException ex)
-                            {
-                                throw ex;
-                            }
-                            catch (Exception ex)
-                            {
-                                throw new Exception(string.Format("Невозможно запустить программу с id = {0}. \"{1}\"", op.Arguments[0], ex.Message), ex);
-                            }
-                            break;
-                        }
-                    case RegisterOperationId.Lock:
-                        {
-                            i = GetRegisterLocker(op.Arguments[0]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[0]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
-                            LockRegister(op.Arguments[0], thread);
-                            res = thread.Info.Command + 1;
-                            break;
-                        }
-                    case RegisterOperationId.Unlock:
-                        {
-                            i = GetRegisterLocker(op.Arguments[0]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[0]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
-                            UnlockRegister(op.Arguments[0]);
-                            res = thread.Info.Command + 1;
-                            break;
-                        }
-                    case RegisterOperationId.Read:
-                        {
-                            i = GetRegisterLocker(op.Arguments[0]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[0]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
+                //            try
+                //            {
+                //                RunProgram((int)op.Arguments[0], op.Arguments[1]);
+                //                res = thread.Info.Command + 1;
+                //            }
+                //            catch (ThreadAbortException ex)
+                //            {
+                //                throw ex;
+                //            }
+                //            catch (Exception ex)
+                //            {
+                //                throw new Exception(string.Format("Невозможно запустить программу с id = {0}. \"{1}\"", op.Arguments[0], ex.Message), ex);
+                //            }
+                //            break;
+                //        }
+                //    case RegisterOperationId.Lock:
+                //        {
+                //            i = GetRegisterLocker(op.Arguments[0]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[0]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
+                //            LockRegister(op.Arguments[0], thread);
+                //            res = thread.Info.Command + 1;
+                //            break;
+                //        }
+                //    case RegisterOperationId.Unlock:
+                //        {
+                //            i = GetRegisterLocker(op.Arguments[0]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[0]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
+                //            UnlockRegister(op.Arguments[0]);
+                //            res = thread.Info.Command + 1;
+                //            break;
+                //        }
+                //    case RegisterOperationId.Read:
+                //        {
+                //            i = GetRegisterLocker(op.Arguments[0]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[0]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
 
-                            _registers.SetValue(Input(), op.Arguments[0]);
-                            res = thread.Info.Command + 1;
-                            if (!_registersChanged)
-                                _registersChanged = true;
-                            break;
-                        }
-                    case RegisterOperationId.Write:
-                        {
-                            i = GetRegisterLocker(op.Arguments[0]);
-                            if (i >= 0 && i != thread.Info.Id)
-                            {
-                                AddAwaiter(thread, op.Arguments[0]);
-                                Monitor.Exit(_registers);
-                                thread.Pause();
-                                Monitor.Enter(_registers);
-                            }
+                //            _registers.SetValue(Input(), op.Arguments[0]);
+                //            res = thread.Info.Command + 1;
+                //            if (!_registersChanged)
+                //                _registersChanged = true;
+                //            break;
+                //        }
+                //    case RegisterOperationId.Write:
+                //        {
+                //            i = GetRegisterLocker(op.Arguments[0]);
+                //            if (i >= 0 && i != thread.Info.Id)
+                //            {
+                //                AddAwaiter(thread, op.Arguments[0]);
+                //                Monitor.Exit(_registers);
+                //                thread.Pause();
+                //                Monitor.Enter(_registers);
+                //            }
 
-                            Output(_registers.GetValue(op.Arguments[0]));
-                            res = thread.Info.Command + 1;
-                            break;
-                        }
-                }
+                //            Output(_registers.GetValue(op.Arguments[0]));
+                //            res = thread.Info.Command + 1;
+                //            break;
+                //        }
+                //}
             }
-            catch(ThreadAbortException ex)
+            catch (ThreadAbortException ex)
             {
                 throw ex;
             }
             finally
             {
-                if(Monitor.IsEntered(_registers))
+                if (Monitor.IsEntered(_registers))
                     Monitor.Exit(_registers);
             }
 
@@ -451,7 +456,7 @@ namespace AbstractDevelop.machines.regmachine
         {
             int i = 0;
             int n = _threads.Count;
-            while(i < n)
+            while (i < n)
             {
                 if (i == _threads[i].Info.Id) i++;
                 else break;
@@ -489,7 +494,7 @@ namespace AbstractDevelop.machines.regmachine
             if (_debugMode)
                 DebugMode = false;
 
-            while(_threads.Count > 0)
+            while (_threads.Count > 0)
                 _threads[0].Stop();
         }
 
@@ -529,7 +534,7 @@ namespace AbstractDevelop.machines.regmachine
                     thread = new RegisterThread(this, program, GetThreadId());
                 thread.OnThreadStop += ThreadStopHandler;
                 thread.ThreadPaused += ThreadPausedHandler;
-                lock(_threads)
+                lock (_threads)
                     _threads.Add(thread);
 
                 if (_threads.Count == 1)
@@ -542,11 +547,11 @@ namespace AbstractDevelop.machines.regmachine
 
                 thread.Start();
             }
-            catch(ThreadAbortException ex)
+            catch (ThreadAbortException ex)
             {
                 throw ex;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception(string.Format("Ошибка запуска программы: \"{0}\"", ex.Message), ex);
             }
@@ -563,7 +568,7 @@ namespace AbstractDevelop.machines.regmachine
 
         private void MainLoopProgress(object sender, ProgressChangedEventArgs e)
         {
-            switch(e.ProgressPercentage)
+            switch (e.ProgressPercentage)
             {
                 case 0:
                     if (_breakPointReached)
@@ -572,21 +577,24 @@ namespace AbstractDevelop.machines.regmachine
                         if (BreakPointReached != null)
                             BreakPointReached(this, EventArgs.Empty);
                     }
-                    if(_debugMode)
+                    if (_debugMode)
                     {
                         if (StepCompleted != null)
                             StepCompleted(this, EventArgs.Empty);
                     }
                     break;
+
                 case 1:
                     if (OnComplete != null)
                         OnComplete(this, new RegisterThreadManagerEventArgs(_registersChanged));
                     break;
+
                 case 2:
                     if (ValueIn != null)
                         ValueIn(this, EventArgs.Empty);
                     _inputSync.Set(); // Уведомляем поток, запросивший ввод, о том, что данные приняты.
                     break;
+
                 case 3:
                     if (ValueOut != null)
                         ValueOut(this, EventArgs.Empty);
@@ -636,7 +644,7 @@ namespace AbstractDevelop.machines.regmachine
             {
                 _locked.Clear();
                 _pausedThreads.Clear();
-                
+
                 _programs = null;
                 BreakPoints = null;
 
@@ -658,7 +666,7 @@ namespace AbstractDevelop.machines.regmachine
         {
             bool result = true;
 
-            lock(_threads)
+            lock (_threads)
             {
                 int i = GetRegisterLocker(register);
                 if (i >= 0) result = false;
@@ -686,7 +694,7 @@ namespace AbstractDevelop.machines.regmachine
                 _locked.RemoveAt(i);
             }
         }
-        
+
         /// <summary>
         /// Возвращает общее количество потоков, ожидающих разблокировки регистров.
         /// </summary>
@@ -717,7 +725,7 @@ namespace AbstractDevelop.machines.regmachine
         private void AddAwaiter(RegisterThread thread, BigInteger register)
         {
             int i;
-            lock(_locked)
+            lock (_locked)
             {
                 i = _locked.BinarySearch(new LockedRegister() { Index = register });
                 if (i < 0) throw new ArgumentException("Регистр не заблокирован");
@@ -727,7 +735,7 @@ namespace AbstractDevelop.machines.regmachine
                 _locked[i].Awaiters.Insert(~j, thread);
             }
 
-            lock(_pausedThreads)
+            lock (_pausedThreads)
             {
                 i = _pausedThreads.IndexOf(thread);
                 if (i >= 0)
@@ -736,7 +744,7 @@ namespace AbstractDevelop.machines.regmachine
         }
 
         /// <summary>
-        /// Производит чтение числового значения с устройства ввода. 
+        /// Производит чтение числового значения с устройства ввода.
         /// </summary>
         /// <returns>Прочитанное значение. Если с устройства ввода было
         /// подано значение, возвращает это значение, иначе - возвращает нуль.</returns>
@@ -759,7 +767,7 @@ namespace AbstractDevelop.machines.regmachine
             {
                 _outputBuffer.Enqueue(value);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception("Ошибка записи выходных данных в буфер", ex);
             }

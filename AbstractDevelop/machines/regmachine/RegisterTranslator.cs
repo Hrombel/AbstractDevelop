@@ -1,13 +1,12 @@
 ﻿using AbstractDevelop.errors.dev;
-using AbstractDevelop.tools;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
+
+using RegisterOperation = AbstractDevelop.Machines.Operation<AbstractDevelop.machines.regmachine.RegisterOperationId, System.Numerics.BigInteger>;
 
 namespace AbstractDevelop.machines.regmachine
 {
@@ -21,7 +20,7 @@ namespace AbstractDevelop.machines.regmachine
         /// </summary>
         /// <param name="src">Исходный текст программы.</param>
         /// <returns>Список команд для классической машины с бесконечными регистрами.</returns>
-        public static List<Operation> TranslateClassicProgram(string src)
+        public static List<RegisterOperation> TranslateClassicProgram(string src)
         {
             if (src == null)
                 throw new ArgumentNullException("Исходный текст программы не может быть неопределенным");
@@ -29,7 +28,7 @@ namespace AbstractDevelop.machines.regmachine
             List<RegisterOperation> ops = ReadCommands(src);
             CheckClassicOperations(ops);
 
-            return ops.Cast<Operation>().ToList();
+            return ops.Cast<RegisterOperation>().ToList();
         }
 
         /// <summary>
@@ -63,7 +62,7 @@ namespace AbstractDevelop.machines.regmachine
 
             matches = linksReg.Matches(src);
             n = matches.Count;
-            for (int i = 0; i < n; i++ )
+            for (int i = 0; i < n; i++)
             {
                 ind = progs.IndexOf(matches[i].Value);
                 if (ind < 0) throw new Exception("Вызов неизвестной программы");
@@ -76,13 +75,13 @@ namespace AbstractDevelop.machines.regmachine
             bool entryFound = false;
             RegisterProgram prog;
             string name;
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
                 name = progs[i];
                 prog = GetProgram(strings[i], i, name);
                 result.Add(prog);
 
-                if(entryFound)
+                if (entryFound)
                 {
                     if (prog.IsEntry)
                         throw new InvalidOperationTextException("Найдено несколько точек входа");
@@ -96,7 +95,6 @@ namespace AbstractDevelop.machines.regmachine
                 throw new InvalidOperationTextException("Точек входа не найдено");
 
             return result;
-
         }
 
         /// <summary>
@@ -111,7 +109,6 @@ namespace AbstractDevelop.machines.regmachine
             string src = UniteModules(entryProgramPath);
 
             Regex entryReg = new Regex(@"entry\s*\S*");
-            
 
             MatchCollection matches = entryReg.Matches(src);
             if (matches.Count != 1)
@@ -167,14 +164,14 @@ namespace AbstractDevelop.machines.regmachine
 
             matches = programsReg.Matches(src);
             src = programsReg.Replace(src, @"$1 " + unitName + ".$2");
-            
+
             src = thisProgsLinksReg.Replace(src, string.Format("s({0}.$1,", unitName));
 
             result += src.Substring(n).TrimStart() + '\n';
 
             matches = unitLinksReg.Matches(src);
             n = matches.Count;
-            for(i = 0; i < n; i++)
+            for (i = 0; i < n; i++)
             {
                 arr = matches[i].Groups[1].Value.Split('.');
                 Array.Resize<string>(ref arr, arr.Length - 1);
@@ -199,10 +196,10 @@ namespace AbstractDevelop.machines.regmachine
             int j;
             bool entryFound = false;
 
-            while(i < src.Length)
+            while (i < src.Length)
             {
                 i = 0;
-                if(entryFound)
+                if (entryFound)
                 {
                     i = src.IndexOf("program");
                     if (i < 0) break;
@@ -238,7 +235,7 @@ namespace AbstractDevelop.machines.regmachine
             if (block.Count(x => x == '{' || x == '}') != 2)
                 throw new InvalidOperationTextException("Неверный формат блока операций");
 
-            string[] arr = block.Split(new char[]{ '{', '}' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] arr = block.Split(new char[] { '{', '}' }, StringSplitOptions.RemoveEmptyEntries);
             if (arr.Length != 1)
                 throw new InvalidOperationTextException("Неверный формат блока операций");
 
@@ -298,7 +295,7 @@ namespace AbstractDevelop.machines.regmachine
             List<string> exceptions = new List<string>();
 
             int n = ops.Count;
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
                 try
                 {
@@ -330,11 +327,11 @@ namespace AbstractDevelop.machines.regmachine
             ops = ops.Trim();
             List<string> exceptions = new List<string>();
 
-            string[] strArr = ops.Split(new char[]{'\n'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] strArr = ops.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
             List<RegisterOperation> opsList = new List<RegisterOperation>();
             int n = strArr.Length;
             int c = 1;
-            for(int i = 0; i < n; i++)
+            for (int i = 0; i < n; i++)
             {
                 if (string.IsNullOrWhiteSpace(strArr[i])) continue;
 
@@ -342,7 +339,7 @@ namespace AbstractDevelop.machines.regmachine
                 {
                     opsList.Add(ReadCommand(strArr[i]));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     exceptions.Add(string.Format("Команда {0}: \"{1}\"", c, ex.Message));
                 }
@@ -380,12 +377,12 @@ namespace AbstractDevelop.machines.regmachine
                 id = GetId(cmd[0]);
                 args = GetArguments(id, cmd.Substring(1).Trim());
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new InvalidOperationTextException(ex.Message, ex);
             }
 
-            return new RegisterOperation(id, args);
+            return RegisterOperation.Create(id, args);
         }
 
         /// <summary>
@@ -396,16 +393,16 @@ namespace AbstractDevelop.machines.regmachine
         /// <returns>Массив аргументов.</returns>
         private static BigInteger[] GetArguments(RegisterOperationId id, string argsStr)
         {
-            if(argsStr.Count(x => x == '(' || x == ')') != 2)
+            if (argsStr.Count(x => x == '(' || x == ')') != 2)
                 throw new InvalidOperationTextException("Неверный формат записи аргументов");
-            string[] args = argsStr.Split(new char[]{'(', ')'}, StringSplitOptions.RemoveEmptyEntries);
+            string[] args = argsStr.Split(new char[] { '(', ')' }, StringSplitOptions.RemoveEmptyEntries);
             if (args.Length != 1)
                 throw new InvalidOperationTextException("Неверный формат записи аргументов");
             args = args[0].Split(',');
 
             BigInteger[] result = new BigInteger[args.Length];
             int n = args.Length;
-            for (int i = 0; i < n; i++ )
+            for (int i = 0; i < n; i++)
             {
                 try
                 {
@@ -452,7 +449,7 @@ namespace AbstractDevelop.machines.regmachine
         /// <returns>Уникальный идентификатор операции.</returns>
         private static RegisterOperationId GetId(char ch)
         {
-            switch(ch)
+            switch (ch)
             {
                 case 'Z': return RegisterOperationId.Erase;
                 case 'S': return RegisterOperationId.Inc;

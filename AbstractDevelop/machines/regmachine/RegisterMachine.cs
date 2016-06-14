@@ -1,12 +1,13 @@
 ﻿using AbstractDevelop.machines.registers;
+using AbstractDevelop.Machines;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
+
+using RegisterOperation = AbstractDevelop.Machines.Operation<AbstractDevelop.machines.regmachine.RegisterOperationId, System.Numerics.BigInteger>;
 
 namespace AbstractDevelop.machines.regmachine
 {
@@ -14,32 +15,38 @@ namespace AbstractDevelop.machines.regmachine
     /// Представляет модель параллельной машины с бесконечными регистрами.
     /// </summary>
     [Serializable]
-    public class RegisterMachine : IAbstractMachine, ISerializable
+    public class RegisterMachine : ISerializable
     {
         /// <summary>
         /// Генерируется после остановки работы МБР.
         /// </summary>
         public event EventHandler<RegisterMachineStoppedEventArgs> OnMachineStopped;
+
         /// <summary>
         /// Генерируется после записи значения в устройство вывода.
         /// </summary>
         public event EventHandler<RegisterMachineValueOutEventArgs> ValueOut;
+
         /// <summary>
         /// Происходит перед чтением очередного значения из устройства ввода.
         /// </summary>
         public event EventHandler<RegisterMachineValueInEventArgs> ValueIn;
+
         /// <summary>
         /// Происходит после достижения исполнителем точки останова.
         /// </summary>
         public event EventHandler BreakPointReached;
+
         /// <summary>
         /// Происходит после выполнения машиной одного шага в режиме отладки.
         /// </summary>
         public event EventHandler StepCompleted;
 
         private InfiniteRegisters _registers;
+
         [NonSerialized]
         private RegisterThreadManager _manager;
+
         private RegisterBreakPoint[] _breakPoints;
 
         /// <summary>
@@ -108,7 +115,7 @@ namespace AbstractDevelop.machines.regmachine
         {
             int n = _manager.OutputBufferAmount;
             List<BigInteger> buffer = new List<BigInteger>(n);
-            while(n > 0)
+            while (n > 0)
             {
                 buffer.Add(_manager.ReadValue());
                 n--;
@@ -166,7 +173,7 @@ namespace AbstractDevelop.machines.regmachine
         /// Запускает выполнение операций без использования паралеллизма.
         /// </summary>
         /// <param name="ops">Список операций для ПМБР.</param>
-        public void Start(List<Operation> ops)
+        public void Start(List<Operation<object, object>> ops)
         {
             if (ops == null)
                 throw new ArgumentNullException("Список операций не может быть неопределенным");
@@ -187,7 +194,7 @@ namespace AbstractDevelop.machines.regmachine
         /// Запускает классическую МБР в режиме пошагового выполнения.
         /// </summary>
         /// <param name="ops">Список операций для выполнения.</param>
-        public void StartManual(List<Operation> ops)
+        public void StartManual(List<Operation<object, object>> ops)
         {
             if (ops == null)
                 throw new ArgumentNullException("Коллекция операций не может быть неопределенной");
@@ -238,7 +245,7 @@ namespace AbstractDevelop.machines.regmachine
         /// <returns>Истина, если выполнен не последний шаг алгоритма, иначе - ложь.</returns>
         public bool Forward()
         {
-            if(_manager == null)
+            if (_manager == null)
                 throw new InvalidOperationException("МБР не запущена");
             if (!_manager.DebugMode)
                 throw new InvalidOperationException("Машина не находится в режиме пошагового выполнения");

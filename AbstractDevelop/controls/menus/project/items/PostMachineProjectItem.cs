@@ -36,7 +36,7 @@ namespace AbstractDevelop.controls.menus.project.items
             get { return "Машина Поста"; }
         }
 
-        public Dictionary<string, bool> Settings
+        public Dictionary<string, object> Settings
         {
             get { return null; }
         }
