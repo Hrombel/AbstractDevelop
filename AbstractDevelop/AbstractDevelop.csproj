@@ -1,42 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D5122834-BCCC-4FEE-816C-5BE45ACBA4EF}</ProjectGuid>
+    <ProjectGuid>{10D5608B-D11F-43F0-8B8E-15D7416FD3E2}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AbstractDevelop</RootNamespace>
     <AssemblyName>AbstractDevelop</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <PublishUrl>publish\</PublishUrl>
-    <Install>true</Install>
-    <InstallFrom>Disk</InstallFrom>
-    <UpdateEnabled>false</UpdateEnabled>
-    <UpdateMode>Foreground</UpdateMode>
-    <UpdateInterval>7</UpdateInterval>
-    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
-    <UpdatePeriodically>false</UpdatePeriodically>
-    <UpdateRequired>false</UpdateRequired>
-    <MapFileExtensions>true</MapFileExtensions>
-    <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
-    <UseApplicationTrust>false</UseApplicationTrust>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>bin\Debug\Libraries\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\AbstractDevelop.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -48,381 +37,162 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>IconLogo.ico</ApplicationIcon>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.Core.3.0.1\lib\net45\Caliburn.Micro.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
-      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="ScintillaNET, Version=3.5.4.0, Culture=neutral, PublicKeyToken=d42c48f11a620156, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\ScintillaNET\ScintillaNET.dll</HintPath>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Gu.Localization, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Gu.Localization.6.1.0.0\lib\net45\Gu.Localization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Gu.Wpf.Localization, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Gu.Wpf.Localization.6.1.0.0\lib\net45\Gu.Wpf.Localization.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro.3.0.1\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.9.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.9\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.9.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.9\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.9.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.9\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.9.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.9\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2013, Version=2.9.0.1, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xceed.Wpf.AvalonDock.Themes.VS2013.2.9.0.1\lib\net40-client\Xceed.Wpf.AvalonDock.Themes.VS2013.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.DataGrid, Version=2.9.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.9\lib\net40\Xceed.Wpf.DataGrid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.Toolkit, Version=2.9.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\Extended.Wpf.Toolkit.2.9\lib\net40\Xceed.Wpf.Toolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Old\controls\AbstractDevelopUI.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\AbstractDevelopUI.Designer.cs">
-      <DependentUpon>AbstractDevelopUI.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\environment\CurrentVisualizerChangeEventArgs.cs" />
-    <Compile Include="Old\controls\environment\debugwindow\DebugWindow.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\environment\debugwindow\DebugWindow.Designer.cs">
-      <DependentUpon>DebugWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\environment\visualscontrol\VisualsControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\environment\visualscontrol\VisualsControl.Designer.cs">
-      <DependentUpon>VisualsControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\environment\toolpanel\ToolPanel.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\environment\toolpanel\ToolPanel.Designer.cs">
-      <DependentUpon>ToolPanel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\environment\toolpanel\ToolPanelButton.cs" />
-    <Compile Include="Old\controls\environment\toolpanel\ToolPanelEventArgs.cs" />
-    <Compile Include="Old\controls\environment\WorkEnvironment.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\environment\WorkEnvironment.Designer.cs">
-      <DependentUpon>WorkEnvironment.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\menus\about\AboutWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Old\controls\menus\about\AboutWindow.Designer.cs">
-      <DependentUpon>AboutWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\menus\help\HelpWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Old\controls\menus\help\HelpWindow.Designer.cs">
-      <DependentUpon>HelpWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\menus\logo\LogoHolder.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\menus\logo\LogoHolder.Designer.cs">
-      <DependentUpon>LogoHolder.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\CreateProjectMenu.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\CreateProjectMenu.Designer.cs">
-      <DependentUpon>CreateProjectMenu.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\IProjectMenuItem.cs" />
-    <Compile Include="Old\controls\menus\project\items\PostMachineProjectItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\items\PostMachineProjectItem.Designer.cs">
-      <DependentUpon>PostMachineProjectItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\items\RegisterMachineProjectItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\items\RegisterMachineProjectItem.Designer.cs">
-      <DependentUpon>RegisterMachineProjectItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\items\RiscMachineProjectItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\items\RiscMachineProjectItem.Designer.cs">
-      <DependentUpon>RiscMachineProjectItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\items\TuringMachineProjectItem.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\items\TuringMachineProjectItem.Designer.cs">
-      <DependentUpon>TuringMachineProjectItem.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\menus\project\ProjectCreateEventArgs.cs" />
-    <Compile Include="Old\controls\ui\ceditor\CodeEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\ui\ceditor\CodeEditor.Designer.cs">
-      <DependentUpon>CodeEditor.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\ui\ceditor\editors\PostCodeEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\ui\ceditor\editors\RiscCodeEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\ui\ceditor\editors\RegisterCodeEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\ui\ceditor\editors\TuringCodeEditor.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\ui\statecontrol\StateControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\ui\statecontrol\StateControl.Designer.cs">
-      <DependentUpon>StateControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\additionals\TapeToolUnit.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\additionals\TapeToolUnit.Designer.cs">
-      <DependentUpon>TapeToolUnit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\additionals\TextInputControl.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\additionals\TextInputControl.Designer.cs">
-      <DependentUpon>TextInputControl.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\additionals\ThreadFrame.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\additionals\ThreadFrame.Designer.cs">
-      <DependentUpon>ThreadFrame.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\additionals\TuringInfo.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\additionals\TuringInfo.Designer.cs">
-      <DependentUpon>TuringInfo.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\IMachineVisualizer.cs" />
-    <Compile Include="Old\controls\visuals\RiscRegistersVisualizer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\RiscRegistersVisualizer.Designer.cs">
-      <DependentUpon>RiscRegistersVisualizer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\InfiniteRegistersVisualizer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\InfiniteRegistersVisualizer.Designer.cs">
-      <DependentUpon>InfiniteRegistersVisualizer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\MachineVisualizerStateChangedEventArgs.cs" />
-    <Compile Include="Old\controls\visuals\PostVisualizer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\PostVisualizer.Designer.cs">
-      <DependentUpon>PostVisualizer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\RegisterMachineVisualizer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\RegisterMachineVisualizer.Designer.cs">
-      <DependentUpon>RegisterMachineVisualizer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\RiscVisualizer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\RiscVisualizer.Designer.cs">
-      <DependentUpon>RiscVisualizer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\TapeVisualizer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\TapeVisualizer.Designer.cs">
-      <DependentUpon>TapeVisualizer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\TuringVisualizer.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Old\controls\visuals\TuringVisualizer.Designer.cs">
-      <DependentUpon>TuringVisualizer.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Old\controls\visuals\VisualizerState.cs" />
-    <Compile Include="Old\errors\AbstractException.cs" />
-    <Compile Include="Old\errors\dev\InvalidOperationTextException.cs" />
-    <Compile Include="Old\errors\runtime\ExecutionAbstractException.cs" />
-    <Compile Include="MainForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainForm.Designer.cs">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RiscForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="RiscForm.Designer.cs">
-      <DependentUpon>RiscForm.cs</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Old\controls\AbstractDevelopUI.resx">
-      <DependentUpon>AbstractDevelopUI.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\environment\debugwindow\DebugWindow.resx">
-      <DependentUpon>DebugWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\environment\visualscontrol\VisualsControl.resx">
-      <DependentUpon>VisualsControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\environment\toolpanel\ToolPanel.resx">
-      <DependentUpon>ToolPanel.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\environment\WorkEnvironment.resx">
-      <DependentUpon>WorkEnvironment.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\menus\about\AboutWindow.resx">
-      <DependentUpon>AboutWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\menus\help\HelpWindow.resx">
-      <DependentUpon>HelpWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\menus\logo\LogoHolder.resx">
-      <DependentUpon>LogoHolder.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\menus\project\CreateProjectMenu.resx">
-      <DependentUpon>CreateProjectMenu.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\menus\project\items\PostMachineProjectItem.resx">
-      <DependentUpon>PostMachineProjectItem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\menus\project\items\RegisterMachineProjectItem.resx">
-      <DependentUpon>RegisterMachineProjectItem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\menus\project\items\TuringMachineProjectItem.resx">
-      <DependentUpon>TuringMachineProjectItem.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\ui\ceditor\CodeEditor.resx">
-      <DependentUpon>CodeEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\ui\ceditor\editors\RiscCodeEditor.resx">
-      <DependentUpon>RiscCodeEditor.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\additionals\TapeToolUnit.resx">
-      <DependentUpon>TapeToolUnit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\additionals\TextInputControl.resx">
-      <DependentUpon>TextInputControl.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\additionals\ThreadFrame.resx">
-      <DependentUpon>ThreadFrame.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\additionals\TuringInfo.resx">
-      <DependentUpon>TuringInfo.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\RiscRegistersVisualizer.resx">
-      <DependentUpon>RiscRegistersVisualizer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\InfiniteRegistersVisualizer.resx">
-      <DependentUpon>InfiniteRegistersVisualizer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\PostVisualizer.resx">
-      <DependentUpon>PostVisualizer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\RegisterMachineVisualizer.resx">
-      <DependentUpon>RegisterMachineVisualizer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\RiscVisualizer.resx">
-      <DependentUpon>RiscVisualizer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\TapeVisualizer.resx">
-      <DependentUpon>TapeVisualizer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Old\controls\visuals\TuringVisualizer.resx">
-      <DependentUpon>TuringVisualizer.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MainForm.resx">
-      <DependentUpon>MainForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
+    </ApplicationDefinition>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Modules\Registers\ViewModels\RegistersViewModel.cs" />
+    <Compile Include="Modules\Registers\Views\RegistersView.xaml.cs">
+      <DependentUpon>RegistersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\SolutionExplorer\ViewModels\SolutionExplorerViewModel.cs" />
+    <Compile Include="Modules\SolutionExplorer\Views\SolutionExplorerView.xaml.cs">
+      <DependentUpon>SolutionExplorerView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Startup\Module.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="RiscForm.resx">
-      <DependentUpon>RiscForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <None Include="Old\controls\ui\ceditor\SciLexer.exp" />
-    <None Include="Old\lib\ScintillaNET\LICENSE" />
-    <None Include="packages.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+    <None Include="Tests\Project.json" />
+    <None Include="Tests\ProjectSchema.json" />
+    <None Include="Tests\SampleTest.json" />
+    <None Include="Tests\TestSchema.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Old\imgs\TapeCellChecked.jpg" />
+    <ProjectReference Include="..\Libraries\AbstractDevelop.Common\AbstractDevelop.Common.csproj">
+      <Project>{0b76401d-e688-485c-a6e0-a5461cb9fe7e}</Project>
+      <Name>AbstractDevelop.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\AbstractDevelop.Visuals\AbstractDevelop.Visuals.csproj">
+      <Project>{de9b6974-0ab1-44d8-ac96-ddd78a2da5de}</Project>
+      <Name>AbstractDevelop.Visuals</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Libraries\Gemini\Gemini.csproj">
+      <Project>{13dbfc87-c152-4a86-94b0-d9944beef647}</Project>
+      <Name>Gemini</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Old\imgs\TapeCellFocused.jpg" />
+    <Resource Include="IconLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Old\imgs\toolpanel\PauseBtn.png" />
+    <Folder Include="Modules\SolutionExplorer\Commands\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Old\imgs\toolpanel\PlayBtn.png" />
+    <Page Include="Modules\Registers\Views\RegistersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Modules\SolutionExplorer\Views\SolutionExplorerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Old\imgs\toolpanel\StepBtn.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Old\imgs\toolpanel\StopBtn.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Old\webdata\menus\BreakPointInfo.html" />
-    <None Include="Old\webdata\menus\DebugInfo.html" />
-    <None Include="Old\webdata\menus\WorkEnvironmentInfo.html" />
-    <None Include="Old\webdata\menus\ProjectCreateInfo.html" />
-    <None Include="Old\webdata\projectinfo\TuringInfo.html" />
-    <None Include="Old\webdata\projectinfo\RegisterInfo.html" />
-    <None Include="Old\webdata\projectinfo\PostInfo.html" />
-    <EmbeddedResource Include="Old\lib\ScintillaNET\ScintillaNET.dll" />
-    <None Include="Old\imgs\logo\Logo.png" />
-    <None Include="Old\imgs\logo\IconLogo.png" />
-    <Content Include="IconLogo.ico" />
-    <Content Include="Old\lib\ScintillaNET\ScintillaNET.pdb" />
-    <Content Include="Old\lib\ScintillaNET\ScintillaNET.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
-      <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.5 %28x86 и x64%29</ProductName>
-      <Install>true</Install>
-    </BootstrapperPackage>
-    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
-      <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1</ProductName>
-      <Install>false</Install>
-    </BootstrapperPackage>
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties Tests_4SampleTest_1json__JSONSchema="TestSchema.json" />
+    </VisualStudio>
+  </ProjectExtensions>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

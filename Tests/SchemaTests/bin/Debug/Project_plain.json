@@ -1,0 +1,29 @@
+{
+  "Title": "Test project",
+  "PlatformCode": 1,
+  "Settings": {},
+  "Content": [
+    {
+      "Type": "Directory",
+      "Name": "Resources",
+      "Content": [
+        {
+          "Type": "File",
+          "Name": "resource1.res",
+          "Content": "srgetryhbJKSUIJnnsdshdHSDJEUSnVzdCBhIHRlc3Qgc3RyaW5nIGhlcmVKdXN0IGEgdGVzdCBzdHJpbmcgaGVyZQ=="
+        },
+        {
+          "Type": "Directory",
+          "Name": "images",
+          "Content": [
+            {
+              "Type": "File",
+              "Name": "image1.png",
+              "Content": "ew0KICAiVGl0bGUiOiAiVGVzdCBwcm9qZWN0IiwNCiAgIlBsYXRmb3JtQ29kZSI6IDEsDQogICJTZXR0aW5ncyI6IHt9LA0KICAiQ29udGVudCI6IFsNCiAgICB7DQogICAgICAiVHlwZSI6ICJEaXJlY3RvcnkiLA0KICAgICAgIk5hbWUiOiAiUmVzb3VyY2VzIiwNCiAgICAgICJDb250ZW50IjogWw0KICAgICAgICB7DQogICAgICAgICAgIlR5cGUiOiAiRmlsZSIsDQogICAgICAgICAgIk5hbWUiOiAicmVzb3VyY2UxLnJlcyIsDQogICAgICAgICAgIkNvbnRlbnQiOiAic3JnZXRyeWhiSktTVUlKbm5zZHNoZEhTREpFVVNuVnpkQ0JoSUhSbGMzUWdjM1J5YVc1bklHaGxjbVZLZFhOMElHRWdkR1Z6ZENCemRISnBibWNnYUdWeVpRPT0iDQogICAgICAgIH0sDQogICAgICAgIHsNCiAgICAgICAgICAiVHlwZSI6ICJEaXJlY3RvcnkiLA0KICAgICAgICAgICJOYW1lIjogImltYWdlcyIsDQogICAgICAgICAgIkNvbnRlbnQiOiBbDQogICAgICAgICAgICB7DQogICAgICAgICAgICAgICJUeXBlIjogIkZpbGUiLA0KICAgICAgICAgICAgICAiTmFtZSI6ICJpbWFnZTEucG5nIiwNCiAgICAgICAgICAgICAgIkNvbnRlbnQiOiAiIg0KICAgICAgICAgICAgfQ0KICAgICAgICAgIF0NCiAgICAgICAgfQ0KICAgICAgXQ0KICAgIH0NCiAgXQ0KfQ=="
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,58 +1,21 @@
 ﻿using System.Reflection;
+using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
+using System.Windows;
+
+
 
 
 // Управление общими сведениями о сборке осуществляется с помощью 
 // набора атрибутов. Измените значения этих атрибутов, чтобы изменить сведения,
 // связанные со сборкой.
 [assembly: AssemblyTitle("AbstractDevelop")]
-[assembly: AssemblyDescription(
-@"Исполняемый файл программы, а также файлы исходного кода находятся в репозитории GitHub по адресу: https://github.com/Hrombel/AbstractDevelop.
-Программа находится в стадии альфа-версии, поэтому возможны сбои в ее работе.
-По связанным с данной программой вопросам можно обращаться по электронной почте: admin@hrombel.ru
-
-Лицензия MIT (MIT)
-
-Copyright (c) 2016 Максим Куклин, hrombel.ru
-
-Данная лицензия разрешает лицам, получившим копию данного программного обеспечения и сопутствующей документации (в дальнейшем именуемыми «Программное Обеспечение»), 
-безвозмездно использовать Программное Обеспечение без ограничений, включая неограниченное право на использование, копирование, изменение, добавление, публикацию, 
-распространение, сублицензирование и/или продажу копий Программного Обеспечения, а также лицам, которым предоставляется данное Программное Обеспечение, 
-при соблюдении следующих условий:
-
-Указанное выше уведомление об авторском праве и данные условия должны быть включены во все копии или значимые части данного Программного Обеспечения.
-ДАННОЕ ПРОГРАММНОЕ ОБЕСПЕЧЕНИЕ ПРЕДОСТАВЛЯЕТСЯ «КАК ЕСТЬ», БЕЗ КАКИХ-ЛИБО ГАРАНТИЙ, ЯВНО ВЫРАЖЕННЫХ ИЛИ ПОДРАЗУМЕВАЕМЫХ, ВКЛЮЧАЯ ГАРАНТИИ ТОВАРНОЙ ПРИГОДНОСТИ, 
-СООТВЕТСТВИЯ ПО ЕГО КОНКРЕТНОМУ НАЗНАЧЕНИЮ И ОТСУТСТВИЯ НАРУШЕНИЙ, НО НЕ ОГРАНИЧИВАЯСЬ ИМИ. НИ В КАКОМ СЛУЧАЕ АВТОРЫ ИЛИ ПРАВООБЛАДАТЕЛИ НЕ НЕСУТ ОТВЕТСТВЕННОСТИ ПО 
-КАКИМ-ЛИБО ИСКАМ, ЗА УЩЕРБ ИЛИ ПО ИНЫМ ТРЕБОВАНИЯМ, В ТОМ ЧИСЛЕ, ПРИ ДЕЙСТВИИ КОНТРАКТА, ДЕЛИКТЕ ИЛИ ИНОЙ СИТУАЦИИ, ВОЗНИКШИМ ИЗ-ЗА ИСПОЛЬЗОВАНИЯ ПРОГРАММНОГО ОБЕСПЕЧЕНИЯ 
-ИЛИ ИНЫХ ДЕЙСТВИЙ С ПРОГРАММНЫМ ОБЕСПЕЧЕНИЕМ.
-
-The MIT License (MIT)
-
-Copyright (c) 2016 Max Kuklin, hrombel.ru
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the" + " Software" + @"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and / or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED " + "AS IS," + @" WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE."
-)]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("ВятГУ, кафедра ЭВМ")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("AbstractDevelop")]
-[assembly: AssemblyCopyright("Куклин Максим ©  2016")]
+[assembly: AssemblyCopyright("Copyright ©  2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -61,8 +24,25 @@ SOFTWARE."
 // COM, задайте атрибуту ComVisible значение TRUE для этого типа.
 [assembly: ComVisible(false)]
 
-// Следующий GUID служит для идентификации библиотеки типов, если этот проект будет видимым для COM
-[assembly: Guid("a2fe556b-3a93-49a6-839a-445229ef71f6")]
+//Чтобы начать сборку локализованных приложений, задайте 
+//<UICulture>CultureYouAreCodingWith</UICulture> в файле .csproj
+//внутри <PropertyGroup>.  Например, если используется английский США
+//в своих исходных файлах установите <UICulture> в en-US.  Затем отмените преобразование в комментарий
+//атрибута NeutralResourceLanguage ниже.  Обновите "en-US" в
+//строка внизу для обеспечения соответствия настройки UICulture в файле проекта.
+
+//[assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.Satellite)]
+
+
+[assembly: ThemeInfo(
+    ResourceDictionaryLocation.None, //где расположены словари ресурсов по конкретным тематикам
+                                     //(используется, если ресурс не найден на странице 
+                                     // или в словарях ресурсов приложения)
+    ResourceDictionaryLocation.SourceAssembly //где расположен словарь универсальных ресурсов
+                                              //(используется, если ресурс не найден на странице, 
+                                              // в приложении или в каких-либо словарях ресурсов для конкретной темы)
+)]
+
 
 // Сведения о версии сборки состоят из следующих четырех значений:
 //
@@ -74,5 +54,5 @@ SOFTWARE."
 // Можно задать все значения или принять номера сборки и редакции по умолчанию 
 // используя "*", как показано ниже:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.85.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

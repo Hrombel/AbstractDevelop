@@ -1,0 +1,58 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema",
+
+  "id": "http://abstractdevelop.com/testing/schema",
+  "title": "JSON Schema for AbstractDevelop test files",
+
+  "type": "object",
+
+  "definitions": {
+    // массив чисел (byte)
+    "byteArray": {
+      "type": "array",
+      // элементами массива могут быть как числа, так и их строковые представления
+      "items": {
+        "type": [ "number", "string" ],
+        // ограничение для ввода byte
+        "minimum": 0,
+        "maximum": 255
+      }
+    },
+    // набор инструкций для формирования различных базисов
+    "instructions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [ "in", "out", "ror", "rol", "not", "or", "and", "nor", "nand", "xor", "add", "sub", "jz", "jo" ]
+      },
+
+      "minItems": 1,
+      "uniqueItems": true
+    }
+  },
+
+  "properties": {
+    // базис инструкций для использования во всей системе тестов
+    "InstructionSet": { "$ref": "#/definitions/instructions" },
+    "Tests": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "properties": {
+          "Title": { "type": "string" },
+          // набор значений ввода
+          "Input": { "$ref": "#/definitions/byteArray" },
+          // набор значений вывода
+          "Output": { "$ref": "#/definitions/byteArray" },
+          // базис инструкций для использования в данном тесте
+          "InstructionSet": { "$ref": "#/definitions/instructions" }
+        },
+        "required": [ "Title", "Input", "Output" ]
+      }
+    }
+  },
+
+  "required": [ "Tests", "InstructionSet" ]
+}

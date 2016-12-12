@@ -1,0 +1,1 @@
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.TuringMachine\obj\Debug\AbstractDevelop.TuringMachine.csprojResolveAssemblyReference.cache

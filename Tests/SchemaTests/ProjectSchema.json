@@ -1,0 +1,49 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-04/schema",
+  "title": "JSON schema for AbstractDevelop project",
+
+  "id": "http://abstractdevelop.com/project/schema",
+  "type": "object",
+
+  "definitions": {
+    // описывает имя в системе имен AbstractDevelop
+    "name": {
+      "type": "string",
+      "minLength": 3
+    },
+
+    // представляет содержимое
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "Type": {
+            "type": "string",
+            "enum": [ "Directory", "File" ]
+          },
+
+          "Name": { "$ref": "#/definitions/name" },
+
+          "Content": { "$ref": "#/definitions/content" },
+          "FileContent": { "type": "string" }
+        },
+        "required": [ "Name", "Type" ],
+        "additionalProperties": false
+      }
+    }
+  },
+
+  "properties": {
+    "Title": { "$ref": "#/definitions/name" },
+    "Platform": { "$ref": "#/definitions/name" },
+
+    "PlatformCode": { "type": "integer" },
+    "Content": { "$ref": "#/definitions/content" }
+  },
+
+  "required": [ "Title", "Platform", "Content" ],
+
+  "additionalProperties": false,
+  "additionalItems": false
+}

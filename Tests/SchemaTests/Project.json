@@ -1,0 +1,20 @@
+﻿{
+  "Title": "Test project",
+  "PlatformCode": 1,
+
+  "Content": [
+    {
+      "Type": "Directory",
+      "Name": "Resources",
+
+      "Content": [
+        {
+          "Type": "File",
+          "Name": "resource1.res",
+
+          "Content":  "srgetryhbJKSUIJnnsdshdHSDJEU"
+        }
+      ]
+    }
+  ]
+}
