@@ -76,236 +76,192 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common\CodeFile.cs" />
-    <Compile Include="controls\AbstractDevelopUI.cs">
+    <Compile Include="Old\controls\AbstractDevelopUI.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\AbstractDevelopUI.Designer.cs">
+    <Compile Include="Old\controls\AbstractDevelopUI.Designer.cs">
       <DependentUpon>AbstractDevelopUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\environment\CurrentVisualizerChangeEventArgs.cs" />
-    <Compile Include="controls\environment\debugwindow\DebugWindow.cs">
+    <Compile Include="Old\controls\environment\CurrentVisualizerChangeEventArgs.cs" />
+    <Compile Include="Old\controls\environment\debugwindow\DebugWindow.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\environment\debugwindow\DebugWindow.Designer.cs">
+    <Compile Include="Old\controls\environment\debugwindow\DebugWindow.Designer.cs">
       <DependentUpon>DebugWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\environment\visualscontrol\VisualsControl.cs">
+    <Compile Include="Old\controls\environment\visualscontrol\VisualsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\environment\visualscontrol\VisualsControl.Designer.cs">
+    <Compile Include="Old\controls\environment\visualscontrol\VisualsControl.Designer.cs">
       <DependentUpon>VisualsControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\environment\toolpanel\ToolPanel.cs">
+    <Compile Include="Old\controls\environment\toolpanel\ToolPanel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\environment\toolpanel\ToolPanel.Designer.cs">
+    <Compile Include="Old\controls\environment\toolpanel\ToolPanel.Designer.cs">
       <DependentUpon>ToolPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\environment\toolpanel\ToolPanelButton.cs" />
-    <Compile Include="controls\environment\toolpanel\ToolPanelEventArgs.cs" />
-    <Compile Include="controls\environment\WorkEnvironment.cs">
+    <Compile Include="Old\controls\environment\toolpanel\ToolPanelButton.cs" />
+    <Compile Include="Old\controls\environment\toolpanel\ToolPanelEventArgs.cs" />
+    <Compile Include="Old\controls\environment\WorkEnvironment.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\environment\WorkEnvironment.Designer.cs">
+    <Compile Include="Old\controls\environment\WorkEnvironment.Designer.cs">
       <DependentUpon>WorkEnvironment.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\menus\about\AboutWindow.cs">
+    <Compile Include="Old\controls\menus\about\AboutWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="controls\menus\about\AboutWindow.Designer.cs">
+    <Compile Include="Old\controls\menus\about\AboutWindow.Designer.cs">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\menus\help\HelpWindow.cs">
+    <Compile Include="Old\controls\menus\help\HelpWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="controls\menus\help\HelpWindow.Designer.cs">
+    <Compile Include="Old\controls\menus\help\HelpWindow.Designer.cs">
       <DependentUpon>HelpWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\menus\logo\LogoHolder.cs">
+    <Compile Include="Old\controls\menus\logo\LogoHolder.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\menus\logo\LogoHolder.Designer.cs">
+    <Compile Include="Old\controls\menus\logo\LogoHolder.Designer.cs">
       <DependentUpon>LogoHolder.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\menus\project\CreateProjectMenu.cs">
+    <Compile Include="Old\controls\menus\project\CreateProjectMenu.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\menus\project\CreateProjectMenu.Designer.cs">
+    <Compile Include="Old\controls\menus\project\CreateProjectMenu.Designer.cs">
       <DependentUpon>CreateProjectMenu.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\menus\project\IProjectMenuItem.cs" />
-    <Compile Include="controls\menus\project\items\PostMachineProjectItem.cs">
+    <Compile Include="Old\controls\menus\project\IProjectMenuItem.cs" />
+    <Compile Include="Old\controls\menus\project\items\PostMachineProjectItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\menus\project\items\PostMachineProjectItem.Designer.cs">
+    <Compile Include="Old\controls\menus\project\items\PostMachineProjectItem.Designer.cs">
       <DependentUpon>PostMachineProjectItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\menus\project\items\RegisterMachineProjectItem.cs">
+    <Compile Include="Old\controls\menus\project\items\RegisterMachineProjectItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\menus\project\items\RegisterMachineProjectItem.Designer.cs">
+    <Compile Include="Old\controls\menus\project\items\RegisterMachineProjectItem.Designer.cs">
       <DependentUpon>RegisterMachineProjectItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\menus\project\items\RiscMachineProjectItem.cs">
+    <Compile Include="Old\controls\menus\project\items\RiscMachineProjectItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\menus\project\items\RiscMachineProjectItem.Designer.cs">
+    <Compile Include="Old\controls\menus\project\items\RiscMachineProjectItem.Designer.cs">
       <DependentUpon>RiscMachineProjectItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\menus\project\items\TuringMachineProjectItem.cs">
+    <Compile Include="Old\controls\menus\project\items\TuringMachineProjectItem.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\menus\project\items\TuringMachineProjectItem.Designer.cs">
+    <Compile Include="Old\controls\menus\project\items\TuringMachineProjectItem.Designer.cs">
       <DependentUpon>TuringMachineProjectItem.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\menus\project\ProjectCreateEventArgs.cs" />
-    <Compile Include="controls\ui\ceditor\CodeEditor.cs">
+    <Compile Include="Old\controls\menus\project\ProjectCreateEventArgs.cs" />
+    <Compile Include="Old\controls\ui\ceditor\CodeEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\ui\ceditor\CodeEditor.Designer.cs">
+    <Compile Include="Old\controls\ui\ceditor\CodeEditor.Designer.cs">
       <DependentUpon>CodeEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\ui\ceditor\editors\PostCodeEditor.cs">
+    <Compile Include="Old\controls\ui\ceditor\editors\PostCodeEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\ui\ceditor\editors\RiscCodeEditor.cs">
+    <Compile Include="Old\controls\ui\ceditor\editors\RiscCodeEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\ui\ceditor\editors\RegisterCodeEditor.cs">
+    <Compile Include="Old\controls\ui\ceditor\editors\RegisterCodeEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\ui\ceditor\editors\TuringCodeEditor.cs">
+    <Compile Include="Old\controls\ui\ceditor\editors\TuringCodeEditor.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\ui\statecontrol\StateControl.cs">
+    <Compile Include="Old\controls\ui\statecontrol\StateControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\ui\statecontrol\StateControl.Designer.cs">
+    <Compile Include="Old\controls\ui\statecontrol\StateControl.Designer.cs">
       <DependentUpon>StateControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\additionals\TapeToolUnit.cs">
+    <Compile Include="Old\controls\visuals\additionals\TapeToolUnit.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\additionals\TapeToolUnit.Designer.cs">
+    <Compile Include="Old\controls\visuals\additionals\TapeToolUnit.Designer.cs">
       <DependentUpon>TapeToolUnit.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\additionals\TextInputControl.cs">
+    <Compile Include="Old\controls\visuals\additionals\TextInputControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\additionals\TextInputControl.Designer.cs">
+    <Compile Include="Old\controls\visuals\additionals\TextInputControl.Designer.cs">
       <DependentUpon>TextInputControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\additionals\ThreadFrame.cs">
+    <Compile Include="Old\controls\visuals\additionals\ThreadFrame.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\additionals\ThreadFrame.Designer.cs">
+    <Compile Include="Old\controls\visuals\additionals\ThreadFrame.Designer.cs">
       <DependentUpon>ThreadFrame.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\additionals\TuringInfo.cs">
+    <Compile Include="Old\controls\visuals\additionals\TuringInfo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\additionals\TuringInfo.Designer.cs">
+    <Compile Include="Old\controls\visuals\additionals\TuringInfo.Designer.cs">
       <DependentUpon>TuringInfo.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\IMachineVisualizer.cs" />
-    <Compile Include="controls\visuals\RiscRegistersVisualizer.cs">
+    <Compile Include="Old\controls\visuals\IMachineVisualizer.cs" />
+    <Compile Include="Old\controls\visuals\RiscRegistersVisualizer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\RiscRegistersVisualizer.Designer.cs">
+    <Compile Include="Old\controls\visuals\RiscRegistersVisualizer.Designer.cs">
       <DependentUpon>RiscRegistersVisualizer.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\InfiniteRegistersVisualizer.cs">
+    <Compile Include="Old\controls\visuals\InfiniteRegistersVisualizer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\InfiniteRegistersVisualizer.Designer.cs">
+    <Compile Include="Old\controls\visuals\InfiniteRegistersVisualizer.Designer.cs">
       <DependentUpon>InfiniteRegistersVisualizer.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\MachineVisualizerStateChangedEventArgs.cs" />
-    <Compile Include="controls\visuals\PostVisualizer.cs">
+    <Compile Include="Old\controls\visuals\MachineVisualizerStateChangedEventArgs.cs" />
+    <Compile Include="Old\controls\visuals\PostVisualizer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\PostVisualizer.Designer.cs">
+    <Compile Include="Old\controls\visuals\PostVisualizer.Designer.cs">
       <DependentUpon>PostVisualizer.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\RegisterMachineVisualizer.cs">
+    <Compile Include="Old\controls\visuals\RegisterMachineVisualizer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\RegisterMachineVisualizer.Designer.cs">
+    <Compile Include="Old\controls\visuals\RegisterMachineVisualizer.Designer.cs">
       <DependentUpon>RegisterMachineVisualizer.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\RiscVisualizer.cs">
+    <Compile Include="Old\controls\visuals\RiscVisualizer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\RiscVisualizer.Designer.cs">
+    <Compile Include="Old\controls\visuals\RiscVisualizer.Designer.cs">
       <DependentUpon>RiscVisualizer.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\TapeVisualizer.cs">
+    <Compile Include="Old\controls\visuals\TapeVisualizer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\TapeVisualizer.Designer.cs">
+    <Compile Include="Old\controls\visuals\TapeVisualizer.Designer.cs">
       <DependentUpon>TapeVisualizer.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\TuringVisualizer.cs">
+    <Compile Include="Old\controls\visuals\TuringVisualizer.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="controls\visuals\TuringVisualizer.Designer.cs">
+    <Compile Include="Old\controls\visuals\TuringVisualizer.Designer.cs">
       <DependentUpon>TuringVisualizer.cs</DependentUpon>
     </Compile>
-    <Compile Include="controls\visuals\VisualizerState.cs" />
-    <Compile Include="errors\AbstractException.cs" />
-    <Compile Include="errors\dev\InvalidOperationTextException.cs" />
-    <Compile Include="errors\runtime\ExecutionAbstractException.cs" />
-    <Compile Include="Machines\AbstractMachine.cs" />
-    <Compile Include="Machines\AbstractMachine.Nested.cs" />
-    <Compile Include="Machines\AbstractMachineExcepton.cs" />
-    <Compile Include="Machines\BreakPoint.cs" />
-    <Compile Include="Machines\ISourceTranslator.cs" />
-    <Compile Include="Machines\Post\Temporary.cs" />
-    <Compile Include="Machines\registers\InfiniteRegisters.cs" />
-    <Compile Include="Machines\registers\RegistersBlock.cs" />
-    <Compile Include="Machines\regmachine\LockedRegisters.cs" />
-    <Compile Include="Machines\regmachine\RegisterBreakPoint.cs" />
-    <Compile Include="Machines\regmachine\RegisterMachine.cs" />
-    <Compile Include="Machines\regmachine\RegisterMachineStoppedEventArgs.cs" />
-    <Compile Include="Machines\regmachine\RegisterMachineValueInEventArgs.cs" />
-    <Compile Include="Machines\regmachine\RegisterMachineValueOutEventArgs.cs" />
-    <Compile Include="Machines\regmachine\RegisterOperationId.cs" />
-    <Compile Include="Machines\regmachine\RegisterProgram.cs" />
-    <Compile Include="Machines\regmachine\RegisterProgramCollection.cs" />
-    <Compile Include="Machines\regmachine\RegisterThread.cs" />
-    <Compile Include="Machines\regmachine\RegisterThreadEventArgs.cs" />
-    <Compile Include="Machines\regmachine\RegisterThreadManager.cs" />
-    <Compile Include="Machines\regmachine\RegisterThreadManagerEventArgs.cs" />
-    <Compile Include="Machines\regmachine\RegisterTranslator.cs" />
-    <Compile Include="Machines\Risc\RiscMachine.cs" />
-    <Compile Include="Machines\SymbolSet.cs" />
-    <Compile Include="Machines\ThreadInfo.cs" />
-    <Compile Include="Machines\turing\TuringMachineStateChangedEventArgs.cs" />
-    <Compile Include="Machines\turing\TuringMachineStopEventArgs.cs" />
-    <Compile Include="Machines\turing\TuringMachineStopReason.cs" />
-    <Compile Include="Machines\turing\TuringOperation.cs" />
-    <Compile Include="Machines\turing\TuringOperationId.cs" />
-    <Compile Include="Machines\turing\TuringConvert.cs" />
-    <Compile Include="Machines\turing\TuringPenDir.cs" />
-    <Compile Include="Machines\turing\TuringState.cs" />
-    <Compile Include="Machines\turing\TuringTapes.cs" />
-    <Compile Include="Machines\turing\TuringTranslator.cs" />
-    <Compile Include="Machines\turing\TuringUnit.cs" />
-    <Compile Include="Machines\turing\TuringMachine.cs" />
+    <Compile Include="Old\controls\visuals\VisualizerState.cs" />
+    <Compile Include="Old\errors\AbstractException.cs" />
+    <Compile Include="Old\errors\dev\InvalidOperationTextException.cs" />
+    <Compile Include="Old\errors\runtime\ExecutionAbstractException.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Common\MachineId.cs" />
-    <Compile Include="Machines\Operation.cs" />
-    <Compile Include="Machines\Post\PostMachine.cs" />
-    <Compile Include="Machines\Post\PostTranslator.cs" />
-    <Compile Include="Machines\Tape.cs" />
-    <Compile Include="Common\Program.cs" />
-    <Compile Include="Common\AbstractProject.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RiscForm.cs">
       <SubType>Form</SubType>
@@ -313,81 +269,79 @@
     <Compile Include="RiscForm.Designer.cs">
       <DependentUpon>RiscForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="tools\LinkTools.cs" />
-    <Compile Include="tools\SourceTools.cs" />
-    <EmbeddedResource Include="controls\AbstractDevelopUI.resx">
+    <EmbeddedResource Include="Old\controls\AbstractDevelopUI.resx">
       <DependentUpon>AbstractDevelopUI.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\environment\debugwindow\DebugWindow.resx">
+    <EmbeddedResource Include="Old\controls\environment\debugwindow\DebugWindow.resx">
       <DependentUpon>DebugWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\environment\visualscontrol\VisualsControl.resx">
+    <EmbeddedResource Include="Old\controls\environment\visualscontrol\VisualsControl.resx">
       <DependentUpon>VisualsControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\environment\toolpanel\ToolPanel.resx">
+    <EmbeddedResource Include="Old\controls\environment\toolpanel\ToolPanel.resx">
       <DependentUpon>ToolPanel.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\environment\WorkEnvironment.resx">
+    <EmbeddedResource Include="Old\controls\environment\WorkEnvironment.resx">
       <DependentUpon>WorkEnvironment.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\menus\about\AboutWindow.resx">
+    <EmbeddedResource Include="Old\controls\menus\about\AboutWindow.resx">
       <DependentUpon>AboutWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\menus\help\HelpWindow.resx">
+    <EmbeddedResource Include="Old\controls\menus\help\HelpWindow.resx">
       <DependentUpon>HelpWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\menus\logo\LogoHolder.resx">
+    <EmbeddedResource Include="Old\controls\menus\logo\LogoHolder.resx">
       <DependentUpon>LogoHolder.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\menus\project\CreateProjectMenu.resx">
+    <EmbeddedResource Include="Old\controls\menus\project\CreateProjectMenu.resx">
       <DependentUpon>CreateProjectMenu.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\menus\project\items\PostMachineProjectItem.resx">
+    <EmbeddedResource Include="Old\controls\menus\project\items\PostMachineProjectItem.resx">
       <DependentUpon>PostMachineProjectItem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\menus\project\items\RegisterMachineProjectItem.resx">
+    <EmbeddedResource Include="Old\controls\menus\project\items\RegisterMachineProjectItem.resx">
       <DependentUpon>RegisterMachineProjectItem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\menus\project\items\TuringMachineProjectItem.resx">
+    <EmbeddedResource Include="Old\controls\menus\project\items\TuringMachineProjectItem.resx">
       <DependentUpon>TuringMachineProjectItem.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\ui\ceditor\CodeEditor.resx">
+    <EmbeddedResource Include="Old\controls\ui\ceditor\CodeEditor.resx">
       <DependentUpon>CodeEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\ui\ceditor\editors\RiscCodeEditor.resx">
+    <EmbeddedResource Include="Old\controls\ui\ceditor\editors\RiscCodeEditor.resx">
       <DependentUpon>RiscCodeEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\additionals\TapeToolUnit.resx">
+    <EmbeddedResource Include="Old\controls\visuals\additionals\TapeToolUnit.resx">
       <DependentUpon>TapeToolUnit.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\additionals\TextInputControl.resx">
+    <EmbeddedResource Include="Old\controls\visuals\additionals\TextInputControl.resx">
       <DependentUpon>TextInputControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\additionals\ThreadFrame.resx">
+    <EmbeddedResource Include="Old\controls\visuals\additionals\ThreadFrame.resx">
       <DependentUpon>ThreadFrame.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\additionals\TuringInfo.resx">
+    <EmbeddedResource Include="Old\controls\visuals\additionals\TuringInfo.resx">
       <DependentUpon>TuringInfo.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\RiscRegistersVisualizer.resx">
+    <EmbeddedResource Include="Old\controls\visuals\RiscRegistersVisualizer.resx">
       <DependentUpon>RiscRegistersVisualizer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\InfiniteRegistersVisualizer.resx">
+    <EmbeddedResource Include="Old\controls\visuals\InfiniteRegistersVisualizer.resx">
       <DependentUpon>InfiniteRegistersVisualizer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\PostVisualizer.resx">
+    <EmbeddedResource Include="Old\controls\visuals\PostVisualizer.resx">
       <DependentUpon>PostVisualizer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\RegisterMachineVisualizer.resx">
+    <EmbeddedResource Include="Old\controls\visuals\RegisterMachineVisualizer.resx">
       <DependentUpon>RegisterMachineVisualizer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\RiscVisualizer.resx">
+    <EmbeddedResource Include="Old\controls\visuals\RiscVisualizer.resx">
       <DependentUpon>RiscVisualizer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\TapeVisualizer.resx">
+    <EmbeddedResource Include="Old\controls\visuals\TapeVisualizer.resx">
       <DependentUpon>TapeVisualizer.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="controls\visuals\TuringVisualizer.resx">
+    <EmbeddedResource Include="Old\controls\visuals\TuringVisualizer.resx">
       <DependentUpon>TuringVisualizer.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
@@ -406,8 +360,8 @@
     <EmbeddedResource Include="RiscForm.resx">
       <DependentUpon>RiscForm.cs</DependentUpon>
     </EmbeddedResource>
-    <None Include="controls\ui\ceditor\SciLexer.exp" />
-    <None Include="lib\ScintillaNET\LICENSE" />
+    <None Include="Old\controls\ui\ceditor\SciLexer.exp" />
+    <None Include="Old\lib\ScintillaNET\LICENSE" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -423,37 +377,37 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="imgs\TapeCellChecked.jpg" />
+    <None Include="Old\imgs\TapeCellChecked.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="imgs\TapeCellFocused.jpg" />
+    <None Include="Old\imgs\TapeCellFocused.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="imgs\toolpanel\PauseBtn.png" />
+    <None Include="Old\imgs\toolpanel\PauseBtn.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="imgs\toolpanel\PlayBtn.png" />
+    <None Include="Old\imgs\toolpanel\PlayBtn.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="imgs\toolpanel\StepBtn.png" />
+    <None Include="Old\imgs\toolpanel\StepBtn.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="imgs\toolpanel\StopBtn.png" />
+    <None Include="Old\imgs\toolpanel\StopBtn.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="webdata\menus\BreakPointInfo.html" />
-    <None Include="webdata\menus\DebugInfo.html" />
-    <None Include="webdata\menus\WorkEnvironmentInfo.html" />
-    <None Include="webdata\menus\ProjectCreateInfo.html" />
-    <None Include="webdata\projectinfo\TuringInfo.html" />
-    <None Include="webdata\projectinfo\RegisterInfo.html" />
-    <None Include="webdata\projectinfo\PostInfo.html" />
-    <EmbeddedResource Include="lib\ScintillaNET\ScintillaNET.dll" />
-    <None Include="imgs\logo\Logo.png" />
-    <None Include="imgs\logo\IconLogo.png" />
+    <None Include="Old\webdata\menus\BreakPointInfo.html" />
+    <None Include="Old\webdata\menus\DebugInfo.html" />
+    <None Include="Old\webdata\menus\WorkEnvironmentInfo.html" />
+    <None Include="Old\webdata\menus\ProjectCreateInfo.html" />
+    <None Include="Old\webdata\projectinfo\TuringInfo.html" />
+    <None Include="Old\webdata\projectinfo\RegisterInfo.html" />
+    <None Include="Old\webdata\projectinfo\PostInfo.html" />
+    <EmbeddedResource Include="Old\lib\ScintillaNET\ScintillaNET.dll" />
+    <None Include="Old\imgs\logo\Logo.png" />
+    <None Include="Old\imgs\logo\IconLogo.png" />
     <Content Include="IconLogo.ico" />
-    <Content Include="lib\ScintillaNET\ScintillaNET.pdb" />
-    <Content Include="lib\ScintillaNET\ScintillaNET.xml" />
+    <Content Include="Old\lib\ScintillaNET\ScintillaNET.pdb" />
+    <Content Include="Old\lib\ScintillaNET\ScintillaNET.xml" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">

@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractDevelop", "AbstractDevelop\AbstractDevelop.csproj", "{D5122834-BCCC-4FEE-816C-5BE45ACBA4EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractDevelop.Common", "AbstractDevelop.Common\AbstractDevelop.Common.csproj", "{0B76401D-E688-485C-A6E0-A5461CB9FE7E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3490F01F-85E3-4F6E-9DA9-C855906F9A8C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,10 @@ Global
 		{D5122834-BCCC-4FEE-816C-5BE45ACBA4EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5122834-BCCC-4FEE-816C-5BE45ACBA4EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5122834-BCCC-4FEE-816C-5BE45ACBA4EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B76401D-E688-485C-A6E0-A5461CB9FE7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B76401D-E688-485C-A6E0-A5461CB9FE7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B76401D-E688-485C-A6E0-A5461CB9FE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B76401D-E688-485C-A6E0-A5461CB9FE7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

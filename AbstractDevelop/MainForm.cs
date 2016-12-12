@@ -11,7 +11,7 @@ namespace AbstractDevelop
             InitializeComponent();
             Version ver = Assembly.GetExecutingAssembly().GetName().Version;
 
-            Text = string.Format("{0} v{1}.{2}", AssemblyProduct, ver.Major, ver.Minor);
+            Text = string.Format($"{AssemblyProduct} v{ver.Major}.{ver.Minor}");
 
             FormClosing += MainForm_FormClosing;
         }
