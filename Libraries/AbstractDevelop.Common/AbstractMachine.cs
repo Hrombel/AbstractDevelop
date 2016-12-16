@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.Serialization;
-using AbstractDevelop.Machines.BreakPoints;
+
+using AbstractDevelop.Debug.BreakPoints;
+using AbstractDevelop.Translation;
 
 namespace AbstractDevelop.Machines
 {

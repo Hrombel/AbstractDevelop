@@ -4,6 +4,7 @@ using Gemini.Framework.Services;
 using Gemini.Modules.CodeEditor.ViewModels;
 using Gemini.Modules.Output;
 using Gemini.Modules.StatusBar;
+using Gemini.Modules.Toolbox;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -22,11 +23,15 @@ namespace AbstractDevelop.Modules.Startup
 
         IResourceManager ResourceManager;
 
+        //IToolbox RegisterView;
+
         [ImportingConstructor]
-        public Module(IStatusBar statusBar, IResourceManager manager)
+        public Module(IStatusBar statusBar, IResourceManager manager/*, [Import("RegisterView", typeof(IToolbox))] IToolbox regiseterView*/)
         {
             StatusBar = statusBar;
             ResourceManager = manager;
+
+            //RegisterView = regiseterView;
         }
 
         public override void Initialize()
@@ -43,10 +48,10 @@ namespace AbstractDevelop.Modules.Startup
             StatusBar.AddItem("There is nothig to stare at", new GridLength(2, GridUnitType.Star));
             StatusBar.AddItem("You are sucker", new GridLength(8, GridUnitType.Star));
 
-            Shell.OpenDocument(new RegistersViewModel());
             Shell.OpenDocument(new CodeEditorViewModel(new Gemini.Modules.CodeEditor.LanguageDefinitionManager()));
 
             Shell.ShowTool(new SolutionExplorer.ViewModels.SolutionExplorerViewModel());
+            Shell.ShowTool(new RegistersViewModel(null, PlatformService.Extensibility));
 
             Shell.ShowFloatingWindowsInTaskbar = true;
             Shell.ToolBars.Visible = true;

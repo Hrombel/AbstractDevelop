@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
-using System.Diagnostics;
 using System.Linq;
 
 using AbstractDevelop.Machines;
@@ -17,7 +16,7 @@ namespace AbstractDevelop
         /// <summary>
         /// Вспомогательный класс реализации поставщика расширений
         /// </summary>
-        class ExtensibilityProvider :
+        public class ExtensibilityProvider :
             IExtensibilityProvider
         {
             CompositionContainer composition;
@@ -37,6 +36,9 @@ namespace AbstractDevelop
             public ExtensibilityProvider(CompositionContainer container)
             {
                 composition = container;
+
+                // экспорт своего экземпляра
+                Export(this as IExtensibilityProvider);
             }
         }
 
@@ -60,7 +62,7 @@ namespace AbstractDevelop
                     // проверка платформы на пригодность для использования
                     if (initAction?.Invoke(platform) ?? false)
                         platforms.Add(platform.ID, platform);
-                    else Debug.Print(Translate.Key("PlatformExcluded", format: platform.Name));
+                    else System.Diagnostics.Debug.Print(Translate.Key("PlatformExcluded", format: platform.Name));
                 }
             }
         }
@@ -70,6 +72,12 @@ namespace AbstractDevelop
         /// </summary>
         public static IEnumerable<IPlatformProvider> Available
             => observedPlatforms.Values;
+
+        /// <summary>
+        /// Поставщик расширений
+        /// </summary>
+        public static IExtensibilityProvider Extensibility
+            => extesnibilityProvider;
 
         static CompositionContainer extensibilityContainer;
         static IExtensibilityProvider extesnibilityProvider;
@@ -93,6 +101,10 @@ namespace AbstractDevelop
             extesnibilityProvider = new ExtensibilityProvider(extensibilityContainer);
 
             observer = new PlatformObserver();
+            container.SatisfyImportsOnce(observer);
+
+            observedPlatforms = new Dictionary<int, IPlatformProvider>();
+
             Update();
         }
 

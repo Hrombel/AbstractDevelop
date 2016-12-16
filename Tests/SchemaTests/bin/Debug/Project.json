@@ -1,7 +1,10 @@
 {
   "Title": "Test project",
   "PlatformCode": 1,
-  "Settings": {},
+  "Settings": {
+    "memorySize": "256",
+    "registerCount": "8"
+  },
   "Content": [
     {
       "Type": "Directory",
@@ -10,7 +13,7 @@
         {
           "Type": "File",
           "Name": "resource1.res",
-          "Content": "srgetryhbJKSUIJnnsdshdHSDJEUSnVzdCBhIHRlc3Qgc3RyaW5nIGhlcmU="
+          "Content": "srgetryhbJKSUIJnnsdshdHSDJEUSnVzdCBhIHRlc3Qgc3RyaW5nIGhlcmVKdXN0IGEgdGVzdCBzdHJpbmcgaGVyZQ=="
         },
         {
           "Type": "Directory",

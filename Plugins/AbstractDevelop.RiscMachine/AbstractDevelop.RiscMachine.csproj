@@ -9,8 +9,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>AbstractDevelop.RiscMachine</RootNamespace>
     <AssemblyName>AbstractDevelop.RiscMachine</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,26 +31,88 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Caliburn.Micro, Version=3.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Caliburn.Micro.Core.3.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform, Version=3.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Caliburn.Micro.3.0.2\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Caliburn.Micro.3.0.2\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gu.Localization, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Gu.Localization.6.1.0.0\lib\net45\Gu.Localization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Gu.Wpf.Localization, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Gu.Wpf.Localization.6.1.0.0\lib\net45\Gu.Wpf.Localization.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Numerics" />
+    <Reference Include="System.ValueTuple">
+      <HintPath>..\..\Libraries\AbstractDevelop.Common\bin\Debug\System.ValueTuple.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Caliburn.Micro.3.0.2\lib\net45\System.Windows.Interactivity.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Windows.Presentation" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IRegister.cs" />
+    <Compile Include="Machines\Data\DataReferenceType.cs" />
+    <Compile Include="Machines\Data\DataReference.cs" />
+    <Compile Include="Machines\Data\RiscInstructionType.cs" />
+    <Compile Include="Machines\Data\RiscRegister.cs" />
+    <Compile Include="Modules\Registers\Converters\RegisterValueConverter.cs" />
+    <Compile Include="Modules\Registers\ViewModels\RegisterItemViewModel.cs" />
+    <Compile Include="Modules\Registers\ViewModels\RegistersViewModel.cs" />
+    <Compile Include="Modules\Registers\Views\RegistersView.xaml.cs">
+      <DependentUpon>RegistersView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Modules\Schema\ViewModels\SchemaViewModel.cs" />
+    <Compile Include="Modules\Schema\Views\SchemaView.xaml.cs">
+      <DependentUpon>SchemaView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RiscMachine.cs" />
+    <Compile Include="Machines\RiscMachine.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\SettingsBinding.cs" />
     <Compile Include="RiscPlatform.cs" />
-    <Compile Include="RiscTranslator.cs" />
+    <Compile Include="Machines\RiscTranslator.cs" />
+    <Compile Include="Testing\RiscTestSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\AbstractDevelop.Common\AbstractDevelop.Common.csproj">
       <Project>{0b76401d-e688-485c-a6e0-a5461cb9fe7e}</Project>
       <Name>AbstractDevelop.Common</Name>
+      <Private>False</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\Gemini\Gemini.csproj">
+      <Project>{13dbfc87-c152-4a86-94b0-d9944beef647}</Project>
+      <Name>Gemini</Name>
+      <Private>False</Private>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +120,27 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Modules\Memory\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Modules\Registers\Views\RegistersView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+    <Page Include="Modules\Schema\Views\SchemaView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

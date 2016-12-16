@@ -1,0 +1,316 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:AbstractDevelop.Modules.Schema.Views"
+             xmlns:Views="clr-namespace:AbstractDevelop.Modules.Registers.Views" x:Class="AbstractDevelop.Modules.Schema.Views.SchemaView"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Background="White">
+    <UserControl.Resources>
+        <Storyboard x:Key="DataFlowAnimation" RepeatBehavior="Forever">
+            <BooleanAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.ClipToBounds)" Storyboard.TargetName="mailLine">
+                <DiscreteBooleanKeyFrame KeyTime="0" Value="True"/>
+            </BooleanAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Canvas.Top)" Storyboard.TargetName="dataflow2">
+                <EasingDoubleKeyFrame KeyTime="0" Value="157"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:5" Value="8"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[0].(ScaleTransform.ScaleY)" Storyboard.TargetName="dataflow2">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:5" Value="1.182"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[3].(TranslateTransform.Y)" Storyboard.TargetName="dataflow2">
+                <EasingDoubleKeyFrame KeyTime="0" Value="1.67"/>
+                <EasingDoubleKeyFrame KeyTime="0:0:5" Value="14.5"/>
+            </DoubleAnimationUsingKeyFrames>
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Canvas.Top)" Storyboard.TargetName="dataflow1">
+                <EasingDoubleKeyFrame KeyTime="0" Value="0"/>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
+    </UserControl.Resources>
+    <UserControl.Triggers>
+        <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+            <BeginStoryboard Storyboard="{StaticResource DataFlowAnimation}"/>
+        </EventTrigger>
+    </UserControl.Triggers>
+    <Grid>
+        <Border x:Name="incrementBorder" Height="31.995" Margin="108.223,1.333,119.063,0" VerticalAlignment="Top">
+            <Grid Margin="0,0,-10.333,-4">
+                <Rectangle Fill="#FFF4F4F5" Stroke="Black" Margin="0,5,0,0"/>
+                <TextBlock Margin="10,11.344,9.441,10" TextWrapping="Wrap" Text="Инкремент"/>
+
+            </Grid>
+        </Border>
+        <Canvas x:Name="inputBlock" Height="34.593" Margin="6.054,0,0,3.634" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="84.941">
+            <Rectangle Fill="#FFF4F4F5" Height="35" Stroke="Black" Width="85"/>
+            <TextBlock x:Name="input" Height="16.205" TextWrapping="Wrap" Canvas.Left="27.53" Canvas.Top="10" Width="33.241"><Run Text="Ввод"/></TextBlock>
+        </Canvas>
+        <Canvas x:Name="outputBlock" Height="34.593" Margin="108.223,0,106.563,3.634" VerticalAlignment="Bottom">
+            <Rectangle Fill="#FFF4F4F5" Height="35" Stroke="Black" Width="85" Canvas.Top="-0.5"/>
+            <TextBlock x:Name="output" Height="16.205" TextWrapping="Wrap" Width="41.967" Canvas.Left="23.5" Canvas.Top="9"><Run Text="В"/><Run Text="ы"/><Run Text="вод"/></TextBlock>
+        </Canvas>
+        <Canvas x:Name="memoryData" HorizontalAlignment="Right" Margin="0,74.203,58.284,138.124" Width="36.364" RenderTransformOrigin="1.05,0.486">
+            <Rectangle Fill="#FFF4F4F5" Stroke="Black" Width="35" Height="85" Canvas.Left="0.13"/>
+            <TextBlock TextWrapping="Wrap" Text="Память" Width="46.5" Height="19.5" Canvas.Top="20" Canvas.Left="8">
+                <TextBlock.LayoutTransform>
+                    <RotateTransform Angle="-90"/>
+                </TextBlock.LayoutTransform>
+            </TextBlock>
+        </Canvas>
+        <StackPanel x:Name="registersData" Margin="1.554,0.661,0,130.844" Orientation="Vertical" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="100">
+            <TextBlock Height="13.981" TextWrapping="Wrap" Text="Регистры" d:LayoutOverrides="LeftPosition, RightPosition" Margin="5"/>
+            <Border Margin="0,0,4,0" Height="141.014">
+                <Viewbox x:Name="border" VerticalAlignment="Top">
+                    <Views:RegistersView />
+                </Viewbox>
+            </Border>
+        </StackPanel>
+        <StackPanel x:Name="memoryIO" HorizontalAlignment="Right" Margin="0,105.992,99.648,0" Orientation="Vertical" VerticalAlignment="Top" Width="38.43">
+            <Canvas Height="12.289" d:LayoutOverrides="LeftPosition, RightPosition">
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="3.708"/>
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="8.19"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" Canvas.Left="34.016"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" RenderTransformOrigin="0.5,0.5" Canvas.Left="34.016" Canvas.Top="5.375">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+
+            </Canvas>
+            <Canvas Height="12.289" RenderTransformOrigin="0.5,0.5" d:LayoutOverrides="LeftPosition, RightPosition">
+                <Canvas.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                        <SkewTransform AngleY="0" AngleX="0"/>
+                        <RotateTransform Angle="0"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Canvas.RenderTransform>
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="3.708"/>
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="8.19"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" Canvas.Left="34.016"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" RenderTransformOrigin="0.5,0.5" Canvas.Left="34.016" Canvas.Top="5.375">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+
+            </Canvas>
+        </StackPanel>
+        <StackPanel x:Name="registersIO" HorizontalAlignment="Left" Margin="101.554,105.992,0,0" Orientation="Vertical" VerticalAlignment="Top" Width="38.43">
+            <Canvas Height="12.289" d:LayoutOverrides="LeftPosition, RightPosition">
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="3.708"/>
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="8.19"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" Canvas.Left="34.016"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" RenderTransformOrigin="0.5,0.5" Canvas.Left="34.016" Canvas.Top="5.375">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+
+            </Canvas>
+            <Canvas Height="12.289" RenderTransformOrigin="0.5,0.5" d:LayoutOverrides="LeftPosition, RightPosition">
+                <Canvas.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                        <SkewTransform AngleY="0" AngleX="0"/>
+                        <RotateTransform Angle="0"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Canvas.RenderTransform>
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="3.708"/>
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="8.19"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" Canvas.Left="34.016"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" RenderTransformOrigin="0.5,0.5" Canvas.Left="34.016" Canvas.Top="5.375">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+
+            </Canvas>
+        </StackPanel>
+        <Canvas x:Name="mailLine" Margin="139.984,44.126,138.078,48.581" ClipToBounds="True">
+            <Path Data="M180,55 L180,218.07667" Fill="#FF2626D1" Stretch="Fill" Stroke="Black" Width="1" Height="200" Canvas.Left="5" Canvas.Top="3.216"/>
+            <Path Data="M180,55 L180,218.07667" Fill="#FF2626D1" Stretch="Fill" Stroke="Black" Width="1" Height="200" Canvas.Left="15.958" Canvas.Top="3.216"/>
+            <Canvas x:Name="arrow1" Height="7.207" Width="21.938">
+                <Path Data="M190.651,49 L201.40177,42.793037" Fill="#FF2626D1" Height="7.207" Stretch="Fill" Stroke="Black" Width="11.751"/>
+                <Path Data="M190.651,49 L201.40177,42.793037" Fill="#FF2626D1" Height="7.207" Stretch="Fill" Stroke="Black" Width="11.751" RenderTransformOrigin="0.5,0.5" Canvas.Left="10.187">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+            <Canvas x:Name="arrow2" Height="7.207" Width="21.938" RenderTransformOrigin="0.312,23.131" Canvas.Top="199.625">
+                <Canvas.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1" ScaleX="1"/>
+                        <SkewTransform AngleY="0" AngleX="0"/>
+                        <RotateTransform Angle="0"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Canvas.LayoutTransform>
+                <Path Data="M190.651,49 L201.40177,42.793037" Fill="#FF2626D1" Height="7.207" Stretch="Fill" Stroke="Black" Width="11.751"/>
+                <Path Data="M190.651,49 L201.40177,42.793037" Fill="#FF2626D1" Height="7.207" Stretch="Fill" Stroke="Black" Width="11.751" RenderTransformOrigin="0.5,0.5" Canvas.Left="10.187">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+            <Canvas x:Name="dataflow" Height="190.086" Canvas.Left="9.681" Canvas.Top="7.207" Width="3" ClipToBounds="True">
+                <Path x:Name="dataflow1" Data="M10.349,9.207 L10.349,167.29417" Fill="#FFD1B226" Height="159.087" Stretch="Fill" Width="3" StrokeDashArray="5 5" Stroke="#FFEA3500" Canvas.Left="0" Canvas.Top="0"/>
+                <Path x:Name="dataflow2" Data="M10.349,9.207 L10.349,167.29417" Fill="#FFD1B226" Height="159.087" Stretch="Fill" Canvas.Top="149.793" Width="3" StrokeDashArray="5 5" Stroke="#FFEA3500" RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+
+            </Canvas>
+
+        </Canvas>
+        <Canvas x:Name="aluBlock" Height="34.593" Margin="6.054,0,0,77.634" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="84.941">
+            <Rectangle Fill="#FFF4F4F5" Height="35" Stroke="Black" Width="85"/>
+            <TextBlock x:Name="input1" Height="16.205" TextWrapping="Wrap" Canvas.Left="28.78" Canvas.Top="10" Width="33.241" Text="АЛУ"/>
+        </Canvas>
+        <Canvas x:Name="aluRegistersAccess" HorizontalAlignment="Left" Height="18.082" Margin="37.833,0,0,115.085" VerticalAlignment="Bottom" Width="21.938">
+            <Canvas x:Name="arrow2_Copy" Height="7.207" Width="21.938" RenderTransformOrigin="0.312,23.131" Canvas.Top="10.875">
+                <Canvas.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1" ScaleX="1"/>
+                        <SkewTransform AngleY="0" AngleX="0"/>
+                        <RotateTransform Angle="0"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Canvas.LayoutTransform>
+                <Path Data="M190.651,49 L201.40177,42.793037" Fill="#FF2626D1" Height="7.207" Stretch="Fill" Stroke="Black" Width="11.751"/>
+                <Path Data="M190.651,49 L201.40177,42.793037" Fill="#FF2626D1" Height="7.207" Stretch="Fill" Stroke="Black" Width="11.751" RenderTransformOrigin="0.5,0.5" Canvas.Left="10.187">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+            <Path Data="M93.75,165.5 L93.75,179.25227" Fill="#FFF4F4F5" Height="14.752" Stretch="Fill" Stroke="Black" Width="1" Canvas.Left="5.25"/>
+            <Path Data="M93.75,165.5 L93.75,179.25227" Fill="#FFF4F4F5" Height="14.752" Stretch="Fill" Stroke="Black" Width="1" Canvas.Left="15.75"/>
+
+        </Canvas>
+        <Canvas x:Name="inputLink" Height="12.289" Margin="52.398,0,0,59.422" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="88.097">
+            <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="91" Canvas.Top="3.708" Canvas.Left="-4.844"/>
+            <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="86" Canvas.Top="8.19"/>
+            <Canvas Height="12.289" Canvas.Left="83.427" Width="4.414">
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" RenderTransformOrigin="0.5,0.5" Canvas.Top="5.375">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+            <Path Data="M0,8.8773333 L1.2041962E-15,28.544" Fill="#FF2626D1" Height="22" Stretch="Fill" Stroke="Black" Canvas.Top="7.701" Width="1"/>
+            <Path Data="M98.065,231.66667 L98.065,255.44" Fill="#FF2626D1" Height="26.5" Stretch="Fill" Stroke="Black" Width="1" Canvas.Left="-4.844" Canvas.Top="3.207"/>
+
+        </Canvas>
+        <StackPanel x:Name="aluIO" HorizontalAlignment="Left" Margin="101.554,0,0,82.979" Orientation="Vertical" VerticalAlignment="Bottom" Width="38.43">
+            <Canvas Height="12.289" d:LayoutOverrides="LeftPosition, RightPosition">
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="3.708"/>
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="8.19"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" Canvas.Left="34.016"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" RenderTransformOrigin="0.5,0.5" Canvas.Left="34.016" Canvas.Top="5.375">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+
+            </Canvas>
+            <Canvas Height="12.289" RenderTransformOrigin="0.5,0.5" d:LayoutOverrides="LeftPosition, RightPosition">
+                <Canvas.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                        <SkewTransform AngleY="0" AngleX="0"/>
+                        <RotateTransform Angle="0"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Canvas.RenderTransform>
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="3.708"/>
+                <Path Data="M212.609,123.33333 L248.502,123.33333" Fill="#FF2626D1" Height="1" Stretch="Fill" Stroke="Black" Width="36.893" Canvas.Top="8.19"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" Canvas.Left="34.016"/>
+                <Path Data="M243.75,89.75 L247.16447,95.664031" Fill="#FF2626D1" Height="6.914" Stretch="Fill" Stroke="Black" Width="4.414" RenderTransformOrigin="0.5,0.5" Canvas.Left="34.016" Canvas.Top="5.375">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1" ScaleX="-1"/>
+                            <SkewTransform AngleY="0" AngleX="0"/>
+                            <RotateTransform Angle="0"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+
+            </Canvas>
+        </StackPanel>
+        <Canvas x:Name="registerIncrementer" HorizontalAlignment="Left" Height="28.008" Margin="101.553,38.328,0,0" VerticalAlignment="Top" Width="24.78">
+            <Path Data="M125.33333,38.328 L125.33333,64.666667" Fill="#FFF4F4F5" Height="27.339" Stretch="Fill" Stroke="Black" Width="1" Canvas.Left="23.78"/>
+            <Path Data="M125.333,64.166667 L101.55342,64.166667" Fill="#FFF4F4F5" Height="1" Stretch="Fill" Stroke="Black" Width="24.78" Canvas.Top="25.839"/>
+            <Path Data="M101.554,64.167 L106.34685,62.882759" Fill="#FFF4F4F5" Height="2.284" Stretch="Fill" Stroke="Black" Width="5.793" Canvas.Left="0.001" Canvas.Top="24.555"/>
+            <Path Data="M101.554,64.167 L106.34685,62.882759" Fill="#FFF4F4F5" Height="2.284" Stretch="Fill" Stroke="Black" Width="5.793" RenderTransformOrigin="0.5,0.5" Canvas.Left="0.001" Canvas.Top="25.724">
+                <Path.LayoutTransform>
+                    <TransformGroup>
+                        <ScaleTransform ScaleY="-1" ScaleX="1"/>
+                        <SkewTransform AngleY="0" AngleX="0"/>
+                        <RotateTransform Angle="0"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Path.LayoutTransform>
+            </Path>
+
+        </Canvas>
+
+    </Grid>
+</UserControl>

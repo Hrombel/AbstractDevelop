@@ -38,6 +38,8 @@ namespace AbstractDevelop
             // собственные проверки
         }
 
+       
+
         public void ExportObjects(params object[] objectsToExport)
         {
             foreach (var exportingObject in objectsToExport)
@@ -48,14 +50,17 @@ namespace AbstractDevelop
         {
             var pluginsLoading = Task.Run(() => { }); // TODO
 
+            PlatformService.Initialize(Container);
+
             // загрузка базовых параметров приложения
             base.OnStartup(sender, e);
 
             // экспорт экземпляра приложения
             ExportObjects(Application, Application.MainWindow);
+            
 
             //Container.ComposeExportedValue(Application);
-            
+
 
             // ожидание завершения загрузки расширений
             await pluginsLoading;

@@ -62,13 +62,16 @@
     <Compile Include="Debug\BreakPoints\ActionBreakPoint.cs" />
     <Compile Include="Debug\BreakPoints\AlternativeBreakPoint.cs" />
     <Compile Include="Debug\BreakPoints\BreakPointCollection.cs" />
+    <Compile Include="Debug\BreakPoints\BreakPointType.cs" />
     <Compile Include="Debug\BreakPoints\ConditionBreakPoint.cs" />
     <Compile Include="Debug\BreakPoints\DataBreakPoint.cs" />
-    <Compile Include="IExtensibilityProvider.cs" />
+    <Compile Include="Instructions\InstructionMachine.Exceptions.cs" />
+    <Compile Include="Platforms\IExtensibilityProvider.cs" />
     <Compile Include="Instructions\InstructionMachine.Translation.cs" />
     <Compile Include="Instructions\InstructionMachine.cs" />
-    <Compile Include="IPlatformProvider.cs" />
-    <Compile Include="Platforms.cs" />
+    <Compile Include="Platforms\IPlatformProvider.cs" />
+    <Compile Include="NumberFormat.cs" />
+    <Compile Include="Platforms\Platforms.cs" />
     <Compile Include="Projects\AbstractProject.cs" />
     <Compile Include="Debug\AbstractMachineExcepton.cs" />
     <Compile Include="Debug\BreakPoints\BreakPoint.cs" />
@@ -95,6 +98,7 @@
     <Compile Include="Symbols\SetElements\SymbolRange.cs" />
     <Compile Include="Symbols\SymbolSet.cs" />
     <Compile Include="Tools.cs" />
+    <Compile Include="Translation\TranslationState.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

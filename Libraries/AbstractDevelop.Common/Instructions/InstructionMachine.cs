@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using AbstractDevelop.Translation;
+
 namespace AbstractDevelop.Machines
 {
     public abstract partial class InstructionMachine<InstructionCode, ArgumentType> : AbstractMachine
         where InstructionCode : struct, IComparable
     {
+        public Func<ArgumentType> ReadInput { get; set; }
+
+        public Action<ArgumentType> WriteOutput { get; set; }
 
         #region [Интерфейсы]
 
@@ -17,9 +22,9 @@ namespace AbstractDevelop.Machines
 
             ArgumentType DefaultValue { get; }
             bool IsOptional { get; set; }
-            Func<string, ArgumentType> Parser { get; }
+            Func<string, TranslationState, ArgumentType> Parser { get; }
 
-            Func<ArgumentType, bool> Validator { get; }
+            Func<ArgumentType, TranslationState, bool> Validator { get; }
 
             #endregion
 
@@ -69,6 +74,8 @@ namespace AbstractDevelop.Machines
             #region [Свойства и Поля]
 
             Instruction Current { get; }
+
+            int CurrentIndex { get; }
 
             IDefinitionCollection Definitions { get; }
 
@@ -138,7 +145,7 @@ namespace AbstractDevelop.Machines
             #region [Методы]
 
             public override string ToString()
-                => $"Operation of {typeof(InstructionCode).Name} with args of {typeof(ArgumentType).Name} (count = {Arguments?.Length ?? 0})";
+                => Translate.Key("InstructionDescription", format: Translate.Format(typeof(InstructionCode).Name, typeof(ArgumentType).Name, Arguments?.Length ?? 0));
 
             #endregion
 
@@ -162,7 +169,6 @@ namespace AbstractDevelop.Machines
             }
 
             #endregion
-
         }
 
         /// <summary>
@@ -184,6 +190,27 @@ namespace AbstractDevelop.Machines
             }
 
             #endregion
+        }
+
+        protected class Argument :
+            IArgumentDefinition
+        {
+            public ArgumentType DefaultValue { get; set; }
+ 
+            public bool IsOptional { get; set; }
+  
+            public Func<string, TranslationState, ArgumentType> Parser { get; set; }
+           
+            public Func<ArgumentType, TranslationState, bool> Validator { get; set; }
+        }
+
+        /// <summary>
+        /// Класс, позволяющий записывать наборы определений инструкций
+        /// </summary>
+        public class InstructionDefinitions :
+            Dictionary<string, (InstructionCode Code, Action<ArgumentType[]> Handler, IArgumentDefinition[] Arguments)>
+        {
+             
         }
 
         #endregion

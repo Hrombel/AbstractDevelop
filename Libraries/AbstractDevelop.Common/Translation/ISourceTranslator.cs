@@ -3,17 +3,23 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace AbstractDevelop.Machines
+namespace AbstractDevelop.Translation
 {
     /// <summary>
     /// Представляет транслятор исходных данных для абстрактной машины
     /// </summary>
-    public interface ISourceTranslator : IDisposable
+    public interface ISourceTranslator : 
+        IDisposable
     {
         /// <summary>
         /// Поддерживаемая кодировка входного потока
         /// </summary>
         Encoding SupportedEncoding { get; }
+
+        /// <summary>
+        /// Состояние трансляции исходного кода
+        /// </summary>
+        TranslationState State { get; }
 
         /// <summary>
         /// Транслирует исходные данные в набор команд

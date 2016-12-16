@@ -10,7 +10,7 @@ namespace AbstractDevelop.Machines
 {
     [Serializable]
     public class Tape<DataType> :
-        IEnumerable<DataType>
+        ICollection<DataType>//IEnumerable<DataType>
     {
         /// <summary>
         /// Возникает после обновления состояния ленты.
@@ -120,10 +120,24 @@ namespace AbstractDevelop.Machines
         /// </summary>
         public bool IsInfinite { get; set; }
         public IndexType Position { get; set; }
+        public int Length { get; set; }
+        // TODO
+        public int Count { get; set; }
+    
+
+        public bool IsReadOnly
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
 
         #endregion
 
         private int blockLocalIndex;
+        private bool v;
+        private int memorySize;
 
         #region [Методы]
 
@@ -271,12 +285,43 @@ namespace AbstractDevelop.Machines
             else throw new IndexOutOfRangeException($"Не удалось найти блок, содержащий индекс {index}");
         }
 
+        public void Add(DataType item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Clear()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Contains(DataType item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void CopyTo(DataType[] array, int arrayIndex)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Remove(DataType item)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region [Конструкторы]
 
         //TODO: переделать конструктор
         public Tape() { }
+
+        public Tape(bool v, int memorySize)
+        {
+            this.v = v;
+            this.Count = memorySize;
+        }
 
         #endregion
 

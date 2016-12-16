@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Collections;
 
+using AbstractDevelop.Translation;
+
 namespace AbstractDevelop.Machines
 {
     public abstract partial class InstructionMachine<InstructionCode, ArgumentType>
@@ -51,7 +53,15 @@ namespace AbstractDevelop.Machines
             public virtual InstructionPattern Pattern { get; set; }
 
             public virtual Encoding SupportedEncoding { get { return Encoding.UTF8; } }
-                      
+
+            public TranslationState State
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
             public virtual IEnumerable<Instruction> Translate(IEnumerable<string> input, IDefinitionCollection definitions)
             {
                 var match = default(Match);
@@ -85,7 +95,7 @@ namespace AbstractDevelop.Machines
                 {
                     isValid = false; index++;
                     // TODO: реализовать fallback для default парсера
-                    try { value = (argDef.Parser ?? null).Invoke(match.Groups[index].Value); }
+                    try { value = (argDef.Parser ?? null).Invoke(match.Groups[index].Value, State); }
                     catch
                     {
                         // в случае опциональности аргумента возможна замена на значение по умолчанию
@@ -94,7 +104,7 @@ namespace AbstractDevelop.Machines
                         else throw new InvalidOperationException($"Недостаточное количество аргументов для инструкции {definition.Alias}.");
                     }
                     // прохождение проверок
-                    finally { isValid = (argDef.Validator?.Invoke(value) ?? true); }
+                    finally { isValid = (argDef.Validator?.Invoke(value, State) ?? true); }
                     if (isValid) yield return value;
                 }
                 yield break;
@@ -111,6 +121,11 @@ namespace AbstractDevelop.Machines
             }
 
             public void Dispose()
+            {
+                throw new NotImplementedException();
+            }
+
+            public bool Validate(string input, out string[] composingParts)
             {
                 throw new NotImplementedException();
             }

@@ -22,5 +22,14 @@ namespace AbstractDevelop.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Binary")]
+        public global::AbstractDevelop.NumberFormat numberFormat {
+            get {
+                return ((global::AbstractDevelop.NumberFormat)(this["numberFormat"]));
+            }
+        }
     }
 }

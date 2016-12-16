@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="AbstractDevelop.Modules.Registers.Views.RegistersView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:AbstractDevelop.Modules.Registers.Converters"
+             xmlns:lang="http://gu.se/Localization"
+             xmlns:p="clr-namespace:AbstractDevelop.RiscMachine.Properties"
+             mc:Ignorable="d" 
+             MinWidth="70" MinHeight="40"
+             d:DesignHeight="300" d:DesignWidth="300"
+             lang:ErrorHandling.Mode="ReturnErrorInfoPreserveNeutral">
+    <UserControl.Resources>
+        <converters:RegisterValueConverter x:Key="RegisterValueConverter"/>
+    </UserControl.Resources>
+
+    <DataGrid ItemsSource="{Binding Registers}" AutoGenerateColumns="False">
+        <DataGrid.Columns>
+            <DataGridTextColumn Binding="{Binding ID}"      Header="{lang:Static p:Resources.RegisterNumberColumn}"     Width="SizeToCells" IsReadOnly="True"/>
+            <DataGridTextColumn Binding="{Binding Value, Converter={StaticResource RegisterValueConverter}, ConverterParameter={p:Settings numberFormat}}"  Header="{lang:Static p:Resources.RegisterContentColumn}"    Width="*"/>
+        </DataGrid.Columns>
+    </DataGrid>
+
+</UserControl>

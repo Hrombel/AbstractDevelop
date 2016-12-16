@@ -48,7 +48,13 @@ namespace AbstractDevelop
         public static string CheckPath(this string targetPath, bool checkExistance = true)
             => IsValidPath(targetPath) && (!checkExistance || GetPathValue(targetPath) != default(FileSystemInfo)) ?
                 throw new FileNotFoundException(targetPath) : targetPath;
-      
+
+        public static string RemoveWhitespaces(this string source)
+            => new string(source.SkipWhile(char.IsWhiteSpace).ToArray());
+
+        public static string RemoveWhitespaces(this string source, out string output)
+           => output = new string (source.SkipWhile(char.IsWhiteSpace).ToArray());
+
         #endregion
 
         #region [Численные]
@@ -96,6 +102,18 @@ namespace AbstractDevelop
         public static IDictionary<TKey, TValue> AddChain<TKey, TValue>(this IDictionary<TKey, TValue> source, TKey key, TValue value)
         {
             source?.Add(key, value);
+            return source;
+        }
+
+        /// <summary>
+        /// Устаналвивает или добавляет значение ключа в словррь
+        /// </summary>
+        public static IDictionary<TKey, string> Set<TKey, TValue>(this IDictionary<TKey, string> source, TKey key, TValue value)
+        {
+            if (source.ContainsKey(key))
+                source[key] = value.ToString();
+            else source.Add(key, value.ToString());
+
             return source;
         }
 

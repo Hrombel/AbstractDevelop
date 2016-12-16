@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
 
 using AbstractDevelop.Machines;
+using AbstractDevelop.Projects;
 
 namespace AbstractDevelop
 {
@@ -42,8 +42,15 @@ namespace AbstractDevelop
         /// <summary>
         /// Создает машину указанного типа (если он поддерживается данной платформой)
         /// </summary>
+        /// <param name="project">Проект, из которого будут взяты данные для создания машины</param>
+        AbstractMachine CreateMachine(AbstractProject project);
+
+        /// <summary>
+        /// Создает машину указанного типа (если он поддерживается данной платформой)
+        /// </summary>
         /// <param name="machineType">Тип машины для создания</param>
-        AbstractMachine CreateMachine(Type machineType, Dictionary<string, string> settings);
+        /// <param name="project">Проект, из которого будут взяты данные для создания машины</param>
+        AbstractMachine CreateMachine(Type machineType, AbstractProject project);
 
     }
 }

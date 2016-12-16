@@ -61,11 +61,38 @@ namespace AbstractDevelop.RiscMachine.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Содержимое.
+        /// </summary>
+        internal static string RegisterContentColumn {
+            get {
+                return ResourceManager.GetString("RegisterContentColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на #.
+        /// </summary>
+        internal static string RegisterNumberColumn {
+            get {
+                return ResourceManager.GetString("RegisterNumberColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на RISC.
         /// </summary>
         internal static string RiscPlatformName {
             get {
                 return ResourceManager.GetString("RiscPlatformName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Регистры RISC.
+        /// </summary>
+        internal static string RiscRegistersWindowTitle {
+            get {
+                return ResourceManager.GetString("RiscRegistersWindowTitle", resourceCulture);
             }
         }
     }

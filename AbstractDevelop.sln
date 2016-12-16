@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.25920.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3490F01F-85E3-4F6E-9DA9-C855906F9A8C}"
 EndProject
@@ -12,6 +12,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractDevelop.Common", "Libraries\AbstractDevelop.Common\AbstractDevelop.Common.csproj", "{0B76401D-E688-485C-A6E0-A5461CB9FE7E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractDevelop.RiscMachine", "Plugins\AbstractDevelop.RiscMachine\AbstractDevelop.RiscMachine.csproj", "{9681F5DE-E78F-4522-AEF5-C7C666728F6A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{13DBFC87-C152-4A86-94B0-D9944BEEF647} = {13DBFC87-C152-4A86-94B0-D9944BEEF647}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AbstractDevelop.PostMachine", "Plugins\AbstractDevelop.PostMachine\AbstractDevelop.PostMachine.csproj", "{18E1A5BC-DF39-47B9-8C1A-A607E1540249}"
 EndProject
@@ -28,6 +31,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0D43EFE8-CF28-4829-93E2-A3C974507A66}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SchemaTests", "Tests\SchemaTests\SchemaTests.csproj", "{1842F254-C252-416B-8C8A-90D02B9C65A1}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9681F5DE-E78F-4522-AEF5-C7C666728F6A} = {9681F5DE-E78F-4522-AEF5-C7C666728F6A}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,6 +46,7 @@ Global
 		{0B76401D-E688-485C-A6E0-A5461CB9FE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0B76401D-E688-485C-A6E0-A5461CB9FE7E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9681F5DE-E78F-4522-AEF5-C7C666728F6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9681F5DE-E78F-4522-AEF5-C7C666728F6A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9681F5DE-E78F-4522-AEF5-C7C666728F6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9681F5DE-E78F-4522-AEF5-C7C666728F6A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{18E1A5BC-DF39-47B9-8C1A-A607E1540249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

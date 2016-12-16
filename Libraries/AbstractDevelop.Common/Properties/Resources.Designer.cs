@@ -79,6 +79,33 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Инструкция {0} c аргументами {1} (кол-во = {2}).
+        /// </summary>
+        internal static string InstructionDescription {
+            get {
+                return ResourceManager.GetString("InstructionDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Аргумент {0} не является допустимым (см. документацию).
+        /// </summary>
+        internal static string InvalidArgumentException {
+            get {
+                return ResourceManager.GetString("InvalidArgumentException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Неверный формат записи инструкции в строке {0}.
+        /// </summary>
+        internal static string InvalidInstructionSyntaxException {
+            get {
+                return ResourceManager.GetString("InvalidInstructionSyntaxException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Невозможно загрузить данные из источника JSON.
         /// </summary>
         internal static string JsonLoadingError {
@@ -97,6 +124,24 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Метка &quot;{0}&quot; уже определена в данном модуле.
+        /// </summary>
+        internal static string LabelRedefinedException {
+            get {
+                return ResourceManager.GetString("LabelRedefinedException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не найден аргумент с индексом {0} для инструкции {1} (см. документацию) .
+        /// </summary>
+        internal static string MissingArgumentException {
+            get {
+                return ResourceManager.GetString("MissingArgumentException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Платформа {0} не была загружена по причине несовместимости с данной версией программы.
         /// </summary>
         internal static string PlatformExcluded {
@@ -111,6 +156,24 @@ namespace AbstractDevelop.Properties {
         internal static string PlatformNotFoundError {
             get {
                 return ResourceManager.GetString("PlatformNotFoundError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Необходимо предоставить аргументов: {0}.
+        /// </summary>
+        internal static string TooMuchArguentsException {
+            get {
+                return ResourceManager.GetString("TooMuchArguentsException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Нераспознанная инструкция {0}.
+        /// </summary>
+        internal static string UnknownInstructionException {
+            get {
+                return ResourceManager.GetString("UnknownInstructionException", resourceCulture);
             }
         }
     }

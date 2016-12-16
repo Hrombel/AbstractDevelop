@@ -123,16 +123,37 @@
   <data name="FileNotFoundError" xml:space="preserve">
     <value>Не удалось найти файл с путем {0}</value>
   </data>
+  <data name="InstructionDescription" xml:space="preserve">
+    <value>Инструкция {0} c аргументами {1} (кол-во = {2})</value>
+  </data>
+  <data name="InvalidArgumentException" xml:space="preserve">
+    <value>Аргумент {0} не является допустимым (см. документацию)</value>
+  </data>
+  <data name="InvalidInstructionSyntaxException" xml:space="preserve">
+    <value>Неверный формат записи инструкции в строке {0}</value>
+  </data>
   <data name="JsonLoadingError" xml:space="preserve">
     <value>Невозможно загрузить данные из источника JSON</value>
   </data>
   <data name="JsonSavingError" xml:space="preserve">
     <value>Невозможно сохранить данные JSON в назначенный поток вывода</value>
   </data>
+  <data name="LabelRedefinedException" xml:space="preserve">
+    <value>Метка "{0}" уже определена в данном модуле</value>
+  </data>
+  <data name="MissingArgumentException" xml:space="preserve">
+    <value>Не найден аргумент с индексом {0} для инструкции {1} (см. документацию) </value>
+  </data>
   <data name="PlatformExcluded" xml:space="preserve">
     <value>Платформа {0} не была загружена по причине несовместимости с данной версией программы</value>
   </data>
   <data name="PlatformNotFoundError" xml:space="preserve">
     <value>Платформа с кодом {0} не найдена в хранилище</value>
+  </data>
+  <data name="TooMuchArguentsException" xml:space="preserve">
+    <value>Необходимо предоставить аргументов: {0}</value>
+  </data>
+  <data name="UnknownInstructionException" xml:space="preserve">
+    <value>Нераспознанная инструкция {0}</value>
   </data>
 </root>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AbstractDevelop.Machines.BreakPoints
+namespace AbstractDevelop.Debug.BreakPoints
 {
     class AlternativeBreakPoint :
         BreakPoint
