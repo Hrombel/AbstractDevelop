@@ -23,13 +23,14 @@ namespace SchemaTests
 {
     class Program
     {
+        
         static void Main(string[] args)
         {
             var catalogList = new List<ComposablePartCatalog>(Assembly.GetExecutingAssembly().GetReferencedAssemblies().
                     Select(assemblyName => Assembly.Load(assemblyName)).
                     Select(assembly => new AssemblyCatalog(assembly)));
 
-            catalogList.Add(new DirectoryCatalog(Environment.CurrentDirectory, "*.plg"));
+            //catalogList.Add(new DirectoryCatalog(Environment.CurrentDirectory, "AbstractDevelop.RiscMachine.dll"));
 
 
             var priorityCatalog = new AggregateCatalog(catalogList);
@@ -47,10 +48,12 @@ namespace SchemaTests
             var format = container.GetExportedValue<IBinaryDataFormatProvider>();
             var stopwatch = System.Diagnostics.Stopwatch.StartNew();
 
-            var project = AbstractProject.Load(File.OpenRead("Project.json"), format);
+            var project = AbstractProject.Load("Project.json", format);
 
             var machine = project.Platform.CreateMachine(project);
-            var result = machine.Translator.Translate(File.ReadAllLines("risc.txt"));
+            var translator = machine.Translator as RiscMachine.RiscTranslator;
+
+            var result = translator.Translate(File.ReadAllLines("risc.txt"), null);
 
             Console.WriteLine($"Parsing: {stopwatch.ElapsedMilliseconds}"); stopwatch.Restart();
             Console.ReadKey();

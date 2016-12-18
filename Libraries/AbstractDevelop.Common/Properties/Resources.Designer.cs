@@ -79,7 +79,7 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Инструкция {0} c аргументами {1} (кол-во = {2}).
+        ///   Ищет локализованную строку, похожую на {0}, аргументов: {1}.
         /// </summary>
         internal static string InstructionDescription {
             get {

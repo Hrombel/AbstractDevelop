@@ -10,7 +10,6 @@ namespace AbstractDevelop.Machines
     /// </summary>
     public class DataReference
     {
-
         #region [Свойства и Поля]
 
         /// <summary>
@@ -21,7 +20,7 @@ namespace AbstractDevelop.Machines
         /// <summary>
         /// Значение указателя
         /// </summary>
-        public int Reference { get; set; }
+        public DataReference Reference { get; set; }
 
         /// <summary>
         /// Тип указателя
@@ -31,7 +30,7 @@ namespace AbstractDevelop.Machines
         /// <summary>
         /// Значение ячейки памяти, на которую ссылается указатель
         /// </summary>
-        public DataType Value
+        public virtual DataType Value
         {
             get => GetValue(ref Owner.AccessTimer);
             set => SetValue(value, ref Owner.AccessTimer);
@@ -41,11 +40,6 @@ namespace AbstractDevelop.Machines
 
         #region [Методы]
 
-        /// <summary>
-        /// Несуществующий указатель на данные
-        /// </summary>
-        public static DataReference Empty(RiscMachine owner)
-            => new DataReference(owner);
         /// <summary>
         /// Преобразует ссылку в данные 
         /// </summary>
@@ -66,11 +60,10 @@ namespace AbstractDevelop.Machines
                     accessTime += getAccessTime(Owner.Memory);
                     return Owner.Memory[Reference];
                 case DataReferenceType.Register:
-                    accessTime += getAccessTime(Owner.Registers);
+                    accessTime += 1;
                     return Owner.Registers[Reference].Value;
                 default:
-                    accessTime += 1;
-                    return (DataType)Reference;
+                    return Reference.Value;
             }
         }
 
@@ -88,12 +81,11 @@ namespace AbstractDevelop.Machines
                     Owner.Memory[Reference] = value;
                     return;
                 case DataReferenceType.Register:
-                    accessTime += getAccessTime(Owner.Registers);
+                    accessTime += 1;
                     Owner.Registers[Reference].Value = value;
                     return;
                 default:
-                    accessTime += 1;
-                    Reference = value;
+                    Reference.Value = value;
                     return;
             }
         }
@@ -123,7 +115,7 @@ namespace AbstractDevelop.Machines
         /// <param name="owner">Владелец указателя</param>
         /// <param name="reference">Значение указателя</param>
         /// <param name="type">Тип указателя</param>
-        public DataReference(RiscMachine owner, int reference = 0, DataReferenceType type = DataReferenceType.Value)
+        public DataReference(RiscMachine owner, DataReference reference, DataReferenceType type = DataReferenceType.Value)
         {
             Owner = owner;
             Reference = reference;
@@ -131,5 +123,35 @@ namespace AbstractDevelop.Machines
         }
 
         #endregion
+    }
+
+    /// <summary>
+    /// Ссылка на значение
+    /// </summary>
+    public class ValueReference :
+        DataReference
+    {
+        public override byte Value { get; set; }
+      
+        public ValueReference(RiscMachine owner, DataType value) :
+            base(owner, null, DataReferenceType.Value)
+        {
+            Value = value;
+        }
+    }
+
+    /// <summary>
+    /// Ссылка на метку
+    /// </summary>
+    public class LabelReference :
+        DataReference
+    {
+        public override byte Value { get; set; }
+
+        public LabelReference(RiscMachine owner, DataType labelIndex) :
+            base(owner, null, DataReferenceType.Label)
+        {
+            Value = labelIndex;
+        }
     }
 }

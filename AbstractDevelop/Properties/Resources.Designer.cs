@@ -61,29 +61,29 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Содержимое.
+        ///   Ищет локализованную строку, похожую на Text File.
         /// </summary>
-        internal static string RegisterContentColumn {
+        internal static string EditorProviderTextFile {
             get {
-                return ResourceManager.GetString("RegisterContentColumn", resourceCulture);
+                return ResourceManager.GetString("EditorProviderTextFile", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на #.
+        ///   Ищет локализованную строку, похожую на General.
         /// </summary>
-        internal static string RegisterNumberColumn {
+        internal static string SettingsPageGeneral {
             get {
-                return ResourceManager.GetString("RegisterNumberColumn", resourceCulture);
+                return ResourceManager.GetString("SettingsPageGeneral", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Регистры RISC.
+        ///   Ищет локализованную строку, похожую на Environment.
         /// </summary>
-        internal static string RiscRegistersWindowTitle {
+        internal static string SettingsPathEnvironment {
             get {
-                return ResourceManager.GetString("RiscRegistersWindowTitle", resourceCulture);
+                return ResourceManager.GetString("SettingsPathEnvironment", resourceCulture);
             }
         }
     }

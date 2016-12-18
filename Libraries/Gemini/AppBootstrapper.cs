@@ -54,11 +54,22 @@ namespace Gemini
 		protected override void Configure()
 		{
             // Add all assemblies to AssemblySource (using a temporary DirectoryCatalog).
+
+            //var groups = directoryCatalog.Parts
+            //    .ToLookup(part => ReflectionModelServices.GetPartType(part).Value.Assembly);
+
+            //var clean = groups.Select(group => group.Key).
+            //    Where(assembly => !AssemblySource.Instance.Contains(assembly)).Union(AssemblySource.Instance);
+
+            //AssemblySource.Instance.Clear();
+            //AssemblySource.Instance.AddRange(clean);
+
             var directoryCatalog = new DirectoryCatalog(@"./");
             AssemblySource.Instance.AddRange(
                 directoryCatalog.Parts
                     .Select(part => ReflectionModelServices.GetPartType(part).Value.Assembly)
                     .Where(assembly => !AssemblySource.Instance.Contains(assembly)));
+
 
             // Prioritise the executable assembly. This allows the client project to override exports, including IShell.
             // The client project can override SelectAssemblies to choose which assemblies are prioritised.

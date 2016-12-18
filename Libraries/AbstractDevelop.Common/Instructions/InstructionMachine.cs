@@ -3,95 +3,113 @@ using System.Collections.Generic;
 using System.Linq;
 
 using AbstractDevelop.Translation;
+using System.Collections.ObjectModel;
+using System.Collections;
 
 namespace AbstractDevelop.Machines
 {
     public abstract partial class InstructionMachine<InstructionCode, ArgumentType> : AbstractMachine
         where InstructionCode : struct, IComparable
     {
-        public Func<ArgumentType> ReadInput { get; set; }
-
-        public Action<ArgumentType> WriteOutput { get; set; }
-
         #region [Интерфейсы]
 
+        /// <summary>
+        /// Определение формата аргумента инструкции
+        /// </summary>
         public interface IArgumentDefinition
         {
 
             #region [Свойства и Поля]
 
+            /// <summary>
+            /// Значение по умолчанию
+            /// </summary>
             ArgumentType DefaultValue { get; }
-            bool IsOptional { get; set; }
-            Func<string, TranslationState, ArgumentType> Parser { get; }
 
+            /// <summary>
+            /// Являтся ли аргумент опциональным
+            /// </summary>
+            bool IsOptional { get; set; }
+
+            /// <summary>
+            /// Функция преобразования из строкового представления данных в объектоное
+            /// </summary>
+            Func<string, TranslationState, IArgumentDefinition, ArgumentType> Parser { get; }
+
+            /// <summary>
+            /// Функция проверки значения аргумента на допустимость
+            /// </summary>
             Func<ArgumentType, TranslationState, bool> Validator { get; }
 
             #endregion
 
         }
 
-        public interface IDefinitionCollection :
-            ICollection<IInstructionDefinition>
-        {
-
-            #region [Свойства и Поля]
-
-            /// <summary>
-            /// Псевдонимы команд
-            /// </summary>
-            IDictionary<string, InstructionCode> Aliases { get; }
-
-            /// <summary>
-            /// Ожидаемое количество аргументов у команды определенного типа
-            /// </summary>
-            IDictionary<InstructionCode, int> ArgumentCount { get; }
-
-            /// <summary>
-            /// Процедуры-обработчики команд
-            /// </summary>
-            IDictionary<InstructionCode, Action<ArgumentType[]>> Handlers { get; }
-
-            #endregion
-
-            #region [Методы]
-
-            IDefinitionCollection Add(InstructionCode code, string alias, int maxArgumentCount, Action<ArgumentType[]> handler);
-
-            #endregion
-
-            #region [Индексаторы]
-
-            IInstructionDefinition this[InstructionCode code] { get; }
-
-            #endregion
-
-        }
-
+        /// <summary>
+        /// Определение набора инструкций абстрактной машины
+        /// </summary>
         public interface IInstructionCollection :
             ICollection<Instruction>
         {
 
-            #region [Свойства и Поля]
-
-            Instruction Current { get; }
-
-            int CurrentIndex { get; }
-
-            IDefinitionCollection Definitions { get; }
+            #region [События]
 
             /// <summary>
-            /// Определяет следующую операцию (инструкцию) для абстрактной машины
+            /// Событие, возникающее при обработке инструкции
             /// </summary>
-            Instruction Next { get; set; }
+            event Action<Instruction> OnExecution;
+
+            /// <summary>
+            /// Событие, возникающее при вынужденном переходе на инструкцию
+            /// </summary>
+            event Action<int> OnGoto;
+
+            #endregion
+
+            #region [Свойства и Поля]
+
+            /// <summary>
+            /// Инструкция, выполняемая в данный момент
+            /// </summary>
+            Instruction Current { get; }
+
+            /// <summary>
+            /// Индекс инструкции, выполняемой в данный момент
+            /// </summary>
+            int CurrentIndex { get; }
+
+            /// <summary>
+            /// Набор определений инструкций, используемый для их выполнения
+            /// </summary>
+            InstructionDefinitions Definitions { get; set; }
+
+            /// <summary>
+            /// Индекс инструкции, которая будет выполнена на следующем шаге,
+            /// либо null, если задано поведение по умолчанию
+            /// </summary>
+            int? NextIndex { get; }
 
             #endregion
 
             #region [Методы]
 
+            /// <summary>
+            /// Запускает действия, связанные с указанной инструкцией
+            /// </summary>
+            /// <param name="instruction">Инструкция для запуска</param>
+            /// <returns></returns>
             bool Execute(Instruction operation);
 
+            /// <summary>
+            /// Переходит на инструкцию с указанным индексом
+            /// </summary>
+            /// <param name="operationIndex">Индекс инструкции для перехода</param>
             void Goto(int operationIndex);
 
+            /// <summary>
+            /// Переходит ко следующей по порядку или заданию инструкции
+            /// </summary>
+            /// <returns></returns>
             Instruction GotoNext();
 
             /// <summary>
@@ -99,30 +117,25 @@ namespace AbstractDevelop.Machines
             /// </summary>
             /// <param name="source">Источник операций для загрузки</param>
             /// <returns>Возвращает true, если все оперции были успешно загружен в список</returns>
-            bool Load(IEnumerable<Instruction> source);
+            bool Load(IEnumerable source);
+
+            /// <summary>
+            /// Загружает набор инструкций в данную коллекцию
+            /// </summary>
+            /// <param name="source">Набор инструкций для загрузки</param>
+            /// <returns></returns>
+            void Reset();
 
             #endregion
-        }
-
-        public interface IInstructionDefinition
-        {
-
-            #region [Свойства и Поля]
-
-            string Alias { get; }
-
-            IList<IArgumentDefinition> Arguments { get; }
-            Action<ArgumentType[]> Handler { get; }
-            InstructionCode Type { get; }
-
-            #endregion
-
         }
 
         #endregion
 
         #region [Классы и структуры]
 
+        /// <summary>
+        /// Представляет инструкцию абстрактной машины
+        /// </summary>
         public class Instruction
         {
 
@@ -140,12 +153,10 @@ namespace AbstractDevelop.Machines
 
             #endregion
 
-            // TODO: переработать список методов класса <Instruction>
-
             #region [Методы]
 
             public override string ToString()
-                => Translate.Key("InstructionDescription", format: Translate.Format(typeof(InstructionCode).Name, typeof(ArgumentType).Name, Arguments?.Length ?? 0));
+                => Translate.Key("InstructionDescription", format: Translate.Format(Type, Arguments?.Length ?? 0));
 
             #endregion
 
@@ -154,21 +165,188 @@ namespace AbstractDevelop.Machines
             /// <summary>
             /// Создает экземпляр инструкции указанного типа с заданным набором аргументов
             /// </summary>
-            /// <param name="code"></param>
-            /// <param name="args"></param>
+            /// <param name="code">Тип инструкции</param>
+            /// <param name="args">Значения аргументов инструкции</param>
             public Instruction(InstructionCode code = default(InstructionCode), params ArgumentType[] args)
             {
                 Type = code;
                 Arguments = args;
             }
 
+            /// <summary>
+            /// Создает экземпляр инструкции указанного типа с заданным набором аргументов
+            /// </summary>
+            /// <param name="code">Тип инструкции</param>
+            /// <param name="args">Значения аргументов инструкции</param>
             public Instruction(InstructionCode code = default(InstructionCode), IEnumerable<ArgumentType> args = null) :
                 this(code, args?.ToArray() ?? new ArgumentType[0])
-            {
+            { }
+           
+            #endregion
 
+        }
+
+        /// <summary>
+        /// Набор инструкций абстрактной машины, основанной на механизме инструкций
+        /// </summary>
+        public class InstructionCollection :
+            Collection<Instruction>, IInstructionCollection
+        {
+            #region [События]
+
+            /// <summary>
+            /// Событие, возникающее при обработке инструкции
+            /// </summary>
+            public event Action<Instruction> OnExecution;
+
+            /// <summary>
+            /// Событие, возникающее при вынужденном переходе на инструкцию
+            /// </summary>
+            public event Action<int> OnGoto;
+
+            #endregion
+
+            #region [Свойства и Поля]
+
+            /// <summary>
+            /// Инструкция, выполняемая в данный момент
+            /// </summary>
+            public Instruction Current =>
+                CurrentIndex.IsInRange(end: Count - 1) ?
+                this[CurrentIndex] : default(Instruction);
+
+            /// <summary>
+            /// Индекс инструкции, выполняемой в данный момент
+            /// </summary>
+            public int CurrentIndex { get; protected set; }
+
+            /// <summary>
+            /// Набор определений инструкций, используемый для их выполнения
+            /// </summary>
+            public InstructionDefinitions Definitions { get; set; }
+
+            /// <summary>
+            /// Индекс инструкции, которая будет выполнена на следующем шаге,
+            /// либо null, если задано поведение по умолчанию
+            /// </summary>
+            public int? NextIndex { get; set; }
+
+            #endregion
+
+            #region [Методы]
+
+            /// <summary>
+            /// Запускает действия, связанные с указанной инструкцией
+            /// </summary>
+            /// <param name="instruction">Инструкция для запуска</param>
+            /// <returns></returns>
+            public bool Execute(Instruction instruction)
+            {
+                if (Definitions.ByCode.TryGetValue(instruction?.Type ?? default(InstructionCode), out var definition) && definition.Handler != null)
+                {
+                    OnExecution(instruction);
+                    definition.Handler.Invoke(instruction.Arguments);
+
+                    return true;
+                }
+                return false;
+            }
+
+            /// <summary>
+            /// Переход на инструкцию с указанным индексом
+            /// </summary>
+            /// <param name="operationIndex">Индекс инструкции для перехода</param>
+            public void Goto(int operationIndex)
+                => NextIndex = operationIndex != -1 ? operationIndex.Do(v => OnGoto?.Invoke(operationIndex)) : null as int?;
+
+            /// <summary>
+            /// Переходит ко следующей по порядку или заданию инструкции
+            /// </summary>
+            /// <returns></returns>
+            public Instruction GotoNext()
+            {
+                // выбор следующего индекса исходя из заданного значения NextIndex
+                CurrentIndex = NextIndex ?? CurrentIndex + 1;
+                // сброс на поведение по умолчанию
+                NextIndex = null;
+
+                return Current;
+            }
+
+            /// <summary>
+            /// Загружает набор инструкций в данную коллекцию
+            /// </summary>
+            /// <param name="source">Набор инструкций для загрузки</param>
+            /// <returns></returns>
+            public bool Load(IEnumerable source)
+            {
+                try
+                {
+                    if (Count > 0) Clear();
+
+                    // добавление инструкций в коллекцию
+                    source.Cast<Instruction>().Select(instruction => instruction.Do(Add));
+                    Reset();
+
+                    return true;
+                }
+                catch { return false; }
+            }
+
+            /// <summary>
+            /// Сбрасывает настройки позиций на значения по умолчанию
+            /// </summary>
+            public void Reset()
+            {
+                CurrentIndex = -1;
+                NextIndex = null;
             }
 
             #endregion
+
+        }
+
+        /// <summary>
+        /// Класс, позволяющий записывать наборы определений инструкций
+        /// </summary>
+        public class InstructionDefinitions :
+            Dictionary<string, (InstructionCode Code, Action<ArgumentType[]> Handler, IArgumentDefinition[] Arguments)>
+        {
+            #region [Свойства и Поля]
+
+            public Dictionary<InstructionCode, (InstructionCode Code, Action<ArgumentType[]> Handler, IArgumentDefinition[] Arguments)> ByCode { get; } =
+                new Dictionary<InstructionCode, (InstructionCode Code, Action<ArgumentType[]> Handler, IArgumentDefinition[] Arguments)>();
+
+            #endregion
+
+            #region [Методы]
+
+            public new void Add(string key, (InstructionCode Code, Action<ArgumentType[]> Handler, IArgumentDefinition[] Arguments) value)
+            {
+                ByCode.Add(value.Code, value);
+                base.Add(key, value);
+            }
+
+            public new void Clear()
+            {
+                ByCode.Clear();
+                base.Clear();
+            }
+
+            public new void Remove(string key)
+            {
+                ByCode.Remove(this[key].Code);
+                base.Remove(key);
+            }
+
+            #endregion
+
+            public void Rebuild()
+            {
+                ByCode.Clear();
+                foreach (var value in Values)
+                    ByCode.Add(value.Code, value);
+            }
         }
 
         /// <summary>
@@ -176,6 +354,7 @@ namespace AbstractDevelop.Machines
         /// </summary>
         public class InstructionEventArgs : EventArgs
         {
+
             #region [Свойства и Поля]
 
             public Instruction Instruction { get; set; }
@@ -190,27 +369,38 @@ namespace AbstractDevelop.Machines
             }
 
             #endregion
-        }
 
-        protected class Argument :
-            IArgumentDefinition
-        {
-            public ArgumentType DefaultValue { get; set; }
- 
-            public bool IsOptional { get; set; }
-  
-            public Func<string, TranslationState, ArgumentType> Parser { get; set; }
-           
-            public Func<ArgumentType, TranslationState, bool> Validator { get; set; }
         }
 
         /// <summary>
-        /// Класс, позволяющий записывать наборы определений инструкций
+        /// Предстваляет аргумент инструкции
         /// </summary>
-        public class InstructionDefinitions :
-            Dictionary<string, (InstructionCode Code, Action<ArgumentType[]> Handler, IArgumentDefinition[] Arguments)>
+        public class Argument :
+            IArgumentDefinition
         {
-             
+            #region [Свойства и Поля]
+
+            /// <summary>
+            /// Значение по умолчанию
+            /// </summary>
+            public ArgumentType DefaultValue { get; set; }
+
+            /// <summary>
+            /// Являтся ли аргумент опциональным
+            /// </summary>
+            public bool IsOptional { get; set; }
+
+            /// <summary>
+            /// Функция преобразования из строкового представления данных в объектоное
+            /// </summary>
+            public Func<string, TranslationState, IArgumentDefinition, ArgumentType> Parser { get; set; }
+
+            /// <summary>
+            /// Функция проверки значения аргумента на допустимость
+            /// </summary>
+            public Func<ArgumentType, TranslationState, bool> Validator { get; set; }
+
+            #endregion
         }
 
         #endregion
@@ -235,7 +425,18 @@ namespace AbstractDevelop.Machines
         /// <summary>
         /// Набор инструкций и их определений, загруженный в память данной машины
         /// </summary>
-        public virtual IInstructionCollection Instructions { get; }
+        public virtual IInstructionCollection Instructions { get; } =
+            new InstructionCollection();
+
+        /// <summary>
+        /// Функция чтения пользовательского ввода
+        /// </summary>
+        public virtual Func<ArgumentType> ReadInput { get; set; }
+
+        /// <summary>
+        /// Функция вывода значения в порт вывода
+        /// </summary>
+        public virtual Action<ArgumentType> WriteOutput { get; set; }
 
         #endregion
 
@@ -270,76 +471,5 @@ namespace AbstractDevelop.Machines
         }
 
         #endregion
-
-        // предыдущая реализация коллекции инструкций
-        //internal sealed class OperationCollection :
-        //   Collection<OperationType>, IOperationCollection
-        //{
-        //    /// <summary>
-        //    /// Функция, проверяющая корректность переданной операции
-        //    /// </summary>
-        //    public Func<OperationType, bool> Checker { get; set; }
-
-        //    public Dictionary<OperationCode, Action<ArgumentType[]>> Definitions { get; } =
-        //        new Dictionary<OperationCode, Action<ArgumentType[]>>();
-
-        //    public OperationType Current { get { return current; } }
-
-        //    public OperationType Next
-        //    {
-        //        get { return position < Count ? this[position] : default(OperationType); }
-        //        set { position = IndexOf(value); }
-        //    }
-
-        //    private OperationType current;
-        //    private int position;
-
-        //    public bool Load(IEnumerable<OperationType> source)
-        //    {
-        //        if (Count > 0) Clear();
-
-        //        foreach (var item in source)
-        //        {
-        //            if (Checker?.Invoke(item) ?? true)
-        //                Add(item);
-        //            else return false;
-        //        }
-
-        //        Goto(0);
-        //        return true;
-        //    }
-
-        //    public bool Execute(OperationType operation)
-        //    {
-        //        if (operation == default(OperationType))
-        //            return false;
-        //        else
-        //        {
-        //            var action = default(Action<ArgumentType[]>);
-        //            if (Definitions.TryGetValue(operation.Id, out action))
-        //                try
-        //                {
-        //                    action(operation.Args);
-        //                    return true;
-        //                }
-        //                // TODO: добавить вывод отладочной информации
-        //                catch (Exception ex) { return false; }
-        //            else
-        //                return false;
-        //        }
-        //    }
-
-        //    public void Goto(int operationIndex)
-        //    {
-        //        if (operationIndex != -1)
-        //            position = operationIndex.CheckIndex(max: Count);
-        //    }
-
-        //    public void MoveNext()
-        //    {
-        //        current = Next;
-        //        position++;
-        //    }
-        //}
     }
 }

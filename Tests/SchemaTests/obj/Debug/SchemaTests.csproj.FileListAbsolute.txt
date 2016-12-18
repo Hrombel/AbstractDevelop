@@ -18,3 +18,13 @@ C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\AbstractDevelop.Common.pdb
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\Gu.Localization.xml
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\System.ValueTuple.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\AbstractDevelop.RiscMachine.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\Caliburn.Micro.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\AbstractDevelop.RiscMachine.pdb
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\Caliburn.Micro.xml
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\Gemini.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\Caliburn.Micro.Platform.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\MahApps.Metro.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\Caliburn.Micro.Platform.xml
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\MahApps.Metro.xml

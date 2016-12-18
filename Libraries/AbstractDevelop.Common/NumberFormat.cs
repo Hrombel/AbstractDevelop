@@ -9,15 +9,22 @@ namespace AbstractDevelop
     /// <summary>
     /// Перечисление форматов записи цифр
     /// </summary>
-    public enum NumberFormat
+    public enum NumberFormat : int
     {
         /// <summary>
         /// Двоичный формат
         /// </summary>
-        Binary,
+        Binary = 2,
+
+        /// <summary>
+        /// Восьмеричный формат
+        /// </summary>
+        Octal = 8,
+
         /// <summary>
         /// Шестнадцатеричный формат
         /// </summary>
-        Hex
+        Hex = 16,
+    
     }
 }

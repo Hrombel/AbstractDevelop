@@ -12,7 +12,7 @@ namespace AbstractDevelop.Machines
 {
     public abstract partial class InstructionMachine<InstructionCode, ArgumentType>
     {
-        public class InstuctionTranslator :
+        /*public class InstuctionTranslator :
             ISourceTranslator<Instruction, IDefinitionCollection>
         {
             public class InstructionPattern :
@@ -95,7 +95,7 @@ namespace AbstractDevelop.Machines
                 {
                     isValid = false; index++;
                     // TODO: реализовать fallback для default парсера
-                    try { value = (argDef.Parser ?? null).Invoke(match.Groups[index].Value, State); }
+                    try { value = (argDef.Parser ?? null).Invoke(match.Groups[index].Value, State, argDef); }
                     catch
                     {
                         // в случае опциональности аргумента возможна замена на значение по умолчанию
@@ -129,6 +129,6 @@ namespace AbstractDevelop.Machines
             {
                 throw new NotImplementedException();
             }
-        }
+        }*/
     }
 }

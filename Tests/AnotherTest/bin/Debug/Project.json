@@ -1,0 +1,32 @@
+{
+  "Title": "Test project",
+  "PlatformCode": 1,
+  "Settings": {
+    "memorySize": "256",
+    "registerCount": "8"
+  },
+  "Content": [
+    {
+      "Type": "Directory",
+      "Name": "Resources",
+      "Content": [
+        {
+          "Type": "File",
+          "Name": "resource1.res",
+          "Content": "srgetryhbJKSUIJnnsdshdHSDJEUSnVzdCBhIHRlc3Qgc3RyaW5nIGhlcmVKdXN0IGEgdGVzdCBzdHJpbmcgaGVyZQ=="
+        },
+        {
+          "Type": "Directory",
+          "Name": "images",
+          "Content": [
+            {
+              "Type": "File",
+              "Name": "image1.png",
+              "Content": "ew0KICAiVGl0bGUiOiAiVGVzdCBwcm9qZWN0IiwNCiAgIlBsYXRmb3JtQ29kZSI6IDEsDQogICJTZXR0aW5ncyI6IHt9LA0KICAiQ29udGVudCI6IFsNCiAgICB7DQogICAgICAiVHlwZSI6ICJEaXJlY3RvcnkiLA0KICAgICAgIk5hbWUiOiAiUmVzb3VyY2VzIiwNCiAgICAgICJDb250ZW50IjogWw0KICAgICAgICB7DQogICAgICAgICAgIlR5cGUiOiAiRmlsZSIsDQogICAgICAgICAgIk5hbWUiOiAicmVzb3VyY2UxLnJlcyIsDQogICAgICAgICAgIkNvbnRlbnQiOiAic3JnZXRyeWhiSktTVUlKbm5zZHNoZEhTREpFVVNuVnpkQ0JoSUhSbGMzUWdjM1J5YVc1bklHaGxjbVU9Ig0KICAgICAgICB9LA0KICAgICAgICB7DQogICAgICAgICAgIlR5cGUiOiAiRGlyZWN0b3J5IiwNCiAgICAgICAgICAiTmFtZSI6ICJpbWFnZXMiLA0KICAgICAgICAgICJDb250ZW50IjogWw0KICAgICAgICAgICAgew0KICAgICAgICAgICAgICAiVHlwZSI6ICJGaWxlIiwNCiAgICAgICAgICAgICAgIk5hbWUiOiAiaW1hZ2UxLnBuZyIsDQogICAgICAgICAgICAgICJDb250ZW50IjogIiINCiAgICAgICAgICAgIH0NCiAgICAgICAgICBdDQogICAgICAgIH0NCiAgICAgIF0NCiAgICB9DQogIF0NCn0="
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -54,5 +54,5 @@
     }
   },
 
-  "required": [ "Tests", "InstructionSet" ]
+  "required": ["Tests", "InstructionSet" ]
 }

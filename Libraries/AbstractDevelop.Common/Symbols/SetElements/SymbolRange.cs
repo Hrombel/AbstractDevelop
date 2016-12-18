@@ -79,7 +79,7 @@ namespace AbstractDevelop.Symbols
         /// <param name="symbol">Символ для проверки</param>
         /// <returns></returns>
         public bool Contains(char symbol)
-            => symbol.IsInRange(StartChar, EndChar, false);
+            => symbol.IsInRange(StartChar, EndChar);
 
         /// <summary>
         /// Возравщает перечислитель элементов данного набора

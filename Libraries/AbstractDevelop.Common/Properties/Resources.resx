@@ -124,7 +124,7 @@
     <value>Не удалось найти файл с путем {0}</value>
   </data>
   <data name="InstructionDescription" xml:space="preserve">
-    <value>Инструкция {0} c аргументами {1} (кол-во = {2})</value>
+    <value>{0}, аргументов: {1}</value>
   </data>
   <data name="InvalidArgumentException" xml:space="preserve">
     <value>Аргумент {0} не является допустимым (см. документацию)</value>

@@ -117,13 +117,13 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="RegisterContentColumn" xml:space="preserve">
-    <value>Содержимое</value>
+  <data name="EditorProviderTextFile" xml:space="preserve">
+    <value>Text File</value>
   </data>
-  <data name="RegisterNumberColumn" xml:space="preserve">
-    <value>#</value>
+  <data name="SettingsPageGeneral" xml:space="preserve">
+    <value>General</value>
   </data>
-  <data name="RiscRegistersWindowTitle" xml:space="preserve">
-    <value>Регистры RISC</value>
+  <data name="SettingsPathEnvironment" xml:space="preserve">
+    <value>Environment</value>
   </data>
 </root>

@@ -95,16 +95,21 @@ namespace AbstractDevelop
             => observedPlatforms.TryGetValue(code, out var platform) ? platform :
             throw new KeyNotFoundException(Translate.Key("PlatformNotFoundError", format: code));
 
+        public static void Initialize()
+        {
+            observer = new PlatformObserver();
+            observedPlatforms = new Dictionary<int, IPlatformProvider>();
+        }
+
+
         public static void Initialize(CompositionContainer container)
         {
             extensibilityContainer = container ?? throw new ArgumentNullException(nameof(container));
             extesnibilityProvider = new ExtensibilityProvider(extensibilityContainer);
 
-            observer = new PlatformObserver();
+            Initialize();
+
             container.SatisfyImportsOnce(observer);
-
-            observedPlatforms = new Dictionary<int, IPlatformProvider>();
-
             Update();
         }
 
@@ -116,6 +121,11 @@ namespace AbstractDevelop
             // заполнение словаря обнаруженных платформ с их первоначальной инициализацией
             observer.Fill(observedPlatforms, extesnibilityProvider, (platform) =>
                 platform.AvailableMachineTypes.All(type => type.BasedOn(typeof(AbstractMachine))));
+        }
+
+        public static void Add(IPlatformProvider platformProvider)
+        {
+            observedPlatforms.Add(platformProvider.ID, platformProvider);
         }
     }
 }

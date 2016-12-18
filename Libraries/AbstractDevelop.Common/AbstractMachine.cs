@@ -11,12 +11,13 @@ namespace AbstractDevelop.Machines
     ///  Представляет оболочку взаимодействия абстрактной машины (вычислительной архитектуры)
     /// </summary>
     public abstract class AbstractMachine :
-        ISerializable, IDisposable
+        IDisposable
     {
         #region [Классы и структуры]
 
         public class ExecutionContext
         {
+            public int CurrentIndex { get; internal set; }
         }
 
         public abstract class MachineState
@@ -145,20 +146,9 @@ namespace AbstractDevelop.Machines
         }
 
         /// <summary>
-        /// Получает данные, связанные с машиной, в универсальном формате
-        /// </summary>
-        /// <param name="info">Объект, предоставляющий доступ к механизмам сериализации</param>
-        /// <param name="context">Контекст сериализации</param>
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            // TODO: определить процесс сериализации 
-        }
-
-        /// <summary>
         /// Запускает работу машины в пошаговом или обычном режиме
         /// </summary>
-        /// <param name="launchInStepMode">Следует ли запускать машину в пошаговом режиме</param>
-        public virtual void Start(bool launchInStepMode = false)
+        public virtual void Start()
         {
             OnStarting(EventArgs.Empty);
             IsActive = PrepareToStart();
@@ -168,8 +158,20 @@ namespace AbstractDevelop.Machines
                 // подготовка успешна, производится выполнение
                 OnStarted(EventArgs.Empty);
                 // выполнять шаги до конца
-                while (IsActive && OnBeforeStep(EventArgs.Empty) == StepAction.Continue && Step() && !launchInStepMode)
+                while (IsActive && OnBeforeStep(EventArgs.Empty) == StepAction.Continue && Step())
                     OnAfterStep(EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Выполняет шаги данной машины до остановки
+        /// </summary>
+        public virtual void RunToEnd()
+        {
+            if (!IsActive)
+            {
+                Activate();
+                while (IsActive && Step()) ;
             }
         }
 
@@ -194,7 +196,7 @@ namespace AbstractDevelop.Machines
                     IsActive = false;
                     OnStopped(EventArgs.Empty);
                     // запись отладочного сообщения
-                    DebugTrace.Write(debugMessage);
+                    DebugTrace?.Write(debugMessage);
                 }
             }
             else throw new InvalidOperationException("Остановка невозможна: машина не была запущена");
@@ -282,29 +284,5 @@ namespace AbstractDevelop.Machines
         {
             BreakPoints = new BreakPointCollection(this);
         }
-
-        // система ввода-вывода
-        /*public class ValueEventArgs
-        {
-            public ArgumentType Value { get; set; }
-        }
-
-        public delegate void ValueEventHandler(object sender, ValueEventArgs e);
-
-        public event ValueEventHandler ValueIn, ValueOut;
-
-        public ArgumentType ReadInput()
-        {
-            var reference = new ValueEventArgs();
-            ValueIn?.Invoke(this, reference);
-
-            return reference.Value;
-        }
-
-        public void WriteOutput(ArgumentType value)
-        {
-            var reference = new ValueEventArgs() { Value = value };
-            ValueOut?.Invoke(this, reference);
-        }*/
     }
 }

@@ -55,6 +55,9 @@ namespace AbstractDevelop
         public static string RemoveWhitespaces(this string source, out string output)
            => output = new string (source.SkipWhile(char.IsWhiteSpace).ToArray());
 
+        public static IEnumerable<char> Remove(this IEnumerable<char> originalString, char removingChar)
+           => originalString.Where(@char => @char != removingChar);
+
         #endregion
 
         #region [Численные]
@@ -71,7 +74,7 @@ namespace AbstractDevelop
         public static T CheckIndex<T>(this T index, T min = default(T), T max = default(T))
             where T : IComparable<T>
             => IsInRange(index, min, max)? index : throw new ArgumentOutOfRangeException("Указанный индекс находится за пределами диапазона.");
-               
+
         /// <summary>
         /// Проверяет вхождение значения в заданный промежуток.
         /// </summary>
@@ -81,10 +84,9 @@ namespace AbstractDevelop
         /// <param name="end">Конец промежутка.</param>
         /// <param name="isStrictChecking">Показвает, стоит ли трактовать конечное значение как допустимое.</param>
         /// <returns>Наличие факта вхождения данного значения в указанный отрезок.</returns>
-        public static bool IsInRange<T>(this T value, T start = default(T), T end = default(T), bool isStrictChecking = true)
-           where T : IComparable<T> => value.CompareTo(start) == 0 || isStrictChecking? 
-            value.CompareTo(start) * value.CompareTo(end) < 0 : 
-            value.CompareTo(start) * value.CompareTo(end) <= 0;
+        public static bool IsInRange<T>(this T value, T start = default(T), T end = default(T))
+           where T : IComparable<T>
+            => start.CompareTo(value) <= 0 && end.CompareTo(value) >= 0;
 
         #endregion
 

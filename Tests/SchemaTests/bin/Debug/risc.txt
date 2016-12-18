@@ -1,15 +1,15 @@
 in r1
-rol r1 1 r1
+rol r1 0o77 [r1]
 in r2
-and r1 r2 [0]
+and r1 0b11111111 [0]
 out [0]
 
-add [0] r1 [0]
+add [0] 0o0011 [0]
 out [0]
 add [0] r1 [0]
 
 out [0]
-add [0] r1 [0]
+add [r1] r1 [0]
 out [0]
 add [0] r1 [0]
 out [0]

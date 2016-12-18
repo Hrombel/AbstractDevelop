@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
+using System.Linq;
 using AbstractDevelop.Translation;
 
 using DataType = System.Byte;
-using MemoryStorage = AbstractDevelop.Machines.Tape<byte>;
-using System.Linq;
+using MemoryStorage = System.Collections.Generic.List<byte>;
 
 namespace AbstractDevelop.Machines
 {
@@ -15,19 +13,17 @@ namespace AbstractDevelop.Machines
     {
         #region [Шаблоны команд]
 
-        static readonly Regex argumentExpression = new Regex(@"^((\d+)|r(\d)|\[(\d+)\])$", RegexOptions.Singleline);
-
         static Argument
            // точка отправки данных
            source = new Argument(),
            // точка назначения данных (не может быть указателем на значение)
-           destination = new Argument() { Validator = (arg, state) => arg.Type != DataReferenceType.Value },
+           destination = new Argument() { Validator = (arg, state) => !(arg is ValueReference || arg is LabelReference) },
            // метка (указатель должен ссылаться на существующую инструкцию)
            label = new Argument()
            {
                Validator = (arg, state) =>
-                   (arg.Type == DataReferenceType.Label &&
-                   (state as RiscTranslationState).Labels.ContainsValue(arg))
+                   arg?.Type == DataReferenceType.Label &&
+                   (state as RiscTranslationState).Labels.ContainsValue(arg) 
            },
            // количество
            count = source;
@@ -49,31 +45,66 @@ namespace AbstractDevelop.Machines
         static InstructionDefinitions instructionsBase;
 
         /// <summary>
+        /// Список префиксов форматов данных
+        /// </summary>
+        static Dictionary<char, NumberFormat> formatPrefixMapping = new Dictionary<char, NumberFormat>()
+        {
+            ['x'] = NumberFormat.Hex,
+            ['o'] = NumberFormat.Octal,
+            ['b'] = NumberFormat.Binary
+        };
+
+        /// <summary>
         /// Функция для преобразования значений DataReference
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        DataReference ConvertToReference(string token, RiscTranslationState state)
+        DataReference ConvertToReference(string token, RiscTranslationState state, IArgumentDefinition argument)
         {
-            var match = default(Match);
-            if ((match = argumentExpression.Match(token)).Success)
+            if (string.IsNullOrEmpty(token))
+                throw new ArgumentNullException(nameof(token));
+
+            var firstChar = token.First();
+            var lastChar = token.Last();
+
+            // если первый символ - цифра, то преобразование в значение
+            if (char.IsDigit(firstChar))
             {
-                DataReferenceType type = default(DataReferenceType);
+                // если не удастся прочитать, то поиск по префиксам
+                if (!int.TryParse(token, out var value))
+                {
+                    value = -1;
+                    if (firstChar == '0' && token.Length > 1)
+                    {
+                        // формат с префиксом
+                        if (formatPrefixMapping.TryGetValue(token[1], out var format))
+                            value = Convert.ToInt32(token.Remove(0, 2), (int)format);
+                        // восьмеричный формат
+                        else value = Convert.ToInt32(token.Remove(0, 2), 8);
+                    }
+                }
 
-                if (!string.IsNullOrEmpty(match.Groups[2].Value))
-                    type = DataReferenceType.Value;
-                else if (!string.IsNullOrEmpty(match.Groups[3].Value))
-                    type = DataReferenceType.Register;
-                else if (!string.IsNullOrEmpty(match.Groups[4].Value))
-                    type = DataReferenceType.Memory;
-
-                return new DataReference(this, int.Parse(match.Groups[(int)type + 1].Value), type);
+                // значение больше допустимого
+                if (!value.IsInRange(DataType.MinValue, DataType.MaxValue))
+                    throw new Exceptions.InvalidArgumentException(argument, token, state.LineNumber);
+                else
+                    return new ValueReference(this, (DataType)value);
             }
-            // поиск ссылки
-            else if (state.Labels.TryGetValue(token, out var reference))
-                return new DataReference(this, reference, DataReferenceType.Label);
+            // иначе ссылка
             else
-                return DataReference.Empty(this);
+            {
+                // ссылка на регистр
+                if (firstChar == 'r' && byte.TryParse(token.Substring(1, token.Length - 1), out var value))
+                    return new DataReference(this, new ValueReference(this, value), DataReferenceType.Register);
+                // ссылка на память
+                else if (firstChar == '[' && lastChar == ']')
+                    return new DataReference(this, ConvertToReference(token.Substring(1, token.Length - 2), state, argument), DataReferenceType.Memory);
+                // метка
+                else if (state.Labels.TryGetValue(token, out var reference))
+                    return new LabelReference(this, (DataType)reference);
+                // неизвестный формат
+                else throw new Exceptions.InvalidArgumentException(argument, token, state.LineNumber);
+            }
         }
 
         #endregion
@@ -152,10 +183,10 @@ namespace AbstractDevelop.Machines
             base()
         {
             // выделение необходимых ресурсов
-            Memory = new MemoryStorage(false, memorySize);
+            Memory = new MemoryStorage(Enumerable.Repeat((DataType)0, memorySize));
             Registers = new List<IRegister>(Enumerable.Range(0, registerCount).Select(id => new RiscRegister(id)));
             // список доступных операций (реализация по техническому документу)
-            instructionsBase = new InstructionDefinitions()
+            Instructions.Definitions = instructionsBase = instructionsBase ?? new InstructionDefinitions()
             {
                 ["in"] = (RiscInstructionCode.ReadInput, args => args[0].Value = ReadInput(), inputOperation),
                 ["out"] = (RiscInstructionCode.WriteOutput, args => WriteOutput(args[0]), outputOperation),
@@ -178,7 +209,11 @@ namespace AbstractDevelop.Machines
 
                 ["call"] = (RiscInstructionCode.Call, args => Subprocedure(args[0]), subprocedureOperation),
                 ["ret"] = (RiscInstructionCode.Return, args => Instructions.Goto(ExecutionStack.Pop()), noArgOperation)
-            };
+            }; Instructions.Definitions.Rebuild();
+
+            // увеличение счетчика времени доступа\работы
+            Instructions.OnExecution += (instruction) => AccessTimer++;
+            Instructions.OnGoto += (index) => AccessTimer += 8;
 
             // стандартный транслятор инструкций 
             Translator = new RiscTranslator() { Convert = ConvertToReference };

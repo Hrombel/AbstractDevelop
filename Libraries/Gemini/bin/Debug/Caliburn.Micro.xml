@@ -496,6 +496,23 @@
             <param name="container">The container.</param>
             <returns>The resolved instances.</returns>
         </member>
+        <member name="M:Caliburn.Micro.ContainerExtensions.HasHandler``1(Caliburn.Micro.SimpleContainer,System.String)">
+            <summary>
+            Determines if a handler for the service/key has previously been registered.
+            </summary>
+            <typeparam name="TService">The service type.</typeparam>
+            <param name="container">The container.</param>
+            <param name="key">The key.</param>
+            <returns>True if a handler is registere; false otherwise.</returns>
+        </member>
+        <member name="M:Caliburn.Micro.ContainerExtensions.UnregisterHandler``1(Caliburn.Micro.SimpleContainer,System.String)">
+            <summary>
+              Unregisters any handlers for the service/key that have previously been registered.
+            </summary>
+            <typeparam name="TService">The service type.</typeparam>
+            <param name="container">The container.</param>
+            <param name = "key">The key.</param>
+        </member>
         <member name="T:Caliburn.Micro.ContinueResultDecorator">
             <summary>
             A result decorator which executes a coroutine when the wrapped result was cancelled.

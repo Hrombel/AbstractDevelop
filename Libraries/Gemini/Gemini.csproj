@@ -35,16 +35,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Caliburn.Micro, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Caliburn.Micro.Core.3.0.1\lib\net45\Caliburn.Micro.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Platform, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Caliburn.Micro.Platform.Core, Version=3.0.1.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Caliburn.Micro.3.0.1\lib\net45\Caliburn.Micro.Platform.Core.dll</HintPath>
+    <Reference Include="Caliburn.Micro, Version=3.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Caliburn.Micro.Core.3.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Gu.Localization, Version=6.1.0.0, Culture=neutral, processorArchitecture=MSIL">
@@ -68,10 +60,6 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\MahApps.Metro.1.3.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
@@ -171,33 +159,6 @@
     <Compile Include="Framework\Win32\NativeMethods.cs" />
     <Compile Include="Framework\WindowBase.cs" />
     <Compile Include="Framework\Controls\DynamicStyle.cs" />
-    <Compile Include="Modules\CodeEditor\Controls\CodeEditor.cs" />
-    <Compile Include="Modules\CodeEditor\DefaultLanguageDefinition.cs" />
-    <Compile Include="Modules\CodeEditor\EditorProvider.cs" />
-    <Compile Include="Modules\CodeEditor\ILanguageDefinition.cs" />
-    <Compile Include="Modules\CodeEditor\LanguageDefinitionManager.cs" />
-    <Compile Include="Modules\CodeEditor\ViewModels\CodeEditorViewModel.cs" />
-    <Compile Include="Modules\CodeEditor\Views\CodeEditorView.xaml.cs">
-      <DependentUpon>CodeEditorView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\CodeEditor\Views\ICodeEditorView.cs" />
-    <Compile Include="Modules\ErrorList\Commands\ToggleErrorsCommandDefinition.cs" />
-    <Compile Include="Modules\ErrorList\Commands\ToggleErrorsWarningsMessagesCommandHandler.cs" />
-    <Compile Include="Modules\ErrorList\Commands\ToggleMessagesCommandDefinition.cs" />
-    <Compile Include="Modules\ErrorList\Commands\ToggleWarningsCommandDefinition.cs" />
-    <Compile Include="Modules\ErrorList\Commands\ViewErrorListCommandDefinition.cs" />
-    <Compile Include="Modules\ErrorList\Commands\ViewErrorListCommandHandler.cs" />
-    <Compile Include="Modules\ErrorList\Converters\ErrorListItemTypeToImageConverter.cs" />
-    <Compile Include="Modules\ErrorList\Design\DesignTimeErrorListViewModel.cs" />
-    <Compile Include="Modules\ErrorList\ErrorListItem.cs" />
-    <Compile Include="Modules\ErrorList\ErrorListItemType.cs" />
-    <Compile Include="Modules\ErrorList\IErrorList.cs" />
-    <Compile Include="Modules\ErrorList\MenuDefinitions.cs" />
-    <Compile Include="Modules\ErrorList\ToolBarDefinitions.cs" />
-    <Compile Include="Modules\ErrorList\ViewModels\ErrorListViewModel.cs" />
-    <Compile Include="Modules\ErrorList\Views\ErrorListView.xaml.cs">
-      <DependentUpon>ErrorListView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Modules\MainMenu\Behaviors\MenuBehavior.cs" />
     <Compile Include="Modules\MainMenu\Converters\CultureInfoNameConverter.cs" />
     <Compile Include="Modules\MainMenu\IMenuBuilder.cs" />
@@ -208,16 +169,6 @@
     <Compile Include="Modules\MainMenu\ViewModels\MainMenuSettingsViewModel.cs" />
     <Compile Include="Modules\MainMenu\Views\MainMenuSettingsView.xaml.cs">
       <DependentUpon>MainMenuSettingsView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\Output\Commands\ViewOutputCommandDefinition.cs" />
-    <Compile Include="Modules\Output\Commands\ViewOutputCommandHandler.cs" />
-    <Compile Include="Modules\Output\IOutput.cs" />
-    <Compile Include="Modules\Output\MenuDefinitions.cs" />
-    <Compile Include="Modules\Output\ViewModels\OutputViewModel.cs" />
-    <Compile Include="Modules\Output\ViewModels\OutputWriter.cs" />
-    <Compile Include="Modules\Output\Views\IOutputView.cs" />
-    <Compile Include="Modules\Output\Views\OutputView.xaml.cs">
-      <DependentUpon>OutputView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Modules\Settings\Commands\OpenSettingsCommandDefinition.cs" />
     <Compile Include="Modules\Settings\Commands\OpenSettingsCommandHandler.cs" />
@@ -376,14 +327,6 @@
     <Compile Include="Framework\Themes\LightTheme.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Modules\CodeEditor\Views\CodeEditorView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Modules\ErrorList\Views\ErrorListView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Modules\MainMenu\Resources\Styles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -400,10 +343,6 @@
       <SubType>
       </SubType>
     </DesignData>
-    <Page Include="Modules\Output\Views\OutputView.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Modules\Settings\Views\SettingsView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -34,14 +34,14 @@ namespace AbstractDevelop.Machines
         /// Реализация транслятора исходного кода для <see cref="RiscMachine"/>
         /// </summary>
         public class RiscTranslator :
-            ISourceTranslator<Instruction, object>
+            ISourceTranslator<Instruction, InstructionDefinitions>
         {
             #region [Свойства и Поля]
 
             /// <summary>
             /// Функция преобразования строки в значение для обработки
             /// </summary>
-            public Func<string, RiscTranslationState, DataReference> Convert { get; set; }
+            public Func<string, RiscTranslationState, IArgumentDefinition, DataReference> Convert { get; set; }
 
             /// <summary>
             /// Состояние трансляции
@@ -73,11 +73,11 @@ namespace AbstractDevelop.Machines
             /// <param name="input">Строки исходного кода</param>
             /// <param name="rules">Система правил</param>
             /// <returns></returns>
-            public IEnumerable<Instruction> Translate(IEnumerable<string> input, object rules)
+            public IEnumerable<Instruction> Translate(IEnumerable<string> input, InstructionDefinitions rules)
             {
                 var state = new RiscTranslationState()
                 {
-                    Definitions = rules as InstructionDefinitions ?? instructionsBase,
+                    Definitions = rules ?? instructionsBase,
                     Exceptions = new List<Exception>(),
                     Labels = new Dictionary<string, int>(),
                     LineNumber = 0
@@ -143,7 +143,7 @@ namespace AbstractDevelop.Machines
                                 if (state.Labels.ContainsKey(label))
                                     state.Exceptions.Add(new LabelRedefinedException(label, state.LineNumber));
                                 else
-                                    state.Labels.Add(label, state.LineNumber);
+                                    state.Labels.Add(label, state.LineNumber - 1);
 
                                 if (parts.Length == 1)
                                     return false;
@@ -163,6 +163,53 @@ namespace AbstractDevelop.Machines
                 for (int i = 0; i < state.Exceptions.Count; i++)
                     if (state.Exceptions[i] is InvalidArgumentException argEx &&
                        (ValidateValue(Parse(argEx.Token, argEx.Argument), argEx.Argument)))
+                    {
+                        state.Exceptions.RemoveAt(i);
+                        i--;
+                    }
+
+                // вывод обобщенного исключения для отображения в списке ошибок
+                if (state.Exceptions.Count > 0)
+                    throw new AggregateException(state.Exceptions);
+
+                // считывание данных
+                DataReference Parse(string data, IArgumentDefinition arg)
+                {
+                    try { return (arg.Parser ?? Convert)?.Invoke(data, state, arg) ?? arg.DefaultValue; }
+                    catch (Exception exception)
+                    {
+                        state.Exceptions.Add(exception);
+                        return arg.DefaultValue;
+                    }
+                }
+
+                // проверка считанных данных
+                bool ValidateValue(DataReference value, IArgumentDefinition arg)
+                    => arg.Validator?.Invoke(value, state) ?? true;
+            }
+
+            public IEnumerable<Instruction> somekindofmonster(IEnumerable<string> input, InstructionDefinitions rules)
+            {
+                var state = new RiscTranslationState()
+                {
+                    Definitions = rules ?? instructionsBase,
+                    Exceptions = new List<Exception>(),
+                    Labels = new Dictionary<string, int>(),
+                    LineNumber = 0
+                };
+                State = state;
+                // построчный разбор
+                foreach (var line in input)
+                {
+                    state.LineNumber++;
+                    yield return null;
+                }
+
+                // исключение ошибок, исправленных во время трансляции автоматически
+                // (рарешение ссылок на метки)
+                for (int i = 0; i < state.Exceptions.Count; i++)
+                    if (state.Exceptions[i] is InvalidArgumentException argEx &&
+                       (ValidateValue(Parse(argEx.Token, argEx.Argument), argEx.Argument)))
                         state.Exceptions.RemoveAt(i);
 
                 // вывод обобщенного исключения для отображения в списке ошибок
@@ -171,12 +218,20 @@ namespace AbstractDevelop.Machines
 
                 // считывание данных
                 DataReference Parse(string data, IArgumentDefinition arg)
-                    => (arg.Parser ?? Convert)?.Invoke(data, state) ?? arg.DefaultValue;
+                {
+                    try { return (arg.Parser ?? Convert)?.Invoke(data, state, arg) ?? arg.DefaultValue; }
+                    catch (Exception exception)
+                    {
+                        state.Exceptions.Add(exception);
+                        return arg.DefaultValue;
+                    }
+                }
 
                 // проверка считанных данных
                 bool ValidateValue(DataReference value, IArgumentDefinition arg)
                     => arg.Validator?.Invoke(value, state) ?? true;
             }
+
 
             /// <summary>
             /// Производит трансляцию исходного кода в набор инструкций
@@ -184,8 +239,9 @@ namespace AbstractDevelop.Machines
             /// <param name="input">Строки исходного кода</param>
             /// <returns></returns>
             public IEnumerable Translate(IEnumerable input)
-                => input is IEnumerable<string> lines ? Translate(lines, null) :
-                    throw new ArgumentException(nameof(input));
+               => input is IEnumerable<string> lines ? Translate(lines, null) :
+                   throw new ArgumentException(nameof(input));
+            
 
             /// <summary>
             /// Проверяет входные данные и возворащает их декомпозицию

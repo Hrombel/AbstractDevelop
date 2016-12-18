@@ -39,7 +39,6 @@
             <Grid Margin="0,0,-10.333,-4">
                 <Rectangle Fill="#FFF4F4F5" Stroke="Black" Margin="0,5,0,0"/>
                 <TextBlock Margin="10,11.344,9.441,10" TextWrapping="Wrap" Text="Инкремент"/>
-
             </Grid>
         </Border>
         <Canvas x:Name="inputBlock" Height="34.593" Margin="6.054,0,0,3.634" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="84.941">

@@ -83,6 +83,10 @@
       <Project>{0b76401d-e688-485c-a6e0-a5461cb9fe7e}</Project>
       <Name>AbstractDevelop.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Plugins\AbstractDevelop.RiscMachine\AbstractDevelop.RiscMachine.csproj">
+      <Project>{9681f5de-e78f-4522-aef5-c7c666728f6a}</Project>
+      <Name>AbstractDevelop.RiscMachine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
