@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using AbstractDevelop.RiscMachine.Properties;
 using AbstractDevelop.Projects;
+using AbstractDevelop.Machines.Properties;
 
 namespace AbstractDevelop.Machines
 {

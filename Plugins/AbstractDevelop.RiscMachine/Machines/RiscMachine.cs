@@ -54,6 +54,28 @@ namespace AbstractDevelop.Machines
             ['b'] = NumberFormat.Binary
         };
 
+        public static DataType GetNumberValue(string token)
+        {
+            // если не удастся прочитать, то поиск по префиксам
+            if (!int.TryParse(token, out var value))
+            {
+                value = -1;
+                if (token[0] == '0' && token.Length > 1)
+                {
+                    // формат с префиксом
+                    if (formatPrefixMapping.TryGetValue(token[1], out var format))
+                        value = Convert.ToInt32(token.Remove(0, 2), (int)format);
+                    // восьмеричный формат
+                    else value = Convert.ToInt32(token, 8);
+                }
+            }
+
+            if (!value.IsInRange(DataType.MinValue, DataType.MaxValue))
+                throw new ArgumentException(nameof(token));
+
+            return (DataType)value;
+        }
+
         /// <summary>
         /// Функция для преобразования значений DataReference
         /// </summary>
@@ -70,25 +92,8 @@ namespace AbstractDevelop.Machines
             // если первый символ - цифра, то преобразование в значение
             if (char.IsDigit(firstChar))
             {
-                // если не удастся прочитать, то поиск по префиксам
-                if (!int.TryParse(token, out var value))
-                {
-                    value = -1;
-                    if (firstChar == '0' && token.Length > 1)
-                    {
-                        // формат с префиксом
-                        if (formatPrefixMapping.TryGetValue(token[1], out var format))
-                            value = Convert.ToInt32(token.Remove(0, 2), (int)format);
-                        // восьмеричный формат
-                        else value = Convert.ToInt32(token.Remove(0, 2), 8);
-                    }
-                }
-
-                // значение больше допустимого
-                if (!value.IsInRange(DataType.MinValue, DataType.MaxValue))
-                    throw new Exceptions.InvalidArgumentException(argument, token, state.LineNumber);
-                else
-                    return new ValueReference(this, (DataType)value);
+                try { return new ValueReference(this, GetNumberValue(token)); }
+                catch { throw new Exceptions.InvalidArgumentException(argument, token, state.LineNumber); }
             }
             // иначе ссылка
             else

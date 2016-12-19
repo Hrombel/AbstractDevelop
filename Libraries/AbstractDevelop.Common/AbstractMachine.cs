@@ -168,11 +168,10 @@ namespace AbstractDevelop.Machines
         /// </summary>
         public virtual void RunToEnd()
         {
-            if (!IsActive)
-            {
-                Activate();
-                while (IsActive && Step()) ;
-            }
+            Activate();
+            while (IsActive && Step()) ;
+
+            IsActive = false;
         }
 
         /// <summary>

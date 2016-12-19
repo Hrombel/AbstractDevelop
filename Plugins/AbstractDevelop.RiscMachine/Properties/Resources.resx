@@ -129,4 +129,16 @@
   <data name="RiscRegistersWindowTitle" xml:space="preserve">
     <value>Регистры RISC</value>
   </data>
+  <data name="TestInvalidInput" xml:space="preserve">
+    <value>Кол-во считанных байт не равно {0}</value>
+  </data>
+  <data name="TestInvalidInstructionBase" xml:space="preserve">
+    <value>Требуется использовать инструкции из набора {0}</value>
+  </data>
+  <data name="TestInvalidOutput" xml:space="preserve">
+    <value>Кол-во выведенных байт не равно {0}</value>
+  </data>
+  <data name="TestInvalidOutputValue" xml:space="preserve">
+    <value>Значение вывода #{0} не совпало с ожидаемым {1}</value>
+  </data>
 </root>

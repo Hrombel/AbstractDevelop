@@ -20,3 +20,13 @@ C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\MahApps.Metro.xml
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\obj\Debug\AnotherTest.exe
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\obj\Debug\AnotherTest.pdb
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\de\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\en\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\es\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\fr\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\it\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\ja\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\ko\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\ru\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll

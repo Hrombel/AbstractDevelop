@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AbstractDevelop.RiscMachine.Properties {
+namespace AbstractDevelop.Machines.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace AbstractDevelop.RiscMachine.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AbstractDevelop.RiscMachine.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("AbstractDevelop.Machines.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -93,6 +93,42 @@ namespace AbstractDevelop.RiscMachine.Properties {
         internal static string RiscRegistersWindowTitle {
             get {
                 return ResourceManager.GetString("RiscRegistersWindowTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кол-во считанных байт не равно {0}.
+        /// </summary>
+        internal static string TestInvalidInput {
+            get {
+                return ResourceManager.GetString("TestInvalidInput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Требуется использовать инструкции из набора {0}.
+        /// </summary>
+        internal static string TestInvalidInstructionBase {
+            get {
+                return ResourceManager.GetString("TestInvalidInstructionBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Кол-во выведенных байт не равно {0}.
+        /// </summary>
+        internal static string TestInvalidOutput {
+            get {
+                return ResourceManager.GetString("TestInvalidOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Значение вывода #{0} не совпало с ожидаемым {1}.
+        /// </summary>
+        internal static string TestInvalidOutputValue {
+            get {
+                return ResourceManager.GetString("TestInvalidOutputValue", resourceCulture);
             }
         }
     }

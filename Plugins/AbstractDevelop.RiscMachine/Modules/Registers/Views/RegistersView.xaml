@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:converters="clr-namespace:AbstractDevelop.Modules.Registers.Converters"
              xmlns:lang="http://gu.se/Localization"
-             xmlns:p="clr-namespace:AbstractDevelop.RiscMachine.Properties"
+             xmlns:p="clr-namespace:AbstractDevelop.Machines.Properties"
              mc:Ignorable="d" 
              MinWidth="70" MinHeight="40"
              d:DesignHeight="300" d:DesignWidth="300"

@@ -1,4 +1,22 @@
 $ cat .gitignore
 AbstractDevelop/bin/
 AbstractDevelop/obj/
+Libraries/AbstractDevelop.Common/bin/
+Libraries/AbstractDevelop.Common/obj/
+Libraries/AbstractDevelop.Visuals/bin/
+Libraries/AbstractDevelop.Visuals/obj/
+Libraries/Gemini/
+packages
+Plugins/AbstractDevelop.PostMachine/bin/
+Plugins/AbstractDevelop.PostMachine/obj/
+Plugins/AbstractDevelop.RegisterMachine/bin/
+Plugins/AbstractDevelop.RegisterMachine/obj/
+Plugins/AbstractDevelop.RiscMachine/bin/
+Plugins/AbstractDevelop.RiscMachine/obj/
+Plugins/AbstractDevelop.TuringMachine/bin/
+Plugins/AbstractDevelop.TuringMachine/obj/
+Tests/SchemaTests/bin/
+Tests/SchemaTests/obj/
+Tests/AnotherTest/bin/
+Tests/AnotherTest/obj/
 .vs/

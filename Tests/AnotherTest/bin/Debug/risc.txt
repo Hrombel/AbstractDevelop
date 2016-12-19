@@ -6,9 +6,12 @@ do:
 add r1 r2 r1
 xor r1 0b10000000 r3
 
+nand r3 0xAB r4
+
 jo r3 do
 
 quit:
 
 out r1
 out r3
+out r4

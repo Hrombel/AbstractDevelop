@@ -224,5 +224,11 @@ namespace AbstractDevelop
             action(target);
             return target;
         }
+
+        public static T Using<TSource, T>(this TSource target, Func<TSource, T> convert)
+            where TSource: IDisposable
+        {
+            using (target) return convert(target);
+        }
      }
 }

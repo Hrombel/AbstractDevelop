@@ -5,15 +5,15 @@ library
 C#
 .cs
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Release\
-AbstractDevelop.RiscMachine
+AbstractDevelop.Machines
 none
 false
 TRACE
 
 21765287476
 
-19-783833198
-77-1120395895
+21247842738
+77-1579556862
 Modules\Registers\Views\RegistersView.xaml;Modules\Schema\Views\SchemaView.xaml;
 
 True

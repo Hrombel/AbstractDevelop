@@ -117,7 +117,7 @@ namespace AbstractDevelop.Machines
             /// </summary>
             /// <param name="source">Источник операций для загрузки</param>
             /// <returns>Возвращает true, если все оперции были успешно загружен в список</returns>
-            bool Load(IEnumerable source);
+            bool Load(IEnumerable<Instruction> source);
 
             /// <summary>
             /// Загружает набор инструкций в данную коллекцию
@@ -278,16 +278,17 @@ namespace AbstractDevelop.Machines
             /// </summary>
             /// <param name="source">Набор инструкций для загрузки</param>
             /// <returns></returns>
-            public bool Load(IEnumerable source)
+            public bool Load(IEnumerable<Instruction> source)
             {
                 try
                 {
                     if (Count > 0) Clear();
 
                     // добавление инструкций в коллекцию
-                    source.Cast<Instruction>().Select(instruction => instruction.Do(Add));
-                    Reset();
+                    foreach (var instruction in source)
+                        Add(instruction);
 
+                    Reset();
                     return true;
                 }
                 catch { return false; }
@@ -347,6 +348,32 @@ namespace AbstractDevelop.Machines
                 foreach (var value in Values)
                     ByCode.Add(value.Code, value);
             }
+        }
+
+        public class InstructionBase :
+            Collection<InstructionCode>
+        {
+            public InstructionDefinitions Base { get; set; }
+
+            /// <summary>
+            /// Проверяет предоставленный набор инструкций на соответствие данной базе
+            /// </summary>
+            /// <param name="source">Набор для проверки</param>
+            /// <returns></returns>
+            public bool Check(IEnumerable<Instruction> source)
+                => source?.All(i => Contains(i.Type)) ?? false;
+
+            public InstructionBase(InstructionDefinitions definitions, params string[] data)
+            {
+                Base = definitions;
+
+                foreach (var instruction in data)
+                    if (definitions.TryGetValue(instruction, out var def))
+                        Add(def.Code);
+            }
+
+            public override string ToString()
+                => $"[{string.Join(", ", this.Select(val => Base.First(pair => pair.Value.Code.Equals(val)).Key))}]";
         }
 
         /// <summary>
@@ -448,8 +475,6 @@ namespace AbstractDevelop.Machines
         /// <returns></returns>
         public override bool Step()
         {
-            Activate();
-
             // переход ко следующей инструкции
             var currentInstruction = Instructions.GotoNext();
             var args = new InstructionEventArgs(currentInstruction);
@@ -465,9 +490,14 @@ namespace AbstractDevelop.Machines
             }
             // во время выполнения возникло исключение, порожденное частью абстрактной машины
             catch (AbstractMachineException ex) { Stop(StopReason.Exception, ex.Message); }
-            catch (Exception ex) { DebugTrace.Write(ex, "error"); }
 
             return isSucceded;
+        }
+
+        protected override void Activate()
+        {
+            Instructions.Reset();
+            base.Activate();
         }
 
         #endregion

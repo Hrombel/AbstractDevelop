@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace AbstractDevelop.RiscMachine.Properties {
+namespace AbstractDevelop.Machines.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

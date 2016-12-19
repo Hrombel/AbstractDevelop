@@ -28,3 +28,13 @@ C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\System.Windows.Interactivity.dll
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\Caliburn.Micro.Platform.xml
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\MahApps.Metro.xml
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\de\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\en\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\es\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\fr\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\it\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\ja\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\ko\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\ru\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\SchemaTests\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll

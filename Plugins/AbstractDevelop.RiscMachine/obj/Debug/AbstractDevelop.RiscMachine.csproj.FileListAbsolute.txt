@@ -15,7 +15,6 @@ C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugi
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\Modules\Registers\Views\RegistersView.baml
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\Modules\Schema\Views\SchemaView.baml
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.g.resources
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.Properties.Resources.resources
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.csproj.GenerateResource.Cache
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.dll
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.pdb
@@ -39,3 +38,16 @@ C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugi
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\Xceed.Wpf.AvalonDock.Themes.VS2013.dll
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\Xceed.Wpf.DataGrid.dll
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\Xceed.Wpf.Toolkit.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.Machines.Properties.Resources.resources
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\System.ValueTuple.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\MahApps.Metro.pdb
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\de\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\en\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\es\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\fr\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\it\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\ja\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\ko\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\ru\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\zh-Hans\System.Windows.Interactivity.resources.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\zh-Hant\System.Windows.Interactivity.resources.dll

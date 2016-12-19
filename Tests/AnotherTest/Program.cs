@@ -9,6 +9,7 @@ using AbstractDevelop.Storage.Formats;
 using AbstractDevelop.Projects;
 using AbstractDevelop;
 using System.IO;
+using AbstractDevelop.Machines.Testing;
 
 namespace AnotherTest
 {
@@ -23,16 +24,15 @@ namespace AnotherTest
             var project = AbstractProject.Load("Project.json", format);
 
             var machine = project.Platform.CreateMachine(project) as RiscMachine;
+            var test = new RiscTestSystem(TestSource.Load("SampleTest.json", format), machine);
 
             machine.ReadInput = () => new ValueReference(machine.Do(v => Console.Write("Введите число: ")), byte.Parse(Console.ReadLine()));
             machine.WriteOutput = (value) => Console.WriteLine($"Вывод: {value.Value}");
 
-            // var result = (machine.Translator as RiscMachine.RiscTranslator).Translate(File.ReadAllLines("risc.txt"), null);
+            machine.Instructions.Load((machine.Translator as RiscMachine.RiscTranslator).Translate(File.ReadAllLines("risc.txt"), null));
 
-            foreach (var instr in (machine.Translator as RiscMachine.RiscTranslator).Translate(File.ReadAllLines("risc.txt"), null))
-                machine.Instructions.Add(instr);
+            var testResult = test.Run();
 
-            machine.Instructions.Reset();
             machine.RunToEnd();
 
             Console.ReadKey();
