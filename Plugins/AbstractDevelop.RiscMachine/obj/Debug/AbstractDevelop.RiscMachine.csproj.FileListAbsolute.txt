@@ -7,14 +7,6 @@ C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugi
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\Caliburn.Micro.xml
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\bin\Debug\Caliburn.Micro.Platform.xml
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.csprojResolveAssemblyReference.cache
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\Modules\Registers\Views\RegistersView.g.cs
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\Modules\Schema\Views\SchemaView.g.cs
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\GeneratedInternalTypeHelper.g.cs
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine_MarkupCompile.cache
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine_MarkupCompile.lref
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\Modules\Registers\Views\RegistersView.baml
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\Modules\Schema\Views\SchemaView.baml
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.g.resources
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.csproj.GenerateResource.Cache
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.dll
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Plugins\AbstractDevelop.RiscMachine\obj\Debug\AbstractDevelop.RiscMachine.pdb

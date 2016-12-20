@@ -34,5 +34,29 @@ namespace AbstractDevelop.Properties {
                 this["LanguageCode"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Hex")]
+        public global::AbstractDevelop.NumberFormat NumberFormat {
+            get {
+                return ((global::AbstractDevelop.NumberFormat)(this["NumberFormat"]));
+            }
+            set {
+                this["NumberFormat"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowFormatPrefixes {
+            get {
+                return ((bool)(this["ShowFormatPrefixes"]));
+            }
+            set {
+                this["ShowFormatPrefixes"] = value;
+            }
+        }
     }
 }

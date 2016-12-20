@@ -88,6 +88,15 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Точка останова.
+        /// </summary>
+        internal static string DebugBreakpoint {
+            get {
+                return ResourceManager.GetString("DebugBreakpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Пауза.
         /// </summary>
         internal static string DebugPause {
@@ -178,15 +187,6 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на _Файл.
-        /// </summary>
-        internal static string File {
-            get {
-                return ResourceManager.GetString("File", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Ищет локализованную строку, похожую на _Закрыть файл.
         /// </summary>
         internal static string FileClose {
@@ -201,6 +201,15 @@ namespace AbstractDevelop.Properties {
         internal static string FileExit {
             get {
                 return ResourceManager.GetString("FileExit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на _Файл.
+        /// </summary>
+        internal static string FileMenu {
+            get {
+                return ResourceManager.GetString("FileMenu", resourceCulture);
             }
         }
         
@@ -390,6 +399,15 @@ namespace AbstractDevelop.Properties {
         internal static string ViewOctal {
             get {
                 return ResourceManager.GetString("ViewOctal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Показывать префиксы.
+        /// </summary>
+        internal static string ViewShowPrefix {
+            get {
+                return ResourceManager.GetString("ViewShowPrefix", resourceCulture);
             }
         }
     }

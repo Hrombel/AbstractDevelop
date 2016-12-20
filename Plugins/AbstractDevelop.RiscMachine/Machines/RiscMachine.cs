@@ -4,7 +4,9 @@ using System.Linq;
 using AbstractDevelop.Translation;
 
 using DataType = System.Byte;
-using MemoryStorage = System.Collections.ObjectModel.ObservableCollection<byte>;
+
+using MemoryStorage = System.Collections.ObjectModel.ObservableCollection<AbstractDevelop.IDataCell>;
+using RegisterStorage = System.Collections.ObjectModel.ObservableCollection<AbstractDevelop.IDataCell>;
 
 namespace AbstractDevelop.Machines
 {
@@ -130,7 +132,7 @@ namespace AbstractDevelop.Machines
         /// <summary>
         /// Набор регистров <see cref="RiscRegister"/>
         /// </summary>
-        public List<IRegister> Registers { get; }
+        public RegisterStorage Registers { get; }
 
         /// <summary>
         /// Транслятор инструкций для <see cref="RiscRegister"/>
@@ -188,8 +190,8 @@ namespace AbstractDevelop.Machines
             base()
         {
             // выделение необходимых ресурсов
-            Memory = new MemoryStorage(new DataType[memorySize]);
-            Registers = new List<IRegister>(Enumerable.Range(0, registerCount).Select(id => new RiscRegister(id)));
+            Memory = new MemoryStorage(Enumerable.Range(0, memorySize).Select(id => new RiscMemory(id)));
+            Registers = new RegisterStorage(Enumerable.Range(0, registerCount).Select(id => new RiscRegister(id)));
             // список доступных операций (реализация по техническому документу)
             Instructions.Definitions = instructionsBase = instructionsBase ?? new InstructionDefinitions()
             {

@@ -126,6 +126,9 @@
   <data name="Debug" xml:space="preserve">
     <value>Отладка</value>
   </data>
+  <data name="DebugBreakpoint" xml:space="preserve">
+    <value>Точка останова</value>
+  </data>
   <data name="DebugPause" xml:space="preserve">
     <value>Пауза</value>
   </data>
@@ -156,14 +159,14 @@
   <data name="EditUndo" xml:space="preserve">
     <value>_Отменить</value>
   </data>
-  <data name="File" xml:space="preserve">
-    <value>_Файл</value>
-  </data>
   <data name="FileClose" xml:space="preserve">
     <value>_Закрыть файл</value>
   </data>
   <data name="FileExit" xml:space="preserve">
     <value>_Выход</value>
+  </data>
+  <data name="FileMenu" xml:space="preserve">
+    <value>_Файл</value>
   </data>
   <data name="FileNew" xml:space="preserve">
     <value>_Создать</value>
@@ -227,5 +230,8 @@
   </data>
   <data name="ViewOctal" xml:space="preserve">
     <value>Восьмеричный</value>
+  </data>
+  <data name="ViewShowPrefix" xml:space="preserve">
+    <value>Показывать префиксы</value>
   </data>
 </root>

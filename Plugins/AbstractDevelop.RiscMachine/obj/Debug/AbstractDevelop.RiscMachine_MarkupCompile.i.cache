@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-21765287476
+1477103123
 
-251180825804
+20986634341
 77-1253274504
-Modules\Registers\Views\RegistersView.xaml;Modules\Schema\Views\SchemaView.xaml;
+Modules\Schema\Views\SchemaView.xaml;
 
-True
+False
 

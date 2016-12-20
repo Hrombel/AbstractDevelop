@@ -58,7 +58,7 @@ namespace AbstractDevelop.Machines
             {
                 case DataReferenceType.Memory:
                     accessTime += getAccessTime(Owner.Memory);
-                    return Owner.Memory[Reference];
+                    return Owner.Memory[Reference].Value;
                 case DataReferenceType.Register:
                     accessTime += 1;
                     return Owner.Registers[Reference].Value;
@@ -78,7 +78,7 @@ namespace AbstractDevelop.Machines
             {
                 case DataReferenceType.Memory:
                     accessTime += getAccessTime(Owner.Memory);
-                    Owner.Memory[Reference] = value;
+                    Owner.Memory[Reference].Value = value;
                     return;
                 case DataReferenceType.Register:
                     accessTime += 1;

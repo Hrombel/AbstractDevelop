@@ -100,21 +100,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IRegister.cs" />
+    <Compile Include="IDataCell.cs" />
     <Compile Include="Machines\Data\DataReferenceType.cs" />
     <Compile Include="Machines\Data\DataReference.cs" />
     <Compile Include="Machines\Data\RiscInstructionType.cs" />
+    <Compile Include="Machines\Data\RiscMemory.cs" />
     <Compile Include="Machines\Data\RiscRegister.cs" />
-    <Compile Include="Modules\Registers\Converters\RegisterValueConverter.cs" />
-    <Compile Include="Modules\Registers\ViewModels\RegisterItemViewModel.cs" />
-    <Compile Include="Modules\Registers\ViewModels\RegistersViewModel.cs" />
-    <Compile Include="Modules\Registers\Views\RegistersView.xaml.cs">
-      <DependentUpon>RegistersView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Modules\Schema\ViewModels\SchemaViewModel.cs" />
-    <Compile Include="Modules\Schema\Views\SchemaView.xaml.cs">
-      <DependentUpon>SchemaView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -147,9 +138,7 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Modules\Memory\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -157,16 +146,6 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="Modules\Registers\Views\RegistersView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
-    <Page Include="Modules\Schema\Views\SchemaView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>XamlIntelliSenseFileGenerator</Generator>
-    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

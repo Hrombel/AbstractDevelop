@@ -4,9 +4,9 @@ using System.Runtime.CompilerServices;
 namespace AbstractDevelop.Machines
 {
     /// <summary>
-    /// Реализация регистра для <see cref="RiscMachine"/>
+    /// Реализация памяти для <see cref="RiscMachine"/>
     /// </summary>
-    public class RiscRegister :
+    public class RiscMemory :
          IDataCell
     {
         #region [События]
@@ -23,30 +23,30 @@ namespace AbstractDevelop.Machines
         /// <summary>
         /// Строковый иденитфикатор регистра
         /// </summary>
-        public string ID => $"r{Index}";
+        public string ID => $"[{Index}]";
    
         /// <summary>
-        /// Общий индекс регистра
+        /// Общий индекс памяти
         /// </summary>
         public int Index { get; }
       
         /// <summary>
-        /// Значение, хранимое в регистре
+        /// Значение, хранимое в памяти
         /// </summary>
         public byte Value
         {
-            get => registerValue;
+            get => memoryValue;
             set
             {
-                if (value != registerValue)
+                if (value != memoryValue)
                 {
-                    registerValue = value;
+                    memoryValue = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        byte registerValue;
+        byte memoryValue;
 
         #endregion
 
@@ -67,7 +67,7 @@ namespace AbstractDevelop.Machines
         /// Стандартный конструктор объекта
         /// </summary>
         /// <param name="index">Общий индекс регистра</param>
-        public RiscRegister(int index)
+        public RiscMemory(int index)
         {
             Index = index;
         }

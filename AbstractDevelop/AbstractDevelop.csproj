@@ -57,6 +57,10 @@
       <HintPath>..\packages\MahApps.Metro.1.0.0.0\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ScintillaNET, Version=3.5.10.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\jacobslusser.ScintillaNET.3.5.10\lib\net40\ScintillaNET.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Data" />
@@ -114,10 +118,16 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AlignableWrapPanel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="CodeEditor.xaml.cs">
+      <DependentUpon>CodeEditor.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomCommands.cs" />
+    <Compile Include="FormatConverter.cs" />
     <Compile Include="Properties\Labels.Designer.cs">
       <DependentUpon>Labels.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -133,9 +143,12 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="RegisterView.xaml.cs">
-      <DependentUpon>RegisterView.xaml</DependentUpon>
+    <Compile Include="Properties\Menu1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Menu1.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\SettingsBinding.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
@@ -169,6 +182,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Menu1.resx">
       <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Menu1.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -189,13 +203,21 @@
       <Project>{0b76401d-e688-485c-a6e0-a5461cb9fe7e}</Project>
       <Name>AbstractDevelop.Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Plugins\AbstractDevelop.RiscMachine\AbstractDevelop.RiscMachine.csproj">
+      <Project>{9681F5DE-E78F-4522-AEF5-C7C666728F6A}</Project>
+      <Name>AbstractDevelop.RiscMachine</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="MainWindow.xaml">
+    <Page Include="CodeEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="RegisterView.xaml">
+    <Page Include="Graphics.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="MainWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
