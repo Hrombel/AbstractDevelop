@@ -117,16 +117,44 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EnglishLang" xml:space="preserve">
-    <value>English (en)</value>
+  <data name="Edit" xml:space="preserve">
+    <value>_Edit</value>
   </data>
-  <data name="Language" xml:space="preserve">
-    <value>Language</value>
+  <data name="File" xml:space="preserve">
+    <value>_File</value>
   </data>
-  <data name="RussianLang" xml:space="preserve">
-    <value>Russian (ru)</value>
+  <data name="FileClose" xml:space="preserve">
+    <value>_Close</value>
   </data>
-  <data name="SystemLang" xml:space="preserve">
-    <value>System (Default)</value>
+  <data name="FileExit" xml:space="preserve">
+    <value>_Exit</value>
+  </data>
+  <data name="FileNew" xml:space="preserve">
+    <value>_New</value>
+  </data>
+  <data name="FileOpen" xml:space="preserve">
+    <value>_Open</value>
+  </data>
+  <data name="FileSave" xml:space="preserve">
+    <value>_Save</value>
+  </data>
+  <data name="FileSaveAs" xml:space="preserve">
+    <value>_SaveAs</value>
+  </data>
+  <data name="Help" xml:space="preserve">
+    <value>_Help</value>
+  </data>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="Menu" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>menu.resx;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Menu_Designer" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>menu.designer.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="Tools" xml:space="preserve">
+    <value>_Tools</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>_View</value>
   </data>
 </root>

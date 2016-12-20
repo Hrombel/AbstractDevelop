@@ -22,6 +22,6 @@
         /// <param name="errorHandling">How to handle translation errors like missing key or culture.</param>
         /// <returns>A translation for the key.</returns>
         public static ITranslation TranslationFor(string key, ErrorHandling errorHandling = ErrorHandling.ReturnErrorInfoPreserveNeutral, ResourceManager source = default(ResourceManager))
-            => Gu.Localization.Translation.GetOrCreate(source ?? Resources.ResourceManager, key, errorHandling);
+            => Gu.Localization.Translation.GetOrCreate(source ?? CommonResources.ResourceManager, key, errorHandling);
     }
 }

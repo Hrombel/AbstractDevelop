@@ -1,0 +1,142 @@
+﻿<Window x:Class="AbstractDevelop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        
+        xmlns:local="clr-namespace:AbstractDevelop"
+        xmlns:lang="http://gu.se/Localization"
+        xmlns:p="clr-namespace:AbstractDevelop.Properties"
+      
+        mc:Ignorable="d"
+        
+        Title="AbstractDevelop (RISC R8 Engine)" MinWidth="600" MinHeight="450" Height="300" Width="300">
+
+    <Window.Resources>
+        <Style TargetType="GroupBox">
+            <Style.Setters>
+                <Setter Property="Margin" Value="4"/>
+            </Style.Setters>
+        </Style>
+    </Window.Resources>
+    
+    <Grid x:Name="mainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="menuRow" Height="Auto"/>
+            <RowDefinition x:Name="memoryRow"/>
+            <RowDefinition x:Name="editorRow"/>
+            <RowDefinition x:Name="debugRow"/>
+        </Grid.RowDefinitions>
+
+        <!-- Главное меню -->
+        <StackPanel Grid.Row="0">
+            <Menu x:Name="mainMenu">
+                <MenuItem Header="{lang:Static p:Menu.File}">
+                    <MenuItem Header="{lang:Static p:Menu.FileNew}" Command="ApplicationCommands.New"/>
+                    <Separator/>
+                    
+                    <MenuItem Header="{lang:Static p:Menu.FileOpen}" Command="ApplicationCommands.Open"/>
+                    <MenuItem Header="{lang:Static p:Menu.FileSave}" Command="ApplicationCommands.Save"/>
+                    <MenuItem Header="{lang:Static p:Menu.FileSaveAs}" Command="ApplicationCommands.SaveAs"/>
+                    <Separator/>
+
+                    <MenuItem Header="{lang:Static p:Menu.FileClose}"/>
+                    <MenuItem Header="{lang:Static p:Menu.FileExit}" Command="ApplicationCommands.Close"/>
+                </MenuItem>
+                <MenuItem Header="{lang:Static p:Menu.Edit}">
+                    <MenuItem Header="{lang:Static p:Menu.EditUndo}" Command="ApplicationCommands.Undo"/>
+                    <MenuItem Header="{lang:Static p:Menu.EditRedo}" Command="ApplicationCommands.Redo"/>
+                    <Separator/>
+
+                    <MenuItem Header="{lang:Static p:Menu.EditCopy}" Command="ApplicationCommands.Copy"/>
+                    <MenuItem Header="{lang:Static p:Menu.EditCut}" Command="ApplicationCommands.Cut"/>
+                    <MenuItem Header="{lang:Static p:Menu.EditPaste}" Command="ApplicationCommands.Paste"/>
+                    <Separator/>
+
+                    <MenuItem Header="{lang:Static p:Menu.ClearDebug}"/>
+                    <MenuItem Header="{lang:Static p:Menu.ClearAll}"/>
+                </MenuItem>
+                <MenuItem Header="{lang:Static p:Menu.View}">
+                    <MenuItem Header="{lang:Static p:Menu.NumberFormat}">
+                        <RadioButton Content="{lang:Static p:Menu.ViewBinary}"/>
+                        <RadioButton Content="{lang:Static p:Menu.ViewOctal}"/>
+                        <RadioButton Content="{lang:Static p:Menu.ViewHex}"/>
+                    </MenuItem>
+
+                    <Separator/>
+
+                    <MenuItem Header="{lang:Static p:Menu.ShowMemoryEditor}"/>
+                    <MenuItem Header="{lang:Static p:Menu.ShowCodeEditor}"/>
+                    <MenuItem Header="{lang:Static p:Menu.ShowRegisterEditor}"/>
+                    <MenuItem Header="{lang:Static p:Menu.ShowDebugOutput}"/>
+
+                </MenuItem>
+                <MenuItem Header="{lang:Static p:Menu.Tools}">
+                    <MenuItem Header="{lang:Static p:Menu.Debug}">
+                        <MenuItem Header="{lang:Static p:Menu.DebugStart}"/>
+                        <MenuItem Header="{lang:Static p:Menu.DebugStep}"/>
+                        <MenuItem Header="{lang:Static p:Menu.DebugPause}"/>
+                    </MenuItem>
+                    
+                    <Separator/>
+                    
+                    <MenuItem Header="{lang:Static p:Menu.ToolsSchema}"/>
+                    <MenuItem Header="{lang:Static p:Menu.ToolsTesting}"/>
+
+                    <Separator/>
+                    
+                    <MenuItem Header="{lang:Static p:Menu.Settings}"/>
+                </MenuItem>
+                <MenuItem Header="{lang:Static p:Menu.Help}">
+                    <MenuItem Header="{lang:Static p:Menu.HelpContent}"/>
+                    <MenuItem Header="{lang:Static p:Menu.HelpSamples}"/>
+                    <Separator/>
+
+                    <MenuItem Header="{lang:Static p:Menu.HelpAbout}"/>
+                </MenuItem>
+            </Menu>
+            <ToolBarPanel/>
+        </StackPanel>
+
+        <GroupBox Header="{lang:Static p:Labels.MemoryEditor}" Grid.Row="1">
+            <ItemsControl x:Name="memory">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel x:Name="memoryPanel"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </GroupBox>
+
+        <GridSplitter Grid.Row="1" Height="5" Background="Red"/>
+
+        <Grid x:Name="editorGrid" Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="codeColumn" Width="2*"/>
+                    <ColumnDefinition x:Name="registerColumn"/>
+                </Grid.ColumnDefinitions>
+
+            <GroupBox Header="{lang:Static p:Labels.CodeEditor}" Grid.Column="0">
+                <RichTextBox x:Name="codeEditor" />
+            </GroupBox>
+
+            <GridSplitter Grid.Column="0" Width="3" Background="Red"/>
+
+            <GroupBox Header="{lang:Static p:Labels.Registers}" Grid.Column="1">
+                <local:RegisterView x:Name="registers" />
+            </GroupBox>
+        </Grid>
+
+        <GridSplitter Grid.Row="2" Height="3" Background="Transparent" VerticalAlignment="Bottom" ResizeDirection="Rows"/>
+        
+        <GroupBox x:Name="debugOutputGroup" Grid.Row="3" Header="{lang:Static p:Labels.Debug}">
+            <DataGrid x:Name="debugOutputData" AutoGenerateColumns="False">
+                <DataGrid.Columns>
+                    <DataGridTextColumn x:Name="typeColumn" Header="{lang:Static p:Labels.DebugType}"/>
+                    <DataGridTextColumn x:Name="lineColumn" Header="{lang:Static p:Labels.DebugLine}"/>
+                    <DataGridTextColumn x:Name="messageColumn" Header="{lang:Static p:Labels.DebugMessage}"/>
+                </DataGrid.Columns>
+            </DataGrid>
+        </GroupBox>
+    </Grid>
+</Window>

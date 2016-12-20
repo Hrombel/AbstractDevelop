@@ -117,16 +117,31 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="EnglishLang" xml:space="preserve">
-    <value>English (en)</value>
+  <data name="CodeEditor" xml:space="preserve">
+    <value>Редактор кода</value>
   </data>
-  <data name="Language" xml:space="preserve">
-    <value>Language</value>
+  <data name="Debug" xml:space="preserve">
+    <value>Окно вывода</value>
   </data>
-  <data name="RussianLang" xml:space="preserve">
-    <value>Russian (ru)</value>
+  <data name="DebugLine" xml:space="preserve">
+    <value>Строка</value>
   </data>
-  <data name="SystemLang" xml:space="preserve">
-    <value>System (Default)</value>
+  <data name="DebugMessage" xml:space="preserve">
+    <value>Сообщение</value>
+  </data>
+  <data name="DebugType" xml:space="preserve">
+    <value>Тип</value>
+  </data>
+  <data name="MemoryEditor" xml:space="preserve">
+    <value>Память</value>
+  </data>
+  <data name="Registers" xml:space="preserve">
+    <value>Регистры</value>
+  </data>
+  <data name="RegistersColumnID" xml:space="preserve">
+    <value>#</value>
+  </data>
+  <data name="RegistersColumnValue" xml:space="preserve">
+    <value>Значение</value>
   </data>
 </root>

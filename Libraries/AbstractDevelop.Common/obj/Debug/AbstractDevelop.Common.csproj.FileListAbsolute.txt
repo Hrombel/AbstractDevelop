@@ -11,7 +11,7 @@ C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libra
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\bin\Debug\System.ValueTuple.dll
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\bin\Debug\Gu.Localization.xml
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\obj\Debug\AbstractDevelop.Common.csprojResolveAssemblyReference.cache
-C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\obj\Debug\AbstractDevelop.Properties.Resources.resources
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\obj\Debug\AbstractDevelop.Common.csproj.GenerateResource.Cache
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\obj\Debug\AbstractDevelop.Common.dll
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\obj\Debug\AbstractDevelop.Common.pdb
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\obj\Debug\AbstractDevelop.Properties.CommonResources.resources

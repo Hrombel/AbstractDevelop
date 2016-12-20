@@ -91,7 +91,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties Project_1json__JSONSchema="" />
+      <UserProperties Project_1json__JSONSchema="ProjectSchema.json" />
     </VisualStudio>
   </ProjectExtensions>
 </Project>

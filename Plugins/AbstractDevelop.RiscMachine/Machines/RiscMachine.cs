@@ -4,7 +4,7 @@ using System.Linq;
 using AbstractDevelop.Translation;
 
 using DataType = System.Byte;
-using MemoryStorage = System.Collections.Generic.List<byte>;
+using MemoryStorage = System.Collections.ObjectModel.ObservableCollection<byte>;
 
 namespace AbstractDevelop.Machines
 {
@@ -188,7 +188,7 @@ namespace AbstractDevelop.Machines
             base()
         {
             // выделение необходимых ресурсов
-            Memory = new MemoryStorage(Enumerable.Repeat((DataType)0, memorySize));
+            Memory = new MemoryStorage(new DataType[memorySize]);
             Registers = new List<IRegister>(Enumerable.Range(0, registerCount).Select(id => new RiscRegister(id)));
             // список доступных операций (реализация по техническому документу)
             Instructions.Definitions = instructionsBase = instructionsBase ?? new InstructionDefinitions()

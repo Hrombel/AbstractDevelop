@@ -16,5 +16,5 @@ DEBUG;TRACE
 77-1253274504
 Modules\Registers\Views\RegistersView.xaml;Modules\Schema\Views\SchemaView.xaml;
 
-False
+True
 

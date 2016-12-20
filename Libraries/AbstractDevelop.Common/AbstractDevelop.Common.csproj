@@ -79,10 +79,10 @@
     <Compile Include="Projects\ProjectDirectory.cs" />
     <Compile Include="Projects\ProjectEntryConverter.cs" />
     <Compile Include="Projects\ProjectFile.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
+    <Compile Include="Properties\CommonResources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
+      <DependentUpon>CommonResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\Translator.cs" />
     <Compile Include="Storage\FileContainer.cs" />
@@ -104,9 +104,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
+    <EmbeddedResource Include="Properties\CommonResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <LastGenOutput>CommonResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

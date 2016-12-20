@@ -12,7 +12,17 @@
           "Type": "File",
           "Name": "resource1.res",
 
-          "Content":  "srgetryhbJKSUIJnnsdshdHSDJEU"
+          "FileContent": "srgetryhbJKSUIJnnsdshdHSDJEU"
+        }
+      ]
+    },
+    {
+      "Type": "Directory",
+      "Name": "1232jgjdfgkdfg",
+
+      "Content": [
+        {
+          "Type": ""
         }
       ]
     }

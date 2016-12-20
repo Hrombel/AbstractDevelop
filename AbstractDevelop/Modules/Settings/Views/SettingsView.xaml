@@ -6,7 +6,8 @@
     xmlns:dd="clr-namespace:AbstractDevelop.Modules.Settings.ViewModels"
     x:Class="AbstractDevelop.Modules.Settings.Views.SettingsView" mc:Ignorable="d" d:DesignHeight="300"
     d:DesignWidth="300" d:DataContext="{d:DesignInstance dd:SettingsViewModel}">
-    <Grid>
-       
-    </Grid>
+    <StackPanel Orientation="Horizontal">
+        <Label Name="LanguageTitle"/>
+        <ComboBox SelectedValue="{Binding Language}" ItemsSource="{Binding LanguageList}" IsEditable="False"/>
+    </StackPanel>
 </UserControl>

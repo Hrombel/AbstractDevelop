@@ -1,14 +1,16 @@
-﻿<Application x:Class="AbstractDevelop.App"
+﻿<Application
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:AbstractDevelop">
+             xmlns:local="clr-namespace:AbstractDevelop"  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Class="AbstractDevelop.App"
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <ResourceDictionary>
+        <!--<ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary>
                     <local:Bootstrapper x:Key="geminiWindowStarter"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
-        </ResourceDictionary>
+            <DataStore:DataStore x:Key="DataStore" d:IsDataSource="True"/>
+        </ResourceDictionary>-->
     </Application.Resources>
 </Application>
