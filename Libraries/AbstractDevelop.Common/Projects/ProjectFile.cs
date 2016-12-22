@@ -79,7 +79,7 @@ namespace AbstractDevelop.Projects
         /// <typeparam name="TargetType">Ожидаемый тип объекта после десериализации</typeparam>
         /// <param name="formatProvider">Объект, производящий десериализацию</param>
         public TargetType Deserialize<TargetType>(IDataFormatProvider formatProvider)
-            => formatProvider.Deserialize<TargetType>(CreateStream());
+            => CreateStream().Using(formatProvider.Deserialize<TargetType>);
 
         /// <summary>
         /// Сохраняет объект в файл при помощи formatter

@@ -4,9 +4,7 @@ using System.Linq;
 using AbstractDevelop.Translation;
 
 using DataType = System.Byte;
-
 using MemoryStorage = System.Collections.ObjectModel.ObservableCollection<AbstractDevelop.IDataCell>;
-using RegisterStorage = System.Collections.ObjectModel.ObservableCollection<AbstractDevelop.IDataCell>;
 
 namespace AbstractDevelop.Machines
 {
@@ -25,7 +23,7 @@ namespace AbstractDevelop.Machines
            {
                Validator = (arg, state) =>
                    arg?.Type == DataReferenceType.Label &&
-                   (state as RiscTranslationState).Labels.ContainsValue(arg) 
+                   (state as RiscTranslationState).Labels.ContainsValue(arg)
            },
            // количество
            count = source;
@@ -76,6 +74,16 @@ namespace AbstractDevelop.Machines
                 throw new ArgumentException(nameof(token));
 
             return (DataType)value;
+        }
+
+        public static MemoryStorage CreateMemory<CellType>(IEnumerable<DataType> values)
+            where CellType : IDataCell
+        {
+            var index = 0;
+            if (typeof(CellType) == typeof(RiscMemory))
+                return new MemoryStorage(values.Select(v => new RiscMemory(index++) { Value = v }));
+            else
+                return new MemoryStorage(values.Select(v => new RiscRegister(index++) { Value = v }));
         }
 
         /// <summary>
@@ -132,7 +140,7 @@ namespace AbstractDevelop.Machines
         /// <summary>
         /// Набор регистров <see cref="RiscRegister"/>
         /// </summary>
-        public RegisterStorage Registers { get; }
+        public MemoryStorage Registers { get; }
 
         /// <summary>
         /// Транслятор инструкций для <see cref="RiscRegister"/>
@@ -177,6 +185,12 @@ namespace AbstractDevelop.Machines
             Instructions.Goto(instuctionIndex);
         }
 
+        protected override void OnStarting(EventArgs args)
+        {
+            AccessTimer = 0;
+            base.OnStarting(args);
+        }
+
         #endregion
 
         #region [Конструкторы и деструкторы]
@@ -190,8 +204,8 @@ namespace AbstractDevelop.Machines
             base()
         {
             // выделение необходимых ресурсов
-            Memory = new MemoryStorage(Enumerable.Range(0, memorySize).Select(id => new RiscMemory(id)));
-            Registers = new RegisterStorage(Enumerable.Range(0, registerCount).Select(id => new RiscRegister(id)));
+            Memory = CreateMemory<RiscMemory>(new DataType[memorySize]);
+            Registers = CreateMemory<RiscRegister>(new DataType[registerCount]);
             // список доступных операций (реализация по техническому документу)
             Instructions.Definitions = instructionsBase = instructionsBase ?? new InstructionDefinitions()
             {

@@ -117,16 +117,70 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Apply" xml:space="preserve">
+    <value>Применить</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отменить</value>
+  </data>
   <data name="EnglishLang" xml:space="preserve">
-    <value>English (en)</value>
+    <value>Английский (en)</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Ошибка</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Language</value>
+    <value>Язык:</value>
+  </data>
+  <data name="LanguageChangeWarning" xml:space="preserve">
+    <value>Для изменения языка требуется перезапуск программы</value>
+  </data>
+  <data name="MachineStarted" xml:space="preserve">
+    <value>Выполнение команд было начато</value>
+  </data>
+  <data name="MachineStopped" xml:space="preserve">
+    <value>Выполнение было завершено. Общее время выполнения: {0}</value>
+  </data>
+  <data name="ProjectFileFilter" xml:space="preserve">
+    <value>Проект AbstractDevelop|*.adp|Файл проекта в формате JSON|*.json</value>
   </data>
   <data name="RussianLang" xml:space="preserve">
-    <value>Russian (ru)</value>
+    <value>Русский (ru)</value>
+  </data>
+  <data name="SamplesNotFoundMessage" xml:space="preserve">
+    <value>Примеры не найдены! Попробуйте скачать другую сборку.</value>
+  </data>
+  <data name="SchemaViewTitle" xml:space="preserve">
+    <value>Схема RISC R8</value>
   </data>
   <data name="SystemLang" xml:space="preserve">
     <value>System (Default)</value>
+  </data>
+  <data name="TestFailed" xml:space="preserve">
+    <value>Тест не пройден: "{0}"</value>
+  </data>
+  <data name="TestFileFilter" xml:space="preserve">
+    <value>Набор тестов|*.test|Файл JSON|*.json</value>
+  </data>
+  <data name="TestInstructionBase" xml:space="preserve">
+    <value>[полный набор инструкций]</value>
+  </data>
+  <data name="TestLoadingException" xml:space="preserve">
+    <value>Не удалось загрузить указанный файл. Возможно, он имеет неверный формат</value>
+  </data>
+  <data name="TestSucces" xml:space="preserve">
+    <value>Тест пройден успешно</value>
+  </data>
+  <data name="TestSystemError" xml:space="preserve">
+    <value>Ошибка тестирования: "{0}"</value>
+  </data>
+  <data name="TestSystemFailed" xml:space="preserve">
+    <value>Тестов не пройдено: {0}</value>
+  </data>
+  <data name="TestSystemPassed" xml:space="preserve">
+    <value>Все тесты пройдены успешно</value>
+  </data>
+  <data name="UnsavedDataMessage" xml:space="preserve">
+    <value>Сохранить текущий проект?</value>
   </data>
 </root>

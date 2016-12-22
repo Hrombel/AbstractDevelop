@@ -14,11 +14,16 @@ namespace AbstractDevelop.Machines
         /// </summary>
         public static class Exceptions
         {
+            public interface ILineException
+            {
+                int Line { get; }
+            }
+
             /// <summary>
             /// Ошибка отсутствия аргумента 
             /// </summary>
             public class MissingArgumentException :
-                Exception
+                Exception, ILineException
             {
                 public IArgumentDefinition Argument { get; }
 
@@ -42,7 +47,7 @@ namespace AbstractDevelop.Machines
             /// Ошибка недопустимого значения аргумента
             /// </summary>
             public class InvalidArgumentException :
-                Exception
+                Exception, ILineException
             {
                 public IArgumentDefinition Argument { get; }
 
@@ -64,7 +69,7 @@ namespace AbstractDevelop.Machines
             /// Ошибка превышения числа аргументов инструкции
             /// </summary>
             public class TooMuchArguentsException :
-                Exception
+                Exception, ILineException
             {
                 public int TargetCount { get; }
 
@@ -82,7 +87,7 @@ namespace AbstractDevelop.Machines
             /// Ошибка неизвестной инструкции
             /// </summary>
             public class UnknownInstructionException :
-                Exception
+                Exception, ILineException
             {
                 public string InstructionName { get; }
 
@@ -103,7 +108,7 @@ namespace AbstractDevelop.Machines
             /// Ошибка неверного формата записи инструкции
             /// </summary>
             public class InvalidInstructionSyntaxException :
-                Exception
+                Exception, ILineException
             {
                 public int Line { get; }
 
@@ -118,7 +123,7 @@ namespace AbstractDevelop.Machines
             /// Ошибка повторого определения существующей метки
             /// </summary>
             public class LabelRedefinedException :
-              Exception
+               Exception, ILineException
             {
                 public string Label { get; }
 

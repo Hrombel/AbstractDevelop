@@ -469,6 +469,12 @@ namespace AbstractDevelop.Machines
 
         #region [Методы]
 
+        protected override void OnStarting(EventArgs args)
+        {
+            Instructions.Reset();
+            base.OnStarting(args);
+        }
+
         /// <summary>
         /// Выполняет шаг (единичную инструкцию) работы машины
         /// </summary>

@@ -86,7 +86,7 @@ namespace AbstractDevelop.Machines
                 // построчный разбор
                 foreach (var line in input)
                 {
-                    if (!(string.IsNullOrEmpty(line.RemoveWhitespaces(out var cleanLine)) || cleanLine.StartsWith("//")))
+                    if (!(string.IsNullOrEmpty(line.RemoveWhitespaces(out var cleanLine)) || cleanLine.StartsWith(";")))
                     {
                         // проверка и декомпозиция текущей строки
                         if (Validate(cleanLine, out var parts))
@@ -251,6 +251,9 @@ namespace AbstractDevelop.Machines
             /// <returns></returns>
             public bool Validate(string input, out string[] composingParts)
             {
+                if (input.Contains(";"))
+                    input = input.Substring(0, input.IndexOf(';'));
+
                 composingParts = input.Split(' ');
                 bool hasLabel = false;
 

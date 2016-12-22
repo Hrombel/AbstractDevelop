@@ -31,7 +31,7 @@ namespace AnotherTest
 
             machine.Instructions.Load((machine.Translator as RiscMachine.RiscTranslator).Translate(File.ReadAllLines("risc.txt"), null));
 
-            var testResult = test.Run();
+            test.Run();
 
             machine.RunToEnd();
 

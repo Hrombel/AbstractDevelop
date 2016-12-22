@@ -61,7 +61,25 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на English (en).
+        ///   Ищет локализованную строку, похожую на Применить.
+        /// </summary>
+        internal static string Apply {
+            get {
+                return ResourceManager.GetString("Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Отменить.
+        /// </summary>
+        internal static string Cancel {
+            get {
+                return ResourceManager.GetString("Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Английский (en).
         /// </summary>
         internal static string EnglishLang {
             get {
@@ -70,7 +88,16 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Language.
+        ///   Ищет локализованную строку, похожую на Ошибка.
+        /// </summary>
+        internal static string ErrorTitle {
+            get {
+                return ResourceManager.GetString("ErrorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Язык:.
         /// </summary>
         internal static string Language {
             get {
@@ -79,11 +106,65 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Russian (ru).
+        ///   Ищет локализованную строку, похожую на Для изменения языка требуется перезапуск программы.
+        /// </summary>
+        internal static string LanguageChangeWarning {
+            get {
+                return ResourceManager.GetString("LanguageChangeWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выполнение команд было начато.
+        /// </summary>
+        internal static string MachineStarted {
+            get {
+                return ResourceManager.GetString("MachineStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Выполнение было завершено. Общее время выполнения: {0}.
+        /// </summary>
+        internal static string MachineStopped {
+            get {
+                return ResourceManager.GetString("MachineStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Проект AbstractDevelop|*.adp|Файл проекта в формате JSON|*.json.
+        /// </summary>
+        internal static string ProjectFileFilter {
+            get {
+                return ResourceManager.GetString("ProjectFileFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Русский (ru).
         /// </summary>
         internal static string RussianLang {
             get {
                 return ResourceManager.GetString("RussianLang", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Примеры не найдены! Попробуйте скачать другую сборку..
+        /// </summary>
+        internal static string SamplesNotFoundMessage {
+            get {
+                return ResourceManager.GetString("SamplesNotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Схема RISC R8.
+        /// </summary>
+        internal static string SchemaViewTitle {
+            get {
+                return ResourceManager.GetString("SchemaViewTitle", resourceCulture);
             }
         }
         
@@ -93,6 +174,87 @@ namespace AbstractDevelop.Properties {
         internal static string SystemLang {
             get {
                 return ResourceManager.GetString("SystemLang", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тест не пройден: &quot;{0}&quot;.
+        /// </summary>
+        internal static string TestFailed {
+            get {
+                return ResourceManager.GetString("TestFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Набор тестов|*.test|Файл JSON|*.json.
+        /// </summary>
+        internal static string TestFileFilter {
+            get {
+                return ResourceManager.GetString("TestFileFilter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на [полный набор инструкций].
+        /// </summary>
+        internal static string TestInstructionBase {
+            get {
+                return ResourceManager.GetString("TestInstructionBase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось загрузить указанный файл. Возможно, он имеет неверный формат.
+        /// </summary>
+        internal static string TestLoadingException {
+            get {
+                return ResourceManager.GetString("TestLoadingException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тест пройден успешно.
+        /// </summary>
+        internal static string TestSucces {
+            get {
+                return ResourceManager.GetString("TestSucces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка тестирования: &quot;{0}&quot;.
+        /// </summary>
+        internal static string TestSystemError {
+            get {
+                return ResourceManager.GetString("TestSystemError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Тестов не пройдено: {0}.
+        /// </summary>
+        internal static string TestSystemFailed {
+            get {
+                return ResourceManager.GetString("TestSystemFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Все тесты пройдены успешно.
+        /// </summary>
+        internal static string TestSystemPassed {
+            get {
+                return ResourceManager.GetString("TestSystemPassed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сохранить текущий проект?.
+        /// </summary>
+        internal static string UnsavedDataMessage {
+            get {
+                return ResourceManager.GetString("UnsavedDataMessage", resourceCulture);
             }
         }
     }

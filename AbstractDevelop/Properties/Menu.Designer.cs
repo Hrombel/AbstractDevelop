@@ -358,7 +358,7 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Тестировать программу.
+        ///   Ищет локализованную строку, похожую на Тестирование программы.
         /// </summary>
         internal static string ToolsTesting {
             get {

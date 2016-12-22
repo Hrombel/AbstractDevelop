@@ -32,6 +32,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Caliburn.Micro, Version=2.0.2.0, Culture=neutral, PublicKeyToken=8e5891231f2ed21f, processorArchitecture=MSIL">
       <HintPath>..\packages\Caliburn.Micro.Core.2.0.2\lib\net45\Caliburn.Micro.dll</HintPath>
@@ -118,16 +125,35 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AlignableWrapPanel.cs" />
+    <Compile Include="Controls\DebugEntry.cs" />
+    <Compile Include="Controls\InputDialog.xaml.cs">
+      <DependentUpon>InputDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\AboutWindow.xaml.cs">
+      <DependentUpon>AboutWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\AlignableWrapPanel.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="CodeEditor.xaml.cs">
+    <Compile Include="Controls\CodeEditor.xaml.cs">
       <DependentUpon>CodeEditor.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CustomCommands.cs" />
-    <Compile Include="FormatConverter.cs" />
+    <Compile Include="Controls\SchemaView.xaml.cs">
+      <DependentUpon>SchemaView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\ExceptionConverter.cs" />
+    <Compile Include="Converters\StateToBrushConverter.cs" />
+    <Compile Include="Converters\InstructionBaseConverter.cs" />
+    <Compile Include="Windows\HelpWindow.xaml.cs">
+      <DependentUpon>HelpWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\SettingsWindow.xaml.cs">
+      <DependentUpon>SettingsWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\CustomCommands.cs" />
+    <Compile Include="Converters\FormatConverter.cs" />
     <Compile Include="Properties\Labels.Designer.cs">
       <DependentUpon>Labels.resx</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -138,23 +164,28 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Properties\Labels1.Designer.cs">
-      <DependentUpon>Labels1.resx</DependentUpon>
+    <Compile Include="Properties\Labels.en.Designer.cs">
+      <DependentUpon>Labels.en.resx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Properties\Menu1.Designer.cs">
+    <Compile Include="Properties\Menu.en.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>Menu1.resx</DependentUpon>
+      <DependentUpon>Menu.en.resx</DependentUpon>
     </Compile>
     <Compile Include="Properties\SettingsBinding.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Windows\SchemaWindow.xaml.cs">
+      <DependentUpon>SchemaWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\TestSystemWindow.xaml.cs">
+      <DependentUpon>TestSystemWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -176,19 +207,19 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Menu.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Labels1.resx">
+    <EmbeddedResource Include="Properties\Labels.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Labels1.Designer.cs</LastGenOutput>
+      <LastGenOutput>Labels.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Menu1.resx">
+    <EmbeddedResource Include="Properties\Menu.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Menu1.Designer.cs</LastGenOutput>
+      <LastGenOutput>Menu.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.ru.resx" />
+    <EmbeddedResource Include="Properties\Resources.en.resx" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -196,7 +227,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Libraries\AbstractDevelop.Common\AbstractDevelop.Common.csproj">
@@ -209,18 +242,52 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Page Include="CodeEditor.xaml">
+    <Page Include="Controls\InputDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Graphics.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Windows\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\CodeEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\SchemaView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\HelpWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Graphics.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Windows\SettingsWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\SchemaWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\TestSystemWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Windows\MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -100,6 +100,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helper.cs" />
     <Compile Include="IDataCell.cs" />
     <Compile Include="Machines\Data\DataReferenceType.cs" />
     <Compile Include="Machines\Data\DataReference.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="Testing\RiscTest.cs" />
     <Compile Include="Testing\RiscTestSystem.cs" />
     <Compile Include="Testing\TestSource.cs" />
+    <Compile Include="Testing\TestState.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Libraries\AbstractDevelop.Common\AbstractDevelop.Common.csproj">

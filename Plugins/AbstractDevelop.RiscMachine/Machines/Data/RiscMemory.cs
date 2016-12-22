@@ -56,7 +56,7 @@ namespace AbstractDevelop.Machines
         /// Вызывает событие <see cref="PropertyChanged"/>
         /// </summary>
         /// <param name="propertyName">Имя свойства, которое было изменено</param>
-        public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        public void OnPropertyChanged([CallerMemberName] string propertyName = null)
             => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         #endregion

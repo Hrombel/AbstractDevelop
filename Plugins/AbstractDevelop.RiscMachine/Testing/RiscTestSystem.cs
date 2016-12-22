@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 using AbstractDevelop.Machines.Properties;
+using System.Collections.ObjectModel;
 
 namespace AbstractDevelop.Machines.Testing
 {
     public class RiscTestSystem
     {
-        public List<RiscTest> Tests { get; set; }
+        public ObservableCollection<RiscTest> Tests { get; set; }
 
         public RiscMachine Machine { get; set; }
 
@@ -19,33 +18,30 @@ namespace AbstractDevelop.Machines.Testing
         public RiscTestSystem(TestSource source, RiscMachine machine)
         {
             Machine = machine;
-            Tests = new List<RiscTest>(source.Tests.Select(test => new RiscTest(test, this)));
+            Tests = new ObservableCollection<RiscTest>(source.Tests.Select(test => new RiscTest(test, this)));
 
             InstructionSet = source.InstructionSet != null ? new RiscMachine.InstructionBase(machine.Instructions.Definitions, source.InstructionSet) : null ;
         }
 
-        public Dictionary<RiscTest, Exception> Run()
+        public void Run()
         {
             var preservedInput = Machine.ReadInput;
             var preservedOutput = Machine.WriteOutput;
 
-            var result = new Dictionary<RiscTest, Exception>(Tests.Count);
+            var memorySnapshot = Machine.Memory.GetSnapshot();
+            var registerSnapshot = Machine.Registers.GetSnapshot();
 
             foreach (var test in Tests)
             {
                 var instructionBase = (test.InstructionSet ?? InstructionSet);
-
-                if (!(instructionBase?.Check(Machine.Instructions) ?? true))
-                {
-                    result.Add(test, new Exception(Translate.Key("TestInvalidInstructionBase", Resources.ResourceManager, format: instructionBase)));
-                    continue;
-                }
-
-                // TODO: проверка набора инструкций
+                test.LastError = null;
 
                 int inputIndex = 0, outputIndex = 0;
                 try
                 {
+                    if (!(instructionBase?.Check(Machine.Instructions) ?? true))
+                        throw new Exception(Translate.Key("TestInvalidInstructionBase", Resources.ResourceManager, format: instructionBase));
+          
                     Machine.ReadInput = () => new ValueReference(Machine, test.Input[inputIndex++]);
                     Machine.WriteOutput = (value) =>
                     {
@@ -54,10 +50,15 @@ namespace AbstractDevelop.Machines.Testing
                     };
 
                     Machine.RunToEnd();
-                    result.Add(test, CheckIndexes(false));
+                    test.LastError = CheckIndexes(false);
                 }
-                catch (IndexOutOfRangeException) { result.Add(test, CheckIndexes(true)); }
-                catch (Exception ex) { result.Add(test, ex); }
+                catch (IndexOutOfRangeException) { test.LastError = CheckIndexes(true); }
+                catch (Exception ex) { test.LastError =  ex; }
+
+                test.State = test.LastError == null? TestState.Passed : TestState.Failed;
+
+                Machine.Memory.RestoreValues(memorySnapshot);
+                Machine.Registers.RestoreValues(registerSnapshot);
 
                 Exception CheckIndexes(bool shouldBeEqual)
                 {
@@ -73,8 +74,6 @@ namespace AbstractDevelop.Machines.Testing
 
             Machine.ReadInput = preservedInput;
             Machine.WriteOutput = preservedOutput;
-
-            return result;
         }
     }
 }

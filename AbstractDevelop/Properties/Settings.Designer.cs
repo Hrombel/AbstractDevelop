@@ -25,10 +25,10 @@ namespace AbstractDevelop.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string LanguageCode {
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int LanguageCode {
             get {
-                return ((string)(this["LanguageCode"]));
+                return ((int)(this["LanguageCode"]));
             }
             set {
                 this["LanguageCode"] = value;
