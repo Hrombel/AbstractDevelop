@@ -123,6 +123,18 @@
   <data name="Cancel" xml:space="preserve">
     <value>Отменить</value>
   </data>
+  <data name="DebugTypeeMessage" xml:space="preserve">
+    <value>Сообщение</value>
+  </data>
+  <data name="DebugTypeError" xml:space="preserve">
+    <value>Ошибка</value>
+  </data>
+  <data name="DebugTypeOutput" xml:space="preserve">
+    <value>Вывод</value>
+  </data>
+  <data name="DebugTypeWarning" xml:space="preserve">
+    <value>Предупреждение</value>
+  </data>
   <data name="EnglishLang" xml:space="preserve">
     <value>Английский (en)</value>
   </data>
@@ -149,6 +161,9 @@
   </data>
   <data name="SamplesNotFoundMessage" xml:space="preserve">
     <value>Примеры не найдены! Попробуйте скачать другую сборку.</value>
+  </data>
+  <data name="SavingTitle" xml:space="preserve">
+    <value>Сохранение данных</value>
   </data>
   <data name="SchemaViewTitle" xml:space="preserve">
     <value>Схема RISC R8</value>

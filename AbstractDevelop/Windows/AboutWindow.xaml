@@ -5,8 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AbstractDevelop"
         mc:Ignorable="d"
-        Title="AboutWindow" Height="300" Width="300" WindowStyle="ToolWindow">
-    <Grid>
-        
-    </Grid>
-</Window>
+        Title="О программе" Height="300" Width="300" WindowStyle="ToolWindow" ResizeMode="NoResize">
+
+    <ScrollViewer>
+        <StackPanel>
+            <Label HorizontalAlignment="Center">Данная программа разработана в рамках </Label>
+            <Label HorizontalAlignment="Center">курсового проекта по дисциплине</Label>
+            <Label HorizontalAlignment="Center">"Компьютерная графика"</Label>
+            <Label HorizontalAlignment="Center">студентом группы ИВТ-21 Карповым В.Н.</Label>
+            <Label HorizontalAlignment="Center">(Вятский Государственный Университет)</Label>
+
+            <Label HorizontalAlignment="Center" Margin="0, 40, 0, 0">Отчеты об ошибках отправлять на </Label>
+            <Label HorizontalAlignment="Center">ddarksniper97[at]gmail.com</Label>
+        </StackPanel>
+    </ScrollViewer>
+  </Window>

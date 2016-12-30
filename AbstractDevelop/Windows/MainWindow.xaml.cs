@@ -122,18 +122,41 @@ namespace AbstractDevelop
 
                     machine.Started += (o, e) =>
                     {
-                        menuDebugStart.Visibility = toolbarDebugStart.Visibility = Visibility.Collapsed;
-                        menuDebugStop.Visibility = toolbarDebugStop.Visibility = Visibility.Visible;
+                        if (Machine.Instructions.CurrentIndex < 0)
+                        {
+                            menuDebugStart.Visibility = toolbarDebugStart.Visibility = Visibility.Collapsed;
+                            menuDebugStop.Visibility = toolbarDebugStop.Visibility = Visibility.Visible;
 
-                        DebugMessages.Add(new DebugEntry(Translate.Key("MachineStarted", Properties.Resources.ResourceManager)));
+                            DebugMessages.Add(new DebugEntry(Translate.Key("MachineStarted", Properties.Resources.ResourceManager)));
+                        }
                     };
 
-                    machine.Stopped += (o, e) =>
+                    machine.Stopped += (o, reason) =>
                     {
                         menuDebugStart.Visibility = toolbarDebugStart.Visibility = Visibility.Visible;
-                        menuDebugStop.Visibility = toolbarDebugStop.Visibility = Visibility.Collapsed;
+                        if (reason != AbstractMachine.StopReason.BreakPoint)
+                        {
+                            menuDebugStop.Visibility = toolbarDebugStop.Visibility = Visibility.Collapsed;
+                            DebugMessages.Add(new DebugEntry(Translate.Key("MachineStopped", Properties.Resources.ResourceManager, machine.AccessTimer)));
 
-                        DebugMessages.Add(new DebugEntry(Translate.Key("MachineStopped", Properties.Resources.ResourceManager, machine.AccessTimer)));
+                            codeEditor.ExecutionLine = -1;
+                            (o as RiscMachine).AccessTimer = 0;
+                        }
+                    };
+
+                    machine.BeforeStep += (o, e) =>
+                    {
+                        // поиск точек останова
+                        if (machine.IsActive && codeEditor.BreakPoints.Contains(machine.Instructions.CurrentIndex))
+                            machine.Stop(AbstractMachine.StopReason.BreakPoint);
+                       
+                        if (!machine.IsActive)
+                            codeEditor.ExecutionLine = machine.Instructions.CurrentIndex;
+                    };
+
+                    machine.BreakPointReached += (o, e) =>
+                    {
+                        menuDebugStart.Visibility = toolbarDebugStart.Visibility = Visibility.Visible;
                     };
                 });
 
@@ -185,14 +208,16 @@ namespace AbstractDevelop
                 Translate.Key("ErrorTitle", Properties.Resources.ResourceManager),
                 MessageBoxButton.OK, MessageBoxImage.Asterisk);
         }
-      
+
         void CheckUnsavedData(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
-            if (MessageBox.Show(
-                Translate.Key("UnsavedDataMessage", Properties.Resources.ResourceManager),
-                Translate.Key("ErrorTitle", Properties.Resources.ResourceManager),
-                MessageBoxButton.YesNo) == MessageBoxResult.Yes)
-                SaveCommandExecuted(sender, e);
+            if (Project.Title != DefaultProjectTitle)
+
+                if (MessageBox.Show(
+                    Translate.Key("UnsavedDataMessage", Properties.Resources.ResourceManager),
+                    Translate.Key("SavingTitle", Properties.Resources.ResourceManager),
+                    MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    SaveCommandExecuted(sender, e);
 
             ClearAllCommandExecuted(sender, e);
         }
@@ -210,41 +235,49 @@ namespace AbstractDevelop
             DebugMessages.Clear();
         }
 
-       
+        void TranslateInstructions()
+            => Machine.Instructions.Load((Machine.Translator as RiscMachine.RiscTranslator).Translate(codeEditor.Lines, null));
+
+        private void DebugStartStopCanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = codeEditor?.InstructionCount > 0;
+        }
+
+        private void DebugCommandStop(object sender, RoutedEventArgs e)
+        {
+            Machine.Activate();
+            Machine.Stop();
+        }
+
         private void DebugStartStopCommandExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
-            // остановка
-            if (Machine.IsActive)
-                Machine.Stop();
-            else
+            // трансляция кода 
+            try
             {
-                // трансляция кода 
-                try
-                {
-                    var instructions = (Machine.Translator as RiscMachine.RiscTranslator).Translate(codeEditor.Lines, null);
-                    Machine.Instructions.Load(instructions);
+                if (Machine.Instructions.CurrentIndex == 0)
+                    TranslateInstructions();
 
-                    Machine.Start();
-                }
-                catch (Exception ex)
+                codeEditor.ExecutionLine = -1;
+                Machine.Start();
+            }
+            catch (Exception ex)
+            {
+                // удаление старых сообщений об ошибках
+                for (int i = 0; i < DebugMessages.Count; i++)
                 {
-                    // удаление старых сообщений об ошибках
-                    for (int i = 0; i < DebugMessages.Count; i++)
+                    if (DebugMessages[i].Type == DebugEntryType.Error)
                     {
-                        if (DebugMessages[i].Type == DebugEntryType.Error)
-                        {
-                            DebugMessages.RemoveAt(i);
-                            i--;
-                        }
+                        DebugMessages.RemoveAt(i);
+                        i--;
                     }
-
-                    if (ex is AggregateException aggregate)
-                        // добавление новых сообщений об ошибках
-                        foreach (var inner in aggregate.InnerExceptions)
-                            PrintError(inner);
-                    else
-                        PrintError(ex);
                 }
+
+                if (ex is AggregateException aggregate)
+                    // добавление новых сообщений об ошибках
+                    foreach (var inner in aggregate.InnerExceptions)
+                        PrintError(inner);
+                else
+                    PrintError(ex);
             }
 
             void PrintError(Exception ex)
@@ -253,12 +286,20 @@ namespace AbstractDevelop
 
         private void DebugStepCommandExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
+            if (Machine.Instructions.Count == 0)
+                TranslateInstructions();
+
+            if (codeEditor.ExecutionLine == -1)
+                Machine.AccessTimer = 0;
+
+            menuDebugStop.Visibility = toolbarDebugStop.Visibility = Visibility.Visible;
             Machine.Step();
         }
 
         private void DebugPauseCommandExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
-
+            Machine.Stop(AbstractMachine.StopReason.BreakPoint);
+            codeEditor.ExecutionLine = Machine.Instructions.CurrentIndex;
         }
 
         private void NewCommandExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
@@ -448,7 +489,7 @@ namespace AbstractDevelop
         {
             e.CanExecute = codeEditor?.Component.CanPaste ?? false;
         }
-
+     
         private void ClearDebugCanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = DebugMessages.Count > 0;
@@ -456,7 +497,7 @@ namespace AbstractDevelop
 
         private void DebugStepCanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Machine?.Instructions.Count > 0;
+            e.CanExecute = codeEditor?.InstructionCount > 0;
         }
 
         private void DebugPauseCanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)

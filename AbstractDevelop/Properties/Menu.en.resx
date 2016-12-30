@@ -117,44 +117,121 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ClearAll" xml:space="preserve">
+    <value>Clear All</value>
+  </data>
+  <data name="ClearDebug" xml:space="preserve">
+    <value>Clear Output</value>
+  </data>
+  <data name="Debug" xml:space="preserve">
+    <value>Debug</value>
+  </data>
+  <data name="DebugBreakpoint" xml:space="preserve">
+    <value>Toggle Breakpoint</value>
+  </data>
+  <data name="DebugPause" xml:space="preserve">
+    <value>Pause</value>
+  </data>
+  <data name="DebugStart" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="DebugStep" xml:space="preserve">
+    <value>Step</value>
+  </data>
+  <data name="DebugStop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
   <data name="Edit" xml:space="preserve">
-    <value>_Edit</value>
+    <value>Edit</value>
+  </data>
+  <data name="EditCopy" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="EditCut" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="EditPaste" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="EditRedo" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="EditUndo" xml:space="preserve">
+    <value>Cancel</value>
   </data>
   <data name="FileClose" xml:space="preserve">
-    <value>_Close</value>
+    <value>Close file</value>
   </data>
   <data name="FileExit" xml:space="preserve">
-    <value>_Exit</value>
+    <value>Exit</value>
   </data>
   <data name="FileMenu" xml:space="preserve">
-    <value>_File</value>
+    <value>File</value>
   </data>
   <data name="FileNew" xml:space="preserve">
-    <value>_New</value>
+    <value>New</value>
   </data>
   <data name="FileOpen" xml:space="preserve">
-    <value>_Open</value>
+    <value>Open</value>
   </data>
   <data name="FileSave" xml:space="preserve">
-    <value>_Save</value>
+    <value>Save</value>
   </data>
   <data name="FileSaveAs" xml:space="preserve">
-    <value>_SaveAs</value>
+    <value>Save As</value>
   </data>
   <data name="Help" xml:space="preserve">
-    <value>_Help</value>
+    <value>Help</value>
   </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="Menu" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>menu.resx;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="HelpAbout" xml:space="preserve">
+    <value>About</value>
   </data>
-  <data name="Menu_Designer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>menu.designer.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  <data name="HelpContent" xml:space="preserve">
+    <value>Content</value>
+  </data>
+  <data name="HelpSamples" xml:space="preserve">
+    <value>Sample</value>
+  </data>
+  <data name="NumberFormat" xml:space="preserve">
+    <value>Number Format</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="ShowCodeEditor" xml:space="preserve">
+    <value>Show Code Editor</value>
+  </data>
+  <data name="ShowDebugOutput" xml:space="preserve">
+    <value>Show Output Window</value>
+  </data>
+  <data name="ShowMemoryEditor" xml:space="preserve">
+    <value>Show Memory Editor</value>
+  </data>
+  <data name="ShowRegisterEditor" xml:space="preserve">
+    <value>Show Register Edit</value>
   </data>
   <data name="Tools" xml:space="preserve">
-    <value>_Tools</value>
+    <value>Tools</value>
+  </data>
+  <data name="ToolsSchema" xml:space="preserve">
+    <value>RISC R8 Schema</value>
+  </data>
+  <data name="ToolsTesting" xml:space="preserve">
+    <value>Code Testing</value>
   </data>
   <data name="View" xml:space="preserve">
-    <value>_View</value>
+    <value>View</value>
+  </data>
+  <data name="ViewBinary" xml:space="preserve">
+    <value>Binary</value>
+  </data>
+  <data name="ViewHex" xml:space="preserve">
+    <value>Hex</value>
+  </data>
+  <data name="ViewOctal" xml:space="preserve">
+    <value>Octal</value>
+  </data>
+  <data name="ViewShowPrefix" xml:space="preserve">
+    <value>Show Prefixes</value>
   </data>
 </root>

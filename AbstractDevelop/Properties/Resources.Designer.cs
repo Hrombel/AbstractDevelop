@@ -79,6 +79,42 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Сообщение.
+        /// </summary>
+        internal static string DebugTypeeMessage {
+            get {
+                return ResourceManager.GetString("DebugTypeeMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Ошибка.
+        /// </summary>
+        internal static string DebugTypeError {
+            get {
+                return ResourceManager.GetString("DebugTypeError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Вывод.
+        /// </summary>
+        internal static string DebugTypeOutput {
+            get {
+                return ResourceManager.GetString("DebugTypeOutput", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Предупреждение.
+        /// </summary>
+        internal static string DebugTypeWarning {
+            get {
+                return ResourceManager.GetString("DebugTypeWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Английский (en).
         /// </summary>
         internal static string EnglishLang {
@@ -156,6 +192,15 @@ namespace AbstractDevelop.Properties {
         internal static string SamplesNotFoundMessage {
             get {
                 return ResourceManager.GetString("SamplesNotFoundMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Ищет локализованную строку, похожую на Сохранение данных.
+        /// </summary>
+        internal static string SavingTitle {
+            get {
+                return ResourceManager.GetString("SavingTitle", resourceCulture);
             }
         }
         

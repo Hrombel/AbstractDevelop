@@ -469,10 +469,12 @@ namespace AbstractDevelop.Machines
 
         #region [Методы]
 
-        protected override void OnStarting(EventArgs args)
+        protected override bool PrepareToStop(StopReason reason)
         {
-            Instructions.Reset();
-            base.OnStarting(args);
+            if (reason != StopReason.BreakPoint)
+                Instructions.Reset();
+
+            return base.PrepareToStop(reason);
         }
 
         /// <summary>
@@ -487,7 +489,11 @@ namespace AbstractDevelop.Machines
             var isSucceded = false;
             // проверка на возможность выполнения
             if (currentInstruction == default(Instruction))
-                Stop(StopReason.WrongCommand, "Команды выполнены"); // LANG
+            {
+                IsActive = true;
+                Stop(StopReason.WrongCommand);
+                return false;
+            }
             try
             {
                 OnBeforeStep(args);
@@ -500,7 +506,7 @@ namespace AbstractDevelop.Machines
             return isSucceded;
         }
 
-        protected override void Activate()
+        public override void Activate()
         {
             Instructions.Reset();
             base.Activate();

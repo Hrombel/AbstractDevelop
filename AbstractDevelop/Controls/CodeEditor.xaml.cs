@@ -63,53 +63,74 @@ namespace AbstractDevelop
             }
         }
         
-
         // Using a DependencyProperty as the backing store for IsReadonly.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty IsReadonlyProperty =
             DependencyProperty.Register("IsReadonly", typeof(bool), typeof(CodeEditor), new PropertyMetadata(false));
 
+        int executionLine = -1;
+
+        public int ExecutionLine
+        {
+            get { return executionLine; }
+            set
+            {
+                // удаление предыдущего маркера
+                if (executionLine != -1)
+                    FindLine(executionLine + 1).MarkerDelete(3);
+
+                var line = FindLine(value + 1);
+
+                if (line != null)
+                {
+                    line.MarkerAdd(3);
+                    executionLine = value;
+                }
+                else executionLine = -1;
+            }
+        }
 
         public string Text
         {
             get => editorComponent.Text;
             set => editorComponent.Text = value;
         }
-        public List<int> BreakPoints { get; internal set; }
 
-        private List<int> _breakPoints;
-        private List<int> _execLines;
+        List<int> breakpoints = new List<int>();
+
+        public List<int> BreakPoints
+        {
+            get => breakpoints;
+            set
+            {
+                if (value != null)
+                {
+                    // TODO: сделать очистку текстового поля
+                    breakpoints.Clear();
+                    
+                    foreach (var bp in value)
+                        ToggleBreakPoint(FindLine(bp + 1)?.Index ?? -1);
+                }
+            }
+        }
 
         #endregion
 
         #region [Методы]
 
         /// <summary>
-        /// Выполняет поиск строки, содержащей указанную команду для классической МБР.
+        /// Выполняет поиск строки, содержащей указанную команду
         /// </summary>
         /// <param name="command">Номер команды в указанной программе.</param>
         /// <returns>Номер строки. Если строка не найдена - -1.</returns>
-        public int FindLine(int command)
+        public ScintillaNET.Line FindLine(int command)
         {
             if (command <= 0)
-                throw new ArgumentException("Номер команды должен быть положительным");
+                return null;
 
             string txt = command.ToString();
-            int i = editorComponent.Lines.ToList().FindIndex(x => x.MarginText == txt);
-            if (i == -1) throw new ArgumentException("Указанной команды не существует");
+            return Component.Lines.FirstOrDefault(x => x.MarginText == txt);
+         }
 
-            return i;
-        }
-
-
-        /// <summary>
-        /// Устанавливает символ текущей выполняемой команды. Для этого символа по умолчанию используется 3 маркер Scintilla.
-        /// </summary>
-        /// <param name="line">Индекс строки.</param>
-        public virtual void SetExecutionLine(int line)
-        {
-            editorComponent.Lines[line].MarkerAdd(3);
-            _execLines.Add(line);
-        }
 
         /// <summary>
         /// Добавляет или удаляет символ точки останова. Для этого символа по умолчанию используются 1 и 2 маркеры Scintilla.
@@ -118,7 +139,7 @@ namespace AbstractDevelop
         public void ToggleBreakPoint(int line)
         {
             if (line < 0 || line >= editorComponent.Lines.Count)
-                throw new ArgumentOutOfRangeException("Индекс указанной строки вышел за пределы диапазона допустимых значений");
+                return;
 
             ToggleBreakPoint(editorComponent.Lines[line]);
         }
@@ -132,7 +153,7 @@ namespace AbstractDevelop
             uint mask = line.MarkerGet();
             if ((mask & 6) == 0)
             {
-                _breakPoints.Add(line.Index);
+                BreakPoints.Add(int.Parse(text) - 1);
 
                 line.MarkerAdd(1);
                 line.MarkerAdd(2);
@@ -141,7 +162,7 @@ namespace AbstractDevelop
             {
                 line.MarkerDelete(1);
                 line.MarkerDelete(2);
-                _breakPoints.RemoveAt(_breakPoints.FindIndex(x => x == line.Index));
+                BreakPoints.Remove(int.Parse(text) - 1);
             }
 
             BreakPointToggled?.Invoke(this, EventArgs.Empty);
@@ -180,60 +201,49 @@ namespace AbstractDevelop
 
             editorComponent.Margins[0].Type = MarginType.RightText;
             editorComponent.Margins[0].Width = 30;
-
-            editorComponent.Styles[Cpp.Default].ForeColor = EditColor.Silver;
-            editorComponent.Styles[Cpp.Comment].ForeColor = EditColor.Green;
-            editorComponent.Styles[Cpp.CommentLineDoc].ForeColor = EditColor.Gray;
-            editorComponent.Styles[Cpp.Number].ForeColor = EditColor.Olive;
-            editorComponent.Styles[Cpp.Word].ForeColor = EditColor.Blue;
-            editorComponent.Styles[Cpp.Word].Bold = true;
-            editorComponent.Lexer = Lexer.Cpp;
+                            
+            editorComponent.Styles[Asm.Default].ForeColor = EditColor.Silver;
+            editorComponent.Styles[Asm.Comment].ForeColor = EditColor.Gray;
+            editorComponent.Styles[Asm.CommentBlock].ForeColor = EditColor.Gray;
+            editorComponent.Styles[Asm.Number].ForeColor = EditColor.Olive;
+            editorComponent.Styles[Asm.CpuInstruction].ForeColor = EditColor.Blue;
+            editorComponent.Styles[Asm.CpuInstruction].Bold = true;
+           
+            editorComponent.Lexer = Lexer.Asm;
 
             editorComponent.SetKeywords(0, string.Join(" ", new[]
-            {
-                "in",
-                "out",
-                "ror",
-                "rol",
-                "not",
-                "or",
-                "and",
-                "nor",
-                "nand",
-                "xor",
-                "add",
-                "sub",
-                "jz",
-                "jo"
-            }));
-
-
+               {
+                    "in",
+                    "out",
+                    "ror",
+                    "rol",
+                    "not",
+                    "or",
+                    "and",
+                    "nor",
+                    "nand",
+                    "xor",
+                    "add",
+                    "sub",
+                    "jz",
+                    "jo",
+                    "call",
+                    "ret"
+                }));
         }
 
 
         private void LinesAmountChanged(object sender, ModificationEventArgs e)
         {
             int line = editorComponent.LineFromPosition(e.Position);
-            int n = _breakPoints.Count;
+            int n = BreakPoints.Count;
             for (int i = 0; i < n; i++)
             {
-                if (_breakPoints[i] >= line)
-                    _breakPoints[i] += e.LinesAdded;
+                if (BreakPoints[i] >= line)
+                    BreakPoints[i] += e.LinesAdded;
             }
-            n = _execLines.Count;
-            for (int i = 0; i < n; i++)
-            {
-                if (_execLines[i] >= line)
-                    _execLines[i] += e.LinesAdded;
-            }
-
         }
-
-        internal void SetBreakPoints(int[] v)
-        {
-            throw new NotImplementedException();
-        }
-
+     
         private void MarginClickHandler(object sender, MarginClickEventArgs e)
         {
             int i = editorComponent.LineFromPosition(e.Position);
@@ -259,6 +269,8 @@ namespace AbstractDevelop
 
         char[] whitespace = new char[] { ' ' };
 
+        public int InstructionCount { get; protected set; }
+
         private void TextChangedHandler(object sender, EventArgs e)
         {
 
@@ -275,7 +287,7 @@ namespace AbstractDevelop
                 else
                 {
                     editorComponent.Lines[i].MarginText = c.ToString();
-                    c++;
+                    InstructionCount = c++;
                 }
             }
         }
@@ -287,9 +299,6 @@ namespace AbstractDevelop
         public CodeEditor()
         {
             InitializeComponent();
-
-            _execLines = new List<int>();
-            _breakPoints = new List<int>();
             editorComponent.Margins[0].Sensitive = true;
 
             MarkersSetup();

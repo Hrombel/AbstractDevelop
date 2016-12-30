@@ -109,8 +109,8 @@ namespace AbstractDevelop.Machines
                                 foreach (var arg in def.Arguments)
                                 {
                                     // проверка существующих обязательных параметров
-                                    if (index < parts.Length)
-                                        value = Parse(parts[index++], arg);
+                                    if (index++ < parts.Length)
+                                        value = Parse(parts[index], arg);
                                     // проверка опциональных параметров
                                     else if (arg.IsOptional)
                                         value = arg.DefaultValue;
@@ -187,52 +187,7 @@ namespace AbstractDevelop.Machines
                 bool ValidateValue(DataReference value, IArgumentDefinition arg)
                     => arg.Validator?.Invoke(value, state) ?? true;
             }
-
-            public IEnumerable<Instruction> somekindofmonster(IEnumerable<string> input, InstructionDefinitions rules)
-            {
-                var state = new RiscTranslationState()
-                {
-                    Definitions = rules ?? instructionsBase,
-                    Exceptions = new List<Exception>(),
-                    Labels = new Dictionary<string, int>(),
-                    LineNumber = 0
-                };
-                State = state;
-                // построчный разбор
-                foreach (var line in input)
-                {
-                    state.LineNumber++;
-                    yield return null;
-                }
-
-                // исключение ошибок, исправленных во время трансляции автоматически
-                // (рарешение ссылок на метки)
-                for (int i = 0; i < state.Exceptions.Count; i++)
-                    if (state.Exceptions[i] is InvalidArgumentException argEx &&
-                       (ValidateValue(Parse(argEx.Token, argEx.Argument), argEx.Argument)))
-                        state.Exceptions.RemoveAt(i);
-
-                // вывод обобщенного исключения для отображения в списке ошибок
-                if (state.Exceptions.Count > 0)
-                    throw new AggregateException(state.Exceptions);
-
-                // считывание данных
-                DataReference Parse(string data, IArgumentDefinition arg)
-                {
-                    try { return (arg.Parser ?? Convert)?.Invoke(data, state, arg) ?? arg.DefaultValue; }
-                    catch (Exception exception)
-                    {
-                        state.Exceptions.Add(exception);
-                        return arg.DefaultValue;
-                    }
-                }
-
-                // проверка считанных данных
-                bool ValidateValue(DataReference value, IArgumentDefinition arg)
-                    => arg.Validator?.Invoke(value, state) ?? true;
-            }
-
-
+               
             /// <summary>
             /// Производит трансляцию исходного кода в набор инструкций
             /// </summary>

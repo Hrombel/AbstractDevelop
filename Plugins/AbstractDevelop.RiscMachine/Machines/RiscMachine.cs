@@ -185,12 +185,6 @@ namespace AbstractDevelop.Machines
             Instructions.Goto(instuctionIndex);
         }
 
-        protected override void OnStarting(EventArgs args)
-        {
-            AccessTimer = 0;
-            base.OnStarting(args);
-        }
-
         #endregion
 
         #region [Конструкторы и деструкторы]

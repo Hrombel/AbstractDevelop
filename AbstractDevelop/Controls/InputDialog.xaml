@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AbstractDevelop"
         mc:Ignorable="d"
-        Title="Запрос ввода" SizeToContent="WidthAndHeight">
+        Title="Запрос ввода" SizeToContent="WidthAndHeight" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:CustomCommands.SaveValue}" Executed="SaveValueExecuted"/>
     </Window.CommandBindings>

@@ -27,6 +27,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="/AbstractDevelop;component/Resources/Graphics.xaml"/>
             </ResourceDictionary.MergedDictionaries>
+            <local:DebugEntryTypeConverter x:Key="DebugEntryTypeConverter"/>
             <local:FormatConverter x:Key="FormatConverter"/>
 
             <Style TargetType="{x:Type GroupBox}">
@@ -101,7 +102,7 @@
         <CommandBinding Command="{x:Static local:CustomCommands.ClearAll}" Executed="ClearAllCommandExecuted"/>
         <CommandBinding Command="{x:Static local:CustomCommands.ClearDebug}" Executed="ClearDebugCommandExecuted" CanExecute="ClearDebugCanExecute"/>
         <!-- Команды из меню "Инструменты" -->
-        <CommandBinding Command="{x:Static local:CustomCommands.DebugStartStop}" Executed="DebugStartStopCommandExecuted"/>
+        <CommandBinding Command="{x:Static local:CustomCommands.DebugStartStop}" Executed="DebugStartStopCommandExecuted" CanExecute="DebugStartStopCanExecute"/>
         <CommandBinding Command="{x:Static local:CustomCommands.DebugStep}" Executed="DebugStepCommandExecuted" CanExecute="DebugStepCanExecute"/>
         <CommandBinding Command="{x:Static local:CustomCommands.DebugPause}" Executed="DebugPauseCommandExecuted" CanExecute="DebugPauseCanExecute"/>
         <CommandBinding Command="{x:Static local:CustomCommands.DebugBreakpoint}" Executed="DebugBreakpointCommandExecuted" CanExecute="DebugBreakpointCanExecute"/>
@@ -173,7 +174,7 @@
                 <MenuItem Header="{lang:Static p:Menu.Tools}">
                     <MenuItem Header="{lang:Static p:Menu.Debug}">
                         <MenuItem x:Name="menuDebugStart" Header="{lang:Static p:Menu.DebugStart}"  Command="{x:Static local:CustomCommands.DebugStartStop}"/>
-                        <MenuItem x:Name="menuDebugStop" Header="{lang:Static p:Menu.DebugStop}"  Command="{x:Static local:CustomCommands.DebugStartStop}"/>
+                        <MenuItem x:Name="menuDebugStop" Header="{lang:Static p:Menu.DebugStop}" Click="DebugCommandStop"/>
                         <MenuItem Header="{lang:Static p:Menu.DebugStep}" Command="{x:Static local:CustomCommands.DebugStep}"/>
                         <MenuItem Header="{lang:Static p:Menu.DebugPause}" Command="{x:Static local:CustomCommands.DebugPause}"/>
                         <MenuItem Header="{lang:Static p:Menu.DebugBreakpoint}" Command="{x:Static local:CustomCommands.DebugBreakpoint}"/>
@@ -245,7 +246,7 @@
                     <Button Command="ApplicationCommands.Paste" Style="{DynamicResource toolButton}" Background="{DynamicResource editpaste}"/>
                     <Separator/>
                     <Button x:Name="toolbarDebugStart" Command="{x:Static local:CustomCommands.DebugStartStop}" Style="{DynamicResource toolButton}" Background="{DynamicResource run}"/>
-                    <Button x:Name="toolbarDebugStop" Command="{x:Static local:CustomCommands.DebugStartStop}" Style="{DynamicResource toolButton}" Background="{DynamicResource stop}" Visibility="Collapsed"/>
+                    <Button x:Name="toolbarDebugStop" Click="DebugCommandStop"  Style="{DynamicResource toolButton}" Background="{DynamicResource stop}" Visibility="Collapsed"/>
                     <Button Command="{x:Static local:CustomCommands.DebugStep}" Style="{DynamicResource toolButton}" Background="{DynamicResource step}"/>
                     <Button Command="{x:Static local:CustomCommands.DebugPause}" Style="{DynamicResource toolButton}" Background="{DynamicResource pause}"/>
                     <Separator/>
@@ -297,7 +298,7 @@
         <GroupBox x:Name="debugOutputGroup" Grid.Row="5" Header="{lang:Static p:Labels.Debug}">
             <DataGrid x:Name="debugOutputData" AutoGenerateColumns="False" EnableColumnVirtualization="True" GridLinesVisibility="Horizontal" IsReadOnly="True" ItemsSource="{Binding DebugMessages, ElementName=window}" >
                 <DataGrid.Columns>
-                    <DataGridTextColumn x:Name="typeColumn" Header="{lang:Static p:Labels.DebugType}" Binding="{Binding Type}"/>
+                    <DataGridTextColumn x:Name="typeColumn" Header="{lang:Static p:Labels.DebugType}" Binding="{Binding Type, Converter={StaticResource DebugEntryTypeConverter}}"/>
                     <DataGridTextColumn x:Name="lineColumn" Header="{lang:Static p:Labels.DebugLine}" Binding="{Binding Line}" />
                     <DataGridTextColumn x:Name="messageColumn" Header="{lang:Static p:Labels.DebugMessage}" Width="*" Binding="{Binding Content}"/>
                 </DataGrid.Columns>

@@ -117,16 +117,85 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="DebugTypeeMessage" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="DebugTypeError" xml:space="preserve">
+    <value>Error</value>
+  </data>
+  <data name="DebugTypeOutput" xml:space="preserve">
+    <value>Output</value>
+  </data>
+  <data name="DebugTypeWarning" xml:space="preserve">
+    <value>Warning</value>
+  </data>
   <data name="EnglishLang" xml:space="preserve">
-    <value>Английский (en)</value>
+    <value>English (en)</value>
+  </data>
+  <data name="ErrorTitle" xml:space="preserve">
+    <value>Error</value>
   </data>
   <data name="Language" xml:space="preserve">
-    <value>Язык</value>
+    <value>Language:</value>
+  </data>
+  <data name="LanguageChangeWarning" xml:space="preserve">
+    <value>To apply new language restart new program</value>
+  </data>
+  <data name="MachineStarted" xml:space="preserve">
+    <value>Machine started</value>
+  </data>
+  <data name="MachineStopped" xml:space="preserve">
+    <value>Machine stopped. Total time in ticks: {0}</value>
+  </data>
+  <data name="ProjectFileFilter" xml:space="preserve">
+    <value>AbstractDevelop Project|*.adp|JSON File Project|*.json</value>
   </data>
   <data name="RussianLang" xml:space="preserve">
-    <value>Русский (ru)</value>
+    <value>Russian (ru)</value>
+  </data>
+  <data name="SamplesNotFoundMessage" xml:space="preserve">
+    <value>Samples are not found! Try to reinstall the program.</value>
+  </data>
+  <data name="SavingTitle" xml:space="preserve">
+    <value>Save the Data</value>
+  </data>
+  <data name="SchemaViewTitle" xml:space="preserve">
+    <value>RISC R8 Scheme</value>
   </data>
   <data name="SystemLang" xml:space="preserve">
-    <value>Системный (Default)</value>
+    <value>System (Default)</value>
+  </data>
+  <data name="TestFailed" xml:space="preserve">
+    <value>Test Failed: "{0}"</value>
+  </data>
+  <data name="TestFileFilter" xml:space="preserve">
+    <value>Test set|*.test|JSON project|*.json</value>
+  </data>
+  <data name="TestInstructionBase" xml:space="preserve">
+    <value>[full instruction set]</value>
+  </data>
+  <data name="TestLoadingException" xml:space="preserve">
+    <value>Unable to open specified file. This file is possibly corrupted</value>
+  </data>
+  <data name="TestSucces" xml:space="preserve">
+    <value>Test Passed</value>
+  </data>
+  <data name="TestSystemError" xml:space="preserve">
+    <value>Test Error: "{0}"</value>
+  </data>
+  <data name="TestSystemFailed" xml:space="preserve">
+    <value>Failed tests: {0}</value>
+  </data>
+  <data name="TestSystemPassed" xml:space="preserve">
+    <value>All tests are passed</value>
+  </data>
+  <data name="UnsavedDataMessage" xml:space="preserve">
+    <value>Would you like to save the project?</value>
   </data>
 </root>

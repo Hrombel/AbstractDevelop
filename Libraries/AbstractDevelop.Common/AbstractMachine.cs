@@ -77,6 +77,9 @@ namespace AbstractDevelop.Machines
         /// <remarks></remarks>
         public delegate void EventHandler(AbstractMachine source, EventArgs args);
 
+        // TODO
+        public delegate void StopEventHandler(AbstractMachine source, StopReason reason);
+
         #endregion
 
         #region [События]
@@ -100,7 +103,7 @@ namespace AbstractDevelop.Machines
         /// <summary>
         /// События, происходящие непосредственно перед остановом и после останова абстрактной машины
         /// </summary>
-        public event EventHandler Stopping, Stopped;
+        public event StopEventHandler Stopping, Stopped;
 
         #endregion
 
@@ -158,8 +161,9 @@ namespace AbstractDevelop.Machines
                 // подготовка успешна, производится выполнение
                 OnStarted(EventArgs.Empty);
                 // выполнять шаги до конца
-                while (IsActive && OnBeforeStep(EventArgs.Empty) == StepAction.Continue && Step())
-                    OnAfterStep(EventArgs.Empty);
+                while (IsActive && Step()) ;
+
+                Stop(StopReason.Result);
             }
         }
 
@@ -171,7 +175,7 @@ namespace AbstractDevelop.Machines
             Activate();
             while (IsActive && Step()) ;
 
-            IsActive = false;
+            Stop(StopReason.Result);
         }
 
         /// <summary>
@@ -188,23 +192,22 @@ namespace AbstractDevelop.Machines
         {
             if (IsActive)
             {
-                OnStopping(EventArgs.Empty);
+                OnStopping(reason);
                 // подготовка машины к остановке
                 if (PrepareToStop(reason))
                 {
                     IsActive = false;
-                    OnStopped(EventArgs.Empty);
+                    OnStopped(reason);
                     // запись отладочного сообщения
                     DebugTrace?.Write(debugMessage);
                 }
             }
-            else throw new InvalidOperationException("Остановка невозможна: машина не была запущена");
         }
 
         /// <summary>
         /// Переводит машину в активное состояние
         /// </summary>
-        protected virtual void Activate()
+        public virtual void Activate()
             =>  IsActive = true;
         /// <summary>
         /// Вызывает обработку события <see cref="AfterStep"/>
@@ -254,15 +257,15 @@ namespace AbstractDevelop.Machines
         /// Вызывает обработку события <see cref="Stopped"/>
         /// </summary>
         /// <param name="args">Аргументы для обработки</param>
-        protected virtual void OnStopped(EventArgs args)
-            => Stopped?.Invoke(this, args);
+        protected virtual void OnStopped(StopReason reason)
+            => Stopped?.Invoke(this, reason);
 
         /// <summary>
         /// Вызывает обработку события <see cref="Stopping"/>
         /// </summary>
         /// <param name="args">Аргументы для обработки</param>
-        protected virtual void OnStopping(EventArgs args)
-            => Stopping?.Invoke(this, args);
+        protected virtual void OnStopping(StopReason reason)
+            => Stopping?.Invoke(this, reason);
 
         /// <summary>
         /// Производит подготовку машины к запуску

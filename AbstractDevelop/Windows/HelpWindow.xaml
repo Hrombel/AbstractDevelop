@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AbstractDevelop"
         mc:Ignorable="d"
-        Height="300" Width="300" WindowStyle="ToolWindow">
+        Title="Содержание" Height="300" Width="300" WindowStyle="ToolWindow">
     <Grid>
-        
+        <Label VerticalAlignment="Center" HorizontalAlignment="Center" Content="(unable to load content)" />
     </Grid>
 </Window>
