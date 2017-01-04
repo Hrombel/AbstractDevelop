@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Text;
 
 namespace AbstractDevelop
 {
@@ -17,6 +20,8 @@ namespace AbstractDevelop
         /// Строка, содержащая все недопустимые для пути файла символы.
         /// </summary>
         public static string InvalidPathChars = string.Concat(Path.GetInvalidPathChars());
+
+        static StringBuilder builder = new StringBuilder();
 
         /// <summary>
         /// Проверяет путь на корректность
@@ -49,14 +54,40 @@ namespace AbstractDevelop
             => IsValidPath(targetPath) && (!checkExistance || GetPathValue(targetPath) != default(FileSystemInfo)) ?
                 throw new FileNotFoundException(targetPath) : targetPath;
 
-        public static string RemoveWhitespaces(this string source)
-            => new string(source.SkipWhile(char.IsWhiteSpace).ToArray());
+        public static string Build(this IEnumerable<char> source)
+        {
+            var local = builder.Clear();
+            foreach (var c in source) local.Append(c);
+            return local.ToString();
+        }
 
-        public static string RemoveWhitespaces(this string source, out string output)
-           => output = new string (source.SkipWhile(char.IsWhiteSpace).ToArray());
+        /// <summary>
+        /// Удаляет все вхождения символов, соответствующие данному шаблону
+        /// </summary>
+        /// <param name="source">Исходная строка</param>
+        /// <param name="predicate">Шаблон удаляемых символов</param>
+        /// <param name="onlyPreceeding">Следует ли удалять знаки только с начала строки</param>
+        /// <returns></returns>
+        public static string RemoveChars(this string source, Func<char, bool> predicate, bool onlyPreceeding = true)
+            => (onlyPreceeding ? source.SkipWhile(predicate) : source.WhereNot(predicate)).Build();
 
-        public static IEnumerable<char> Remove(this IEnumerable<char> originalString, char removingChar)
-           => originalString.Where(@char => @char != removingChar);
+        public static bool RemoveChars(this string source, Func<char, bool> predicate, out string result, bool onlyPreceeding = true)
+            => (result = (onlyPreceeding ? source.SkipWhile(predicate) : source.WhereNot(predicate)).Build()) != source;
+
+        public static bool RemoveChars(this string source, out string result, params char[] chars)
+            => source.RemoveChars(chars.Contains, out result, false);
+
+        public static string RemoveWhitespaces(this string source, bool onlyPreceeding = true)
+            => RemoveChars(source, char.IsWhiteSpace, onlyPreceeding);
+
+        public static string RemoveWhitespaces(this string source, out string output, bool onlyPreceeding = true)
+           => output = source.RemoveWhitespaces(onlyPreceeding);
+
+        public static bool Replace(this string source, string old, string @new, out string result)
+            => (result = source.Replace(old, @new)) != source;
+
+        public static bool Replace(this string source, char old, char @new, out string result)
+            => (result = source.Replace(old, @new)) != source;
 
         #endregion
 
@@ -143,9 +174,14 @@ namespace AbstractDevelop
         /// <returns>Последний объект в наборе, либо заменяющее его значение <paramref name="defaultValue"/>.</returns>
         public static T LastOrDefault<T>(this IEnumerable<T> source, T defaultValue)
             where T : class => source.LastOrDefault() ?? defaultValue;
-        
-        //TODO: сделать описание реализованных функций
 
+        public static T Last<T>(this IList<T> source)
+            => source[source.Count - 1];
+
+        public static void Apply<T>(this IEnumerable<T> source, Action<T> action)
+            => source?.Try(action.ApplyTo);
+
+        //TODO: сделать описание реализованных функций
         public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, bool> predicate)
         {
             if (source != null)
@@ -180,6 +216,9 @@ namespace AbstractDevelop
                 source[key] = func(source[key]);
             return source;
         }
+
+        public static T FirstOfType<T>(this IEnumerable source)
+            => (T)source?.Cast<object>().FirstOrDefault(e => e is T);
 
         #endregion
 
@@ -225,10 +264,85 @@ namespace AbstractDevelop
             return target;
         }
 
+        public static bool Execute<T>(this T target, Action<T> action)
+        {
+            action(target);
+            return true;
+        }
+
+        public static void ApplyTo<T>(this Action<T> action, IEnumerable<T> target)
+        {
+            foreach (var e in target)
+                action(e);
+        }
+
         public static T Using<TSource, T>(this TSource target, Func<TSource, T> convert)
             where TSource: IDisposable
         {
             using (target) return convert(target);
         }
-     }
+
+        public static bool Try(this Delegate value, Func<Exception, bool> onError = null, params object[] args)
+        {
+            try
+            {
+                value.DynamicInvoke(args);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return onError?.Invoke(ex) ?? false;
+            }
+        }
+
+        public static TRet Try<T, TRet>(this T value, Func<T, TRet> func)
+        {
+            try { return func(value); }
+            catch { return default(TRet); }
+        }
+
+        public static T TryGet<T>(this IEnumerable<T> source, int index)
+            => source.Try(s => s.Skip(index)).FirstOrDefault();
+
+        public static T TryGet<T>(this IEnumerable<T> source, int index, out IEnumerable<T> skipped)
+            => (skipped = source.Skip(index)).FirstOrDefault();
+
+        public static bool Try<T>(this T value, Action<T> action, Action<T> errorAction = null)
+            => action.Try(ex => value.Try(errorAction), value);
+
+        public static bool Check<T>(this T target, Func<T, bool> validator)
+            => validator(target);
+       
+        public static bool CheckAll<T>(this T target, params Func<T, bool>[] validators)
+            => validators.All(v => Check(target, v));
+
+        public static bool CheckAny<T>(this T target, params Func<T, bool>[] validators)
+            => validators.Any(v => Check(target, v));
+
+        public static void Invoke(this PropertyChangedEventHandler @event, object sender = null, [CallerMemberName] string propertyName = null)
+            => @event?.Invoke(sender, new PropertyChangedEventArgs(propertyName));
+
+        public static T ToVariable<T>(this T value, out T variable)
+            => variable = value;
+
+        public static bool Decision(this bool condition, Action @true, Action @false)
+        {
+            if (condition) @true();
+            else @false();
+
+            return condition;
+        }
+
+        public static bool Select<T>(this bool condition, T @true, T @false, out T value)
+        {
+            value = condition ? @true : @false;
+            return condition;
+        }
+
+        public static bool Select<T>(this Func<bool> condition, Func<T> @true, Func<T> @false, out T value)
+            => condition().Select(@true(), @false(), out value);
+
+        public static bool MoveNext<T>(this IEnumerator<T> enumerator, out T variable)
+            => enumerator.MoveNext().Select(enumerator.Current, default(T), out variable);
+    }
 }

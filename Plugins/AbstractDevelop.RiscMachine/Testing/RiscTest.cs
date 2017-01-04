@@ -28,7 +28,7 @@ namespace AbstractDevelop.Machines.Testing
                 if (state != value)
                 {
                     state = value;
-                    OnPropertyChanged();
+                    PropertyChanged.Invoke(this);
                 }
             }
         }
@@ -41,20 +41,13 @@ namespace AbstractDevelop.Machines.Testing
                 if (lastError != value)
                 {
                     lastError = value;
-                    OnPropertyChanged();
+                    PropertyChanged.Invoke(this);
                 }
             }
         }
 
         #endregion
-
-        /// <summary>
-        /// Вызывает событие <see cref="PropertyChanged"/>
-        /// </summary>
-        /// <param name="propertyName">Имя свойства, которое было изменено</param>
-        public virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-            => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
+        
         #region [Конструкторы и деструкторы]
 
         public RiscTest(TestEntry test, RiscTestSystem system)

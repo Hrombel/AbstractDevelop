@@ -37,14 +37,7 @@ namespace AbstractDevelop.Symbols
         /// </summary>
         /// <param name="elements">Ряд символьных элементов для добавления</param>
         public void AddRange(IEnumerable<ISymbolSetElement> elements)
-        {
-            if (elements == null)
-                throw new ArgumentNullException(nameof(elements));
-
-            foreach (var element in elements)
-                if (!Contains(element))
-                    Add(element);
-        }
+            => elements?.WhereNot(Contains).Apply(Add);
 
         /// <summary>
         /// Создает точную копию данного набора символов

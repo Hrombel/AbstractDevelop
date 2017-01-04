@@ -117,7 +117,7 @@ namespace AbstractDevelop.Machines
             /// </summary>
             /// <param name="source">Источник операций для загрузки</param>
             /// <returns>Возвращает true, если все оперции были успешно загружен в список</returns>
-            bool Load(IEnumerable<Instruction> source);
+            bool Load(IEnumerable source);
 
             /// <summary>
             /// Загружает набор инструкций в данную коллекцию
@@ -260,7 +260,7 @@ namespace AbstractDevelop.Machines
                 => NextIndex = operationIndex != -1 ? operationIndex.Do(v => OnGoto?.Invoke(operationIndex)) : null as int?;
 
             /// <summary>
-            /// Переходит ко следующей по порядку или заданию инструкции
+            /// Переходит ко следующей по порядку или заданной инструкции
             /// </summary>
             /// <returns></returns>
             public Instruction GotoNext()
@@ -278,14 +278,14 @@ namespace AbstractDevelop.Machines
             /// </summary>
             /// <param name="source">Набор инструкций для загрузки</param>
             /// <returns></returns>
-            public bool Load(IEnumerable<Instruction> source)
+            public bool Load(IEnumerable source)
             {
                 try
                 {
                     if (Count > 0) Clear();
 
                     // добавление инструкций в коллекцию
-                    foreach (var instruction in source)
+                    foreach (Instruction instruction in source)
                         Add(instruction);
 
                     Reset();

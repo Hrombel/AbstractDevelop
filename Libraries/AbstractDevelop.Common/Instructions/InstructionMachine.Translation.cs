@@ -7,128 +7,274 @@ using System.Text.RegularExpressions;
 using System.Collections;
 
 using AbstractDevelop.Translation;
+using AbstractDevelop.Symbols;
+
+using System.Globalization;
 
 namespace AbstractDevelop.Machines
 {
     public abstract partial class InstructionMachine<InstructionCode, ArgumentType>
     {
-        /*public class InstuctionTranslator :
-            ISourceTranslator<Instruction, IDefinitionCollection>
+        public class InstuctionTranslator :
+            ISourceTranslator<Instruction, InstructionDefinitions>
         {
-            public class InstructionPattern :
-                Regex
+            public class ValidationRules
             {
-                #region [Константы]
+                public const char
+                    DefaultLabelSign = ':',
+                    DefaultWhiteSpace = ' ',
+                    DefaultTabSign = '\t';
 
-                public const string
-                    InstructionGroupName = "instruction",
-                    Whitespace = @"\s+";
+                public virtual char Whitespace { get; } = DefaultWhiteSpace;
 
+                public virtual char LabelSign { get; } = DefaultLabelSign;
+
+                public virtual char[] Separators => 
+                    new char[] { Whitespace, LabelSign, DefaultTabSign };
+
+                public virtual ISymbolSet AllowedSymbols { get; } 
+                    = new ISymbolSetElement[]
+                    {
+                        // буквенно-цифровые символы
+                        new SymbolGroup(UnicodeCategory.LowercaseLetter),
+                        new SymbolGroup(UnicodeCategory.UppercaseLetter),
+                        new SymbolGroup(UnicodeCategory.DecimalDigitNumber),
+
+                        // символы пунктуации
+                        new SymbolGroup(UnicodeCategory.OpenPunctuation),
+                        new SymbolGroup(UnicodeCategory.ClosePunctuation),
+                        new SymbolGroup(UnicodeCategory.DashPunctuation),
+                        new SymbolGroup(UnicodeCategory.ConnectorPunctuation),
+                        new SymbolGroup(UnicodeCategory.OtherPunctuation)
+                    }.ToSymbolSet();
+
+                public bool IsValid { get; protected internal set; }
+
+                public virtual bool IsCommented(string token)
+                    => false;
+
+                public virtual bool HasLabel(string token, out string label)
+                    => token.RemoveChars(out label, LabelSign);
+
+                public virtual IEnumerable<string> GetParts(IEnumerable<char> input)
+                {
+                    var word = new StringBuilder();
+                    IsValid = true;
+
+                    var separators = Separators;
+                    bool isSeparated = false, wasSeparated = false;
+
+                    foreach (var @char in input)
+                    {
+                        // пропуск пробелов
+                        if (isSeparated = separators.Contains(@char))
+                        {
+                            if (wasSeparated) continue;
+                            // все символы, кроме пробелов, должны быть сохранены
+                            else yield return (char.IsWhiteSpace(@char) ? word.ToString() :
+                                    word.ToString() + @char);
+                        }
+                        else
+                        {
+                            // проверка на допустимость символа
+                            if (!AllowedSymbols?.Contains(@char) ?? false)
+                            {
+                                IsValid = false;
+                                yield break;
+                            }
+                            // добавление символа в слово
+                            if (wasSeparated) word.Clear();
+                            word.Append(@char);
+                        }
+                        wasSeparated = isSeparated;
+                    }
+
+                    if (word.Length > 0)
+                        yield return word.ToString();
+                }
+
+                public virtual bool Decompose(string input, out string label, out string instruction, out IEnumerable<string> args)
+                {
+                    label = instruction = null;
+
+                    var parts = args = GetParts(input);
+                    var first = parts?.FirstOrDefault();
+
+                    if (IsValid && !string.IsNullOrEmpty(first))
+                    {
+                        var hasLabel = HasLabel(first, out label);
+                        // определение метки и инструкции
+                        label = hasLabel ? label : string.Empty;
+                        instruction = hasLabel ? parts.TryGet(1, out args) : first;
+                        // переход на аргументы
+                        args = args.Skip(1);
+                        return true;
+                    }
+                    return false;
+                }
+            }
+
+            public class InstructionTranslationState :
+                TranslationState
+            {
+                #region [Свойства и Поля]
+
+                /// <summary>
+                /// Описание инструкций
+                /// </summary>
+                public InstructionDefinitions Definitions { get; set; }
+
+                /// <summary>
+                /// Метки переходов (индексы инструкций)
+                /// </summary>
+                public Dictionary<string, int> Labels { get; set; } = new Dictionary<string, int>();
+
+                /// <summary>
+                /// Обработанная инструкция
+                /// </summary>
+                public List<Instruction> Processed { get; set; } = new List<Instruction>();
 
                 #endregion
 
-                public string ArgumentSeparators { get; set; }
-
-                public int MaxArgumentCount { get; set; } = -1;
-
-                public IDefinitionCollection Definitions { get; set; }
-
-                // composition
-                // $@"\s*({list})\s+({reg1})+\s*({reg2})*\s*({reg3})*";
-                // reg3 = $@"r\d+|\[\d+\]",
-                // reg1 = $@"{reg3}|[\d-]+",
-                // reg2 = $@"{reg1}|[A-Za-z_\d]+",
-                // list = "in|out|ror|rol|not|or|and|nor|nand|xor|add|sub|jz|jo",
-
-                public string InstructionGroup
-                    => $"";
-
-                public string ArgumentGroup
-                    => $"";
-
-                public virtual string RegexString
-                    => $"({InstructionGroup})({Whitespace}({ArgumentGroup}))*";
-            }
-
-            public virtual InstructionPattern Pattern { get; set; }
-
-            public virtual Encoding SupportedEncoding { get { return Encoding.UTF8; } }
-
-            public TranslationState State
-            {
-                get
+                public override bool ProcessException(Exception exception)
                 {
-                    throw new NotImplementedException();
-                }
-            }
-
-            public virtual IEnumerable<Instruction> Translate(IEnumerable<string> input, IDefinitionCollection definitions)
-            {
-                var match = default(Match);
-                // интерпретация всех ненулевых входных строк в виде инструкций
-                foreach (var line in input.WhereNot(string.IsNullOrEmpty))
-                {
-                    // шаблон инструкции найден в данной строке
-                    if ((match = Pattern.Match(line)).Success)
-                    { 
-                        string instructionName = match.Groups[InstructionPattern.InstructionGroupName].Value;
-                        // определение типа инструкции и сопоставление параметров
-                        // код операции не должен быть равен зарезервированному значению 'unknown'
-                        if (definitions.Aliases.TryGetValue(instructionName, out var code) &&
-                            code.CompareTo(default(InstructionCode)) != 0)
-                            yield return new Instruction(code, GetArguments(definitions[code], match).ToArray());
-                        // несуществующий тип инструкции
-                        else throw new InvalidOperationException($"Незарегистрированный тип инструкции: {instructionName}");
-                    }
-                    else throw new FormatException($"Строка #{input.IndexOf(line)} во входных данных имеет неверный формат");
-                }
-                yield break;
-            }
-
-            public virtual IEnumerable<ArgumentType> GetArguments(IInstructionDefinition definition, Match match)
-            {
-                ArgumentType value = default(ArgumentType);
-                int index = 0;
-                bool isValid;
-
-                foreach (var argDef in definition.Arguments)
-                {
-                    isValid = false; index++;
-                    // TODO: реализовать fallback для default парсера
-                    try { value = (argDef.Parser ?? null).Invoke(match.Groups[index].Value, State, argDef); }
-                    catch
+                    switch (exception)
                     {
-                        // в случае опциональности аргумента возможна замена на значение по умолчанию
-                        if (argDef.IsOptional) value = argDef.DefaultValue;
-                        // в противном случае дальнейший разбор не представляет смысла
-                        else throw new InvalidOperationException($"Недостаточное количество аргументов для инструкции {definition.Alias}.");
+                        case Exceptions.SkipLineException skip:
+                            return true;
+                        case AggregateException aggregation:
+                            return aggregation.InnerExceptions.All(ProcessException);
+                        default:
+                            return base.ProcessException(exception);
                     }
-                    // прохождение проверок
-                    finally { isValid = (argDef.Validator?.Invoke(value, State) ?? true); }
-                    if (isValid) yield return value;
                 }
-                yield break;
+
+                public InstructionTranslationState(InstructionDefinitions instructionSet)
+                {
+                    if (instructionSet != default(InstructionDefinitions))
+                        Definitions = instructionSet;
+                }
             }
 
-            public IEnumerable Translate(IEnumerable input)
-            {
-                throw new NotImplementedException();
-            }
+            public Encoding SupportedEncoding
+                => Encoding.UTF8;
 
-            public bool Validate(IEnumerable input)
-            {
-                throw new NotImplementedException();
-            }
+            /// <summary>
+            /// Функция преобразования строки в значение для обработки
+            /// </summary>
+            public Func<string, InstructionTranslationState, IArgumentDefinition, ArgumentType> Convert { get; set; }
+
+            protected virtual ValidationRules Validation { get; } = new ValidationRules();
+
+            protected InstructionTranslationState State;
+  
+            TranslationState ISourceTranslator.State => throw new NotImplementedException();
 
             public void Dispose()
             {
-                throw new NotImplementedException();
+                State = null;
+                Convert = null;
+            }
+
+            public IEnumerable Translate(IEnumerable input, params object[] args)
+                =>  input is IEnumerable<string> lines ?
+                    Translate(lines, args?.FirstOfType<InstructionDefinitions>()).ToArray() :
+                    throw new ArgumentException(nameof(input));
+
+            public IEnumerable<Instruction> Translate(IEnumerable<string> input, InstructionDefinitions rules)
+            {
+                var current = default(Instruction);
+                State = new InstructionTranslationState(rules);
+                
+                foreach (var inputLine in input)
+                {
+                    (State.LineNumber++).ToVariable(out var line);
+
+                    try { State.Processed.Add(current = ProcessLine()); }
+                    catch (Exception ex)
+                    {
+                        State.ProcessException(ex);
+                        continue;
+                    }
+
+                    yield return current;
+
+                    Instruction ProcessLine()
+                    {
+                        if (!inputLine.RemoveWhitespaces(out var cleanLine).CheckAny(string.IsNullOrEmpty, Validation.IsCommented) &&
+                            // декомпозиция текущей строки и сохранене метки
+                            Validation.Decompose(cleanLine, out var label, out var instruction, out var args) && ProcessLabel(label))
+                        {
+                            // попытка распознавания инструкции
+                            if (State.Definitions.TryGetValue(instruction, out var def))
+                                return new Instruction(def.Code, GetArguments());
+                            else
+                                throw new Exceptions.UnknownInstructionException(instruction, cleanLine, line);
+
+                            // считывание списка аргументов
+                            IEnumerable<ArgumentType> GetArguments()
+                            {
+                                var value = default(ArgumentType);
+                                var argumentEnum = args.GetEnumerator();
+
+                                // последовательное сопоставление всех определений с полученными данными
+                                foreach (var argPrototype in def.Arguments)
+                                {
+                                    // проверка существующих обязательных параметров
+                                    if (argumentEnum.MoveNext(out var argument).ToVariable(out var foundArgument))
+                                        value = Parse(argument, argPrototype);
+                                    // проверка опциональных параметров
+                                    else if (argPrototype.IsOptional)
+                                        value = argPrototype.DefaultValue;
+                                    // параметр не найден
+                                    else throw new Exceptions.MissingArgumentException(argPrototype, Array.IndexOf(def.Arguments, argPrototype) + 1, instruction, line);
+
+                                    if (ValidateValue(value, argPrototype)) yield return value;
+                                    // если аргумент не прошел проверку, необходимо добавить его в список ошибок для повторной проверки
+                                    else throw new Exceptions.InvalidArgumentException(argPrototype, foundArgument? argument : value.ToString(), line);
+                                }
+
+                                // превышение количества необходимых аргументов
+                                if (argumentEnum.MoveNext())
+                                    throw new Exceptions.TooMuchArguentsException(def.Arguments.Length, line);
+                            }
+                        }
+
+                        throw new Exceptions.SkipLineException();
+                    }
+
+                    // обработка строковых меток
+                    bool ProcessLabel(string value)
+                        => !value.Check(string.IsNullOrEmpty) && State.Execute(s => s.Labels.Add(value, s.Labels.ContainsKey(value)? 
+                        throw new Exceptions.LabelRedefinedException(value, s.LineNumber) : s.Processed.Count));
+                }
+
+                // исключение ошибок, исправленных во время трансляции автоматически
+                // (рарешение ссылок на метки)
+                State.Exceptions.RemoveAll(ex =>
+                    ex is Exceptions.InvalidArgumentException argEx &&
+                    ValidateValue(Parse(argEx.Token, argEx.Argument), argEx.Argument));
+
+                #region [Внутренние функции]
+
+                // считывание данных
+                ArgumentType Parse(string data, IArgumentDefinition arg)
+                {
+                    (arg.Parser ?? Convert).Invoke(data, State, arg).ToVariable(out var value);
+                    return value.Equals(default(ArgumentType)) ? arg.DefaultValue : value;
+                }
+
+                // проверка считанных данных
+                bool ValidateValue(ArgumentType value, IArgumentDefinition arg)
+                    => arg.Validator?.Invoke(value, State) ?? true;
+
+                #endregion
             }
 
             public bool Validate(string input, out string[] composingParts)
-            {
-                throw new NotImplementedException();
-            }
-        }*/
+                => Validation.Decompose(input, out var label, out var instruction, out var args)
+                .Select(new List<string>() { label, instruction }.WhereNot(string.IsNullOrEmpty).Union(args).ToArray(),
+                        new  string[0], out composingParts);
+        }
     }
 }

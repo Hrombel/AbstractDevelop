@@ -6,6 +6,7 @@ using AbstractDevelop.Storage.Formats;
 using Newtonsoft.Json;
 
 using SettingsContainer = System.Collections.Generic.Dictionary<string, string>;
+using AbstractDevelop.Machines;
 
 namespace AbstractDevelop.Projects
 {
@@ -87,6 +88,15 @@ namespace AbstractDevelop.Projects
         /// <param name="provider">Поставщик форматов для задания</param>
         public void SetFormatProvider(IDataFormatProvider provider)
             => formatProvider = provider;
+
+        /// <summary>
+        /// Создает абстрактную машину указанного типа из данного проекта
+        /// </summary>
+        /// <typeparam name="MachineType">Тип абстрактной машины для создания</typeparam>
+        /// <returns>Экземлпяр абстрактной машины указанного типа</returns>
+        public MachineType CreateMachine<MachineType>()
+            where MachineType : AbstractMachine
+            => Platform.CreateMachine(this) as MachineType;
 
         #endregion
 

@@ -136,6 +136,11 @@ namespace AbstractDevelop.Machines
                     Line = line;
                 }
             }
+
+            /// <summary>
+            /// Указывает системе обработки ошибок, что необходимо пропустить обработку данной строки
+            /// </summary>
+            public class SkipLineException : Exception { }          
         }
     }
 }

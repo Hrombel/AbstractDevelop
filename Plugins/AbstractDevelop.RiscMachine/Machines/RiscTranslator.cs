@@ -22,12 +22,41 @@ namespace AbstractDevelop.Machines
         {
             #region [Свойства и Поля]
 
-            public InstructionDefinitions Definitions { get; set; }
-            public List<Exception> Exceptions { get; set; }
-            public Dictionary<string, int> Labels { get; set; }
-            public int LineNumber { get; set; }
+            /// <summary>
+            /// Описание инструкций
+            /// </summary>
+            public InstructionDefinitions Definitions { get; set; } = instructionsBase;
+   
+            /// <summary>
+            /// Метки переходов (индексы инструкций)
+            /// </summary>
+            public Dictionary<string, int> Labels { get; set; } = new Dictionary<string, int>();
+   
+            /// <summary>
+            /// Обработанная инструкция
+            /// </summary>
+            public List<Instruction> Processed { get; set; } = new List<Instruction>();
 
             #endregion
+
+            public override bool ProcessException(Exception exception)
+            {
+                switch (exception)
+                {
+                    case SkipLineException skip:
+                        return true;
+                    case AggregateException aggregation:
+                        return aggregation.InnerExceptions.All(ProcessException);
+                    default:
+                        return base.ProcessException(exception);
+                }
+            }
+
+            public RiscTranslationState(InstructionDefinitions instructionSet)
+            {
+                if (instructionSet != default(InstructionDefinitions))
+                    Definitions = instructionSet;
+            }
         }
 
         /// <summary>
@@ -46,14 +75,16 @@ namespace AbstractDevelop.Machines
             /// <summary>
             /// Состояние трансляции
             /// </summary>
-            public TranslationState State { get; private set; }
+            RiscTranslationState State;
+
+            TranslationState ISourceTranslator.State => State;
 
             /// <summary>
             /// Кодировка по-умолчанию
             /// </summary>
             public Encoding SupportedEncoding
                 => Encoding.UTF8;
-
+            
             #endregion
 
             #region [Методы]
@@ -73,131 +104,120 @@ namespace AbstractDevelop.Machines
             /// <param name="input">Строки исходного кода</param>
             /// <param name="rules">Система правил</param>
             /// <returns></returns>
-            public IEnumerable<Instruction> Translate(IEnumerable<string> input, InstructionDefinitions rules)
+            public IEnumerable<Instruction> Translate(IEnumerable<string> input, InstructionDefinitions rules = default(InstructionDefinitions))
             {
-                var state = new RiscTranslationState()
-                {
-                    Definitions = rules ?? instructionsBase,
-                    Exceptions = new List<Exception>(),
-                    Labels = new Dictionary<string, int>(),
-                    LineNumber = 0
-                };
-                State = state;
-                // построчный разбор
+                State = new RiscTranslationState(rules);
                 foreach (var line in input)
                 {
-                    if (!(string.IsNullOrEmpty(line.RemoveWhitespaces(out var cleanLine)) || cleanLine.StartsWith(";")))
+                    State.LineNumber++;
+
+                    try { State.Processed.Add(ProcessLine()); }
+                    catch (Exception ex)
                     {
-                        // проверка и декомпозиция текущей строки
-                        if (Validate(cleanLine, out var parts))
-                        {
-                            // кроме метки ничего не нашлось
-                            if (!ProcessLabel(out var index))
-                                continue;
-
-                            // попытка распознавания инструкции
-                            if (state.Definitions.TryGetValue(parts[index++], out var def))
-                                yield return new Instruction(def.Code, GetArguments());
-                            else
-                                state.Exceptions.Add(new UnknownInstructionException(parts[index - 1], cleanLine, state.LineNumber));
-
-                            // считывание списка аргументов
-                            IEnumerable<DataReference> GetArguments()
-                            {
-                                var value = default(DataReference);
-                                // последовательное сопоставление всех определений с полученными данными
-                                foreach (var arg in def.Arguments)
-                                {
-                                    // проверка существующих обязательных параметров
-                                    if (index++ < parts.Length)
-                                        value = Parse(parts[index], arg);
-                                    // проверка опциональных параметров
-                                    else if (arg.IsOptional)
-                                        value = arg.DefaultValue;
-                                    // параметр не найден
-                                    else state.Exceptions.Add(new MissingArgumentException(arg, index, parts[0], state.LineNumber));
-
-                                    // если аргумент не прошел проверку, необходимо добавить его в список ошибок для повторной проверки
-                                    if (!ValidateValue(value, arg))
-                                        state.Exceptions.Add(new InvalidArgumentException(arg, parts[index - 1], state.LineNumber));
-
-                                    yield return value;
-                                }
-
-                                // превышение количества необходимых аргументов
-                                if (index < parts.Length)
-                                    state.Exceptions.Add(new TooMuchArguentsException(def.Arguments.Length, state.LineNumber));
-                            }
-                        }
-                        else state.Exceptions.Add(new InvalidInstructionSyntaxException(state.LineNumber));
-
-                        // обработка строковых меток
-                        bool ProcessLabel(out int index)
-                        {
-                            index = 0;
-
-                            if (parts[index].EndsWith(":"))
-                            {
-                                var label = parts[index].Replace(":", "");
-
-                                if (state.Labels.ContainsKey(label))
-                                    state.Exceptions.Add(new LabelRedefinedException(label, state.LineNumber));
-                                else
-                                    state.Labels.Add(label, state.LineNumber - 1);
-
-                                if (parts.Length == 1)
-                                    return false;
-
-                                index++;
-                            }
-
-                            return true;
-                        }
+                        State.ProcessException(ex);
+                        continue;
                     }
 
-                    state.LineNumber++;
+                    yield return State.Processed.Last();
+
+                    Instruction ProcessLine()
+                    {
+                        if (!line.RemoveWhitespaces(out var cleanLine).CheckAny(string.IsNullOrEmpty, IsCommented))
+                        {
+                            // проверка и декомпозиция текущей строки
+                            if (Validate(cleanLine, out var parts))
+                            {
+                                // кроме метки ничего не нашлось
+                                if (!ProcessLabel(out var index))
+                                    goto skip;
+
+                                // попытка распознавания инструкции
+                                if (State.Definitions.TryGetValue(parts[index], out var def))
+                                    return new Instruction(def.Code, GetArguments());
+                                else
+                                    throw new UnknownInstructionException(parts[index], cleanLine, State.LineNumber);
+
+                                // считывание списка аргументов
+                                IEnumerable<DataReference> GetArguments()
+                                {
+                                    var value = default(DataReference);
+                                    // последовательное сопоставление всех определений с полученными данными
+                                    foreach (var arg in def.Arguments)
+                                    {
+                                        // проверка существующих обязательных параметров
+                                        if (++index < parts.Length)
+                                            value = Parse(parts[index], arg);
+                                        // проверка опциональных параметров
+                                        else if (arg.IsOptional)
+                                            value = arg.DefaultValue;
+                                        // параметр не найден
+                                        else throw new MissingArgumentException(arg, index, parts.First(part => !State.Labels.Keys.Any(part.Contains)), State.LineNumber);
+                                        
+                                        if (ValidateValue(value, arg))
+                                            yield return value;
+                                        // если аргумент не прошел проверку, необходимо добавить его в список ошибок для повторной проверки
+                                        else throw new InvalidArgumentException(arg, (index < parts.Length) ? parts[index] : value.ToString(), State.LineNumber);
+                                    }
+
+                                    // превышение количества необходимых аргументов
+                                    if (parts.Length > ++index)
+                                        throw new TooMuchArguentsException(def.Arguments.Length, State.LineNumber);
+                                }
+                            }
+                            else throw new InvalidInstructionSyntaxException(State.LineNumber);
+
+                            // обработка строковых меток
+                            bool ProcessLabel(out int index)
+                            {
+                                bool hasLabel = false;
+                                if (hasLabel = parts[index = 0].Replace(":", "", out var label))
+                                {
+                                    State.Labels.Add(label, State.Labels.ContainsKey(label)? 
+                                        throw new LabelRedefinedException(label, State.LineNumber) : 
+                                        State.Processed.Count);
+                                }
+
+                                return parts.Length > (hasLabel ? 1 : 0);
+                            }
+                        }
+
+                        skip: throw new SkipLineException();
+                    }
                 }
 
                 // исключение ошибок, исправленных во время трансляции автоматически
                 // (рарешение ссылок на метки)
-                for (int i = 0; i < state.Exceptions.Count; i++)
-                    if (state.Exceptions[i] is InvalidArgumentException argEx &&
-                       (ValidateValue(Parse(argEx.Token, argEx.Argument), argEx.Argument)))
-                    {
-                        state.Exceptions.RemoveAt(i);
-                        i--;
-                    }
+                State.Exceptions.RemoveAll(ex =>
+                    ex is InvalidArgumentException argEx &&
+                    ValidateValue(Parse(argEx.Token, argEx.Argument), argEx.Argument));
 
-                // вывод обобщенного исключения для отображения в списке ошибок
-                if (state.Exceptions.Count > 0)
-                    throw new AggregateException(state.Exceptions);
+                #region [Внутренние функции]
 
                 // считывание данных
                 DataReference Parse(string data, IArgumentDefinition arg)
-                {
-                    try { return (arg.Parser ?? Convert)?.Invoke(data, state, arg) ?? arg.DefaultValue; }
-                    catch (Exception exception)
-                    {
-                        state.Exceptions.Add(exception);
-                        return arg.DefaultValue;
-                    }
-                }
+                    => (arg.Parser ?? Convert)?.Invoke(data, State, arg) ?? arg.DefaultValue;
 
                 // проверка считанных данных
                 bool ValidateValue(DataReference value, IArgumentDefinition arg)
-                    => arg.Validator?.Invoke(value, state) ?? true;
+                    => arg.Validator?.Invoke(value, State) ?? true;
+
+                bool IsCommented(string str)
+                    => str.StartsWith(";");
+
+                #endregion
             }
                
             /// <summary>
             /// Производит трансляцию исходного кода в набор инструкций
             /// </summary>
             /// <param name="input">Строки исходного кода</param>
+            /// <param name="args">Параметры трансляции</param>
             /// <returns></returns>
-            public IEnumerable Translate(IEnumerable input)
-               => input is IEnumerable<string> lines ? Translate(lines, null) :
-                   throw new ArgumentException(nameof(input));
-            
-
+            public IEnumerable Translate(IEnumerable input, params object[] args)
+               => input is IEnumerable<string> lines ? 
+                    Translate(lines, args?.FirstOfType<InstructionDefinitions>()).ToArray() :
+                    throw new ArgumentException(nameof(input));
+   
             /// <summary>
             /// Проверяет входные данные и возворащает их декомпозицию
             /// </summary>

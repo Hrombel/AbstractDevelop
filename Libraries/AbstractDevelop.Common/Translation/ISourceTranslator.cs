@@ -26,7 +26,7 @@ namespace AbstractDevelop.Translation
         /// </summary>
         /// <param name="input">Набор входных данных для трансляции</param>
         /// <returns>Набор команд для исполнения с использованием абстрактнойй машины неустановленного типа</returns>
-        IEnumerable Translate(IEnumerable input);
+        IEnumerable Translate(IEnumerable input, params object[] args);
 
         /// <summary>
         /// Проверяет входную строку на соответствие шаблону исходного текста

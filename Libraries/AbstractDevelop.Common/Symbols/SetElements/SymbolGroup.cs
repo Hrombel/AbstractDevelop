@@ -1,30 +1,28 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 
 namespace AbstractDevelop.Symbols
 {
-    public struct SingleSymbol :
+    public class SymbolGroup :
         ISymbolSetElement
     {
-
         #region [Свойства и Поля]
+
+        /// <summary>
+        /// Категория символа Юникода
+        /// </summary>
+        public UnicodeCategory Category { get; }
 
         /// <summary>
         /// Количество элементов в наборе
         /// </summary>
-        public int Count { get { return 1; } }
+        public int Count => this.Count();
 
-        /// <summary>
-        /// Символ, представленный данным элементом
-        /// </summary>
-        public char Symbol;
-
-        #endregion [Свойства и Поля]
+        #endregion
 
         #region [Методы]
-
-        public static implicit operator SingleSymbol(char value)
-            => new SingleSymbol(value);
 
         /// <summary>
         /// Проверяет присутствие символа в данном наборе
@@ -32,7 +30,7 @@ namespace AbstractDevelop.Symbols
         /// <param name="symbol">Символ для проверки</param>
         /// <returns></returns>
         public bool Contains(char symbol)
-            => symbol == Symbol;
+            => char.GetUnicodeCategory(symbol) == Category;
 
         /// <summary>
         /// Возравщает перечислитель элементов данного набора
@@ -40,7 +38,11 @@ namespace AbstractDevelop.Symbols
         /// <returns></returns>
         public IEnumerator<char> GetEnumerator()
         {
-            yield return Symbol;
+            for (char c = char.MinValue; c < char.MaxValue; c++)
+            {
+                if (Contains(c))
+                    yield return c;
+            }
         }
 
         /// <summary>
@@ -48,18 +50,17 @@ namespace AbstractDevelop.Symbols
         /// </summary>
         /// <returns></returns>
         IEnumerator IEnumerable.GetEnumerator()
-            => GetEnumerator() as IEnumerator;
+            => GetEnumerator();
 
-        #endregion [Методы]
+        #endregion
 
         #region [Конструкторы и деструкторы]
 
-        public SingleSymbol(char value)
+        public SymbolGroup(UnicodeCategory category)
         {
-            Symbol = value;
+            Category = category;
         }
 
-        #endregion [Конструкторы и деструкторы]
-
+        #endregion
     }
 }

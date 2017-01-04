@@ -88,6 +88,8 @@
     <Compile Include="Storage\FileContainer.cs" />
     <Compile Include="Storage\Formats\IDataFormatProvider.cs" />
     <Compile Include="Storage\Formats\JsonFormat.cs" />
+    <Compile Include="Symbols\SetElements\SymbolGroup.cs" />
+    <Compile Include="Symbols\SymbolHelper.cs" />
     <Compile Include="Translation\ISourceTranslator.cs" />
     <Compile Include="Storage\Tape.cs" />
     <Compile Include="Debug\Threading\ThreadInfo.cs" />
@@ -98,6 +100,7 @@
     <Compile Include="Symbols\SetElements\SymbolRange.cs" />
     <Compile Include="Symbols\SymbolSet.cs" />
     <Compile Include="Tools.cs" />
+    <Compile Include="Translation\TranslationHelper.cs" />
     <Compile Include="Translation\TranslationState.cs" />
   </ItemGroup>
   <ItemGroup>
