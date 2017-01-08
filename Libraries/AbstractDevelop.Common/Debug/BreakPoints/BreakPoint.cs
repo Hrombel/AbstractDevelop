@@ -17,11 +17,6 @@ namespace AbstractDevelop.Debug.BreakPoints
         /// Определяет тип точки останова
         /// </summary>
         BreakPointType Type { get; }
-
-        /// <summary>
-        /// Содержит ссылку на абстрактную машину, которой принадлежит данная точка останова
-        /// </summary>
-        AbstractMachine Owner { get; }
     }
 
     public abstract class BreakPoint :
@@ -31,19 +26,10 @@ namespace AbstractDevelop.Debug.BreakPoints
 
         public abstract bool IsReached { get; }
 
-        public virtual BreakPointType Type => BreakPointType.Inactive;
+        public virtual BreakPointType Type => BreakPointType.All;
 
-        public bool IsActive => Type != BreakPointType.Inactive;
-
-        public AbstractMachine Owner => MasterCollection.Owner;
-
-        protected IBreakPointCollection MasterCollection { get; set; }
-
-        protected BreakPoint(IBreakPointCollection master)
-        {
-            MasterCollection = master;
-        }
-
+        public bool IsActive => Type != BreakPointType.All;
+        
         protected virtual void OnTypeChanged(EventArgs args)
             => TypeChanged?.Invoke(this, args);
     }   

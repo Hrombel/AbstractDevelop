@@ -59,12 +59,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AbstractMachine.cs" />
-    <Compile Include="Debug\BreakPoints\ActionBreakPoint.cs" />
-    <Compile Include="Debug\BreakPoints\AlternativeBreakPoint.cs" />
+    <Compile Include="Debug\BreakPoints\Types\ActionBreakPoint.cs" />
+    <Compile Include="Debug\BreakPoints\Types\AlternativeBreakPoint.cs" />
     <Compile Include="Debug\BreakPoints\BreakPointCollection.cs" />
-    <Compile Include="Debug\BreakPoints\BreakPointType.cs" />
-    <Compile Include="Debug\BreakPoints\ConditionBreakPoint.cs" />
-    <Compile Include="Debug\BreakPoints\DataBreakPoint.cs" />
+    <Compile Include="Debug\BreakPoints\Helpers\BreakPointEventArgs.cs" />
+    <Compile Include="Debug\BreakPoints\Helpers\BreakPointHelper.cs" />
+    <Compile Include="Debug\BreakPoints\Types\BreakPointType.cs" />
+    <Compile Include="Debug\BreakPoints\Types\ConditionBreakPoint.cs" />
+    <Compile Include="Debug\BreakPoints\Types\DataBreakPoint.cs" />
     <Compile Include="Instructions\InstructionMachine.Exceptions.cs" />
     <Compile Include="Platforms\IExtensibilityProvider.cs" />
     <Compile Include="Instructions\InstructionMachine.Translation.cs" />

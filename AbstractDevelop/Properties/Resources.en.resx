@@ -198,4 +198,7 @@
   <data name="UnsavedDataMessage" xml:space="preserve">
     <value>Would you like to save the project?</value>
   </data>
+  <data name="TestSystemTranslationError" xml:space="preserve">
+    <value>Failed to translate source code. Fix the bugs then try again</value>
+  </data>
 </root>

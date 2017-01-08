@@ -15,6 +15,48 @@ namespace AbstractDevelop.Machines
 {
     public abstract partial class InstructionMachine<InstructionCode, ArgumentType>
     {
+        public class InstructionTranslationState :
+                TranslationState
+        {
+            #region [Свойства и Поля]
+
+            /// <summary>
+            /// Описание инструкций
+            /// </summary>
+            public InstructionDefinitions Definitions { get; set; }
+
+            /// <summary>
+            /// Метки переходов (индексы инструкций)
+            /// </summary>
+            public Dictionary<string, int> Labels { get; set; } = new Dictionary<string, int>();
+
+            /// <summary>
+            /// Обработанная инструкция
+            /// </summary>
+            public List<Instruction> Processed { get; set; } = new List<Instruction>();
+
+            #endregion
+
+            public override bool ProcessException(Exception exception)
+            {
+                switch (exception)
+                {
+                    case Exceptions.SkipLineException skip:
+                        return true;
+                    case AggregateException aggregation:
+                        return aggregation.InnerExceptions.All(ProcessException);
+                    default:
+                        return base.ProcessException(exception);
+                }
+            }
+
+            public InstructionTranslationState(InstructionDefinitions instructionSet)
+            {
+                if (instructionSet != default(InstructionDefinitions))
+                    Definitions = instructionSet;
+            }
+        }
+
         public class InstuctionTranslator :
             ISourceTranslator<Instruction, InstructionDefinitions>
         {
@@ -25,9 +67,11 @@ namespace AbstractDevelop.Machines
                     DefaultWhiteSpace = ' ',
                     DefaultTabSign = '\t';
 
-                public virtual char Whitespace { get; } = DefaultWhiteSpace;
+                public virtual char Whitespace { get; set; } = DefaultWhiteSpace;
 
-                public virtual char LabelSign { get; } = DefaultLabelSign;
+                public virtual char LabelSign { get; set; } = DefaultLabelSign;
+
+                public virtual string[] CommentSigns { get; set; }
 
                 public virtual char[] Separators => 
                     new char[] { Whitespace, LabelSign, DefaultTabSign };
@@ -51,7 +95,7 @@ namespace AbstractDevelop.Machines
                 public bool IsValid { get; protected internal set; }
 
                 public virtual bool IsCommented(string token)
-                    => false;
+                    => CommentSigns.Any(token.StartsWith);
 
                 public virtual bool HasLabel(string token, out string label)
                     => token.RemoveChars(out label, LabelSign);
@@ -71,8 +115,8 @@ namespace AbstractDevelop.Machines
                         {
                             if (wasSeparated) continue;
                             // все символы, кроме пробелов, должны быть сохранены
-                            else yield return (char.IsWhiteSpace(@char) ? word.ToString() :
-                                    word.ToString() + @char);
+                            else yield return (char.IsWhiteSpace(@char) ? word.GetAndClear() :
+                                    word.GetAndClear() + @char);
                         }
                         else
                         {
@@ -83,7 +127,6 @@ namespace AbstractDevelop.Machines
                                 yield break;
                             }
                             // добавление символа в слово
-                            if (wasSeparated) word.Clear();
                             word.Append(@char);
                         }
                         wasSeparated = isSeparated;
@@ -113,49 +156,7 @@ namespace AbstractDevelop.Machines
                     return false;
                 }
             }
-
-            public class InstructionTranslationState :
-                TranslationState
-            {
-                #region [Свойства и Поля]
-
-                /// <summary>
-                /// Описание инструкций
-                /// </summary>
-                public InstructionDefinitions Definitions { get; set; }
-
-                /// <summary>
-                /// Метки переходов (индексы инструкций)
-                /// </summary>
-                public Dictionary<string, int> Labels { get; set; } = new Dictionary<string, int>();
-
-                /// <summary>
-                /// Обработанная инструкция
-                /// </summary>
-                public List<Instruction> Processed { get; set; } = new List<Instruction>();
-
-                #endregion
-
-                public override bool ProcessException(Exception exception)
-                {
-                    switch (exception)
-                    {
-                        case Exceptions.SkipLineException skip:
-                            return true;
-                        case AggregateException aggregation:
-                            return aggregation.InnerExceptions.All(ProcessException);
-                        default:
-                            return base.ProcessException(exception);
-                    }
-                }
-
-                public InstructionTranslationState(InstructionDefinitions instructionSet)
-                {
-                    if (instructionSet != default(InstructionDefinitions))
-                        Definitions = instructionSet;
-                }
-            }
-
+           
             public Encoding SupportedEncoding
                 => Encoding.UTF8;
 
@@ -164,11 +165,13 @@ namespace AbstractDevelop.Machines
             /// </summary>
             public Func<string, InstructionTranslationState, IArgumentDefinition, ArgumentType> Convert { get; set; }
 
-            protected virtual ValidationRules Validation { get; } = new ValidationRules();
+            public virtual ValidationRules Validation { get; } = new ValidationRules();
+
+            public virtual InstructionDefinitions DefaultDefinitions { get; set; }
 
             protected InstructionTranslationState State;
   
-            TranslationState ISourceTranslator.State => throw new NotImplementedException();
+            TranslationState ISourceTranslator.State => State;
 
             public void Dispose()
             {
@@ -178,7 +181,7 @@ namespace AbstractDevelop.Machines
 
             public IEnumerable Translate(IEnumerable input, params object[] args)
                 =>  input is IEnumerable<string> lines ?
-                    Translate(lines, args?.FirstOfType<InstructionDefinitions>()).ToArray() :
+                    Translate(lines, args?.FirstOfType<InstructionDefinitions>() ?? DefaultDefinitions).ToArray() :
                     throw new ArgumentException(nameof(input));
 
             public IEnumerable<Instruction> Translate(IEnumerable<string> input, InstructionDefinitions rules)
@@ -203,7 +206,7 @@ namespace AbstractDevelop.Machines
                     {
                         if (!inputLine.RemoveWhitespaces(out var cleanLine).CheckAny(string.IsNullOrEmpty, Validation.IsCommented) &&
                             // декомпозиция текущей строки и сохранене метки
-                            Validation.Decompose(cleanLine, out var label, out var instruction, out var args) && ProcessLabel(label))
+                            Validation.Decompose(cleanLine, out var label, out var instruction, out var args) && ProcessLabel(label) && !instruction.Check(string.IsNullOrEmpty))
                         {
                             // попытка распознавания инструкции
                             if (State.Definitions.TryGetValue(instruction, out var def))
@@ -245,7 +248,7 @@ namespace AbstractDevelop.Machines
 
                     // обработка строковых меток
                     bool ProcessLabel(string value)
-                        => !value.Check(string.IsNullOrEmpty) && State.Execute(s => s.Labels.Add(value, s.Labels.ContainsKey(value)? 
+                        => value.Check(string.IsNullOrEmpty) || !State.Execute(s => s.Labels.Add(value, s.Labels.ContainsKey(value)? 
                         throw new Exceptions.LabelRedefinedException(value, s.LineNumber) : s.Processed.Count));
                 }
 

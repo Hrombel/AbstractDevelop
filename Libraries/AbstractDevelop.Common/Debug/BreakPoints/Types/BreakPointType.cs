@@ -1,18 +1,23 @@
-﻿namespace AbstractDevelop.Debug.BreakPoints
+﻿using System;
+
+namespace AbstractDevelop.Debug.BreakPoints
 {
+    [Flags]
     public enum BreakPointType
     {
         /// <summary>
-        /// Неактивная точка останова
-        /// </summary>
-        Inactive,
-        /// <summary>
         /// Точка останова, активирующаяся перед выполнением действия
         /// </summary>
-        PreAction,
+        PreAction = 1,
+
         /// <summary>
         /// Точка останова, активирущаяся после выполнения действия
         /// </summary>
-        PostAction
+        PostAction = 2,
+
+        /// <summary>
+        /// Включает в себя все тип точек останова
+        /// </summary>
+        All = PreAction | PostAction
     }
 }

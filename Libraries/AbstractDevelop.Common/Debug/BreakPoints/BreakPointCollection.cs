@@ -86,19 +86,5 @@ namespace AbstractDevelop.Debug.BreakPoints
         }
 
         #endregion
-
-        #region [Конструкторы и деструкторы]
-
-        public BreakPointCollection(AbstractMachine owner)
-        {
-            Owner = owner;
-        }
-
-        ~BreakPointCollection()
-        {
-            Dispose();
-        }
-
-        #endregion
     }
 }

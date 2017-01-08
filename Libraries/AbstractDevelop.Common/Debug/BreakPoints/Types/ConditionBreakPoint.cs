@@ -9,10 +9,6 @@ namespace AbstractDevelop.Debug.BreakPoints
     public class ConditionBreakPoint :
          BreakPoint
     {
-        public ConditionBreakPoint(IBreakPointCollection master) : base(master)
-        {
-        }
-
         public override bool IsReached
         {
             get

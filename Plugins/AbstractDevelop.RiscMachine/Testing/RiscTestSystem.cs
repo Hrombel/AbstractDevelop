@@ -31,6 +31,8 @@ namespace AbstractDevelop.Machines.Testing
             var memorySnapshot = Machine.Memory.GetSnapshot();
             var registerSnapshot = Machine.Registers.GetSnapshot();
 
+
+            Machine.Instructions.Reset();
             foreach (var test in Tests)
             {
                 var instructionBase = (test.InstructionSet ?? InstructionSet);
@@ -49,7 +51,9 @@ namespace AbstractDevelop.Machines.Testing
                             throw new ArgumentException(Translate.Key("TestInvalidOutputValue", Resources.ResourceManager, outputIndex, test.Output[outputIndex - 1]));
                     };
 
-                    Machine.RunToEnd();
+                    Machine.Do(m => m.Activate()).RunToEnd(breakpointsActive: false);
+                    Machine.Instructions.Reset();
+
                     test.LastError = CheckIndexes(false);
                 }
                 catch (IndexOutOfRangeException) { test.LastError = CheckIndexes(true); }

@@ -295,6 +295,15 @@ namespace AbstractDevelop.Properties {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Не удалось транслировать исходный код. Исправьте ошибки и попробуйте снова.
+        /// </summary>
+        internal static string TestSystemTranslationError {
+            get {
+                return ResourceManager.GetString("TestSystemTranslationError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Ищет локализованную строку, похожую на Сохранить текущий проект?.
         /// </summary>
         internal static string UnsavedDataMessage {

@@ -69,6 +69,11 @@ namespace AbstractDevelop.Machines
             #region [Свойства и Поля]
 
             /// <summary>
+            /// Набор определений инструкций, используемый для их выполнения
+            /// </summary>
+            InstructionDefinitions Definitions { get; set; }
+
+            /// <summary>
             /// Инструкция, выполняемая в данный момент
             /// </summary>
             Instruction Current { get; }
@@ -76,19 +81,14 @@ namespace AbstractDevelop.Machines
             /// <summary>
             /// Индекс инструкции, выполняемой в данный момент
             /// </summary>
-            int CurrentIndex { get; }
-
-            /// <summary>
-            /// Набор определений инструкций, используемый для их выполнения
-            /// </summary>
-            InstructionDefinitions Definitions { get; set; }
+            int? CurrentIndex { get; }
 
             /// <summary>
             /// Индекс инструкции, которая будет выполнена на следующем шаге,
             /// либо null, если задано поведение по умолчанию
             /// </summary>
             int? NextIndex { get; }
-
+        
             #endregion
 
             #region [Методы]
@@ -103,8 +103,8 @@ namespace AbstractDevelop.Machines
             /// <summary>
             /// Переходит на инструкцию с указанным индексом
             /// </summary>
-            /// <param name="operationIndex">Индекс инструкции для перехода</param>
-            void Goto(int operationIndex);
+            /// <param name="index">Индекс инструкции для перехода</param>
+            void Goto(int? index);
 
             /// <summary>
             /// Переходит ко следующей по порядку или заданию инструкции
@@ -212,24 +212,31 @@ namespace AbstractDevelop.Machines
             /// Инструкция, выполняемая в данный момент
             /// </summary>
             public Instruction Current =>
-                CurrentIndex.IsInRange(end: Count - 1) ?
-                this[CurrentIndex] : default(Instruction);
+                CurrentIndex.HasValue ? this[CurrentIndex.Value] : default(Instruction);
 
             /// <summary>
             /// Индекс инструкции, выполняемой в данный момент
             /// </summary>
-            public int CurrentIndex { get; protected set; }
-
-            /// <summary>
-            /// Набор определений инструкций, используемый для их выполнения
-            /// </summary>
-            public InstructionDefinitions Definitions { get; set; }
+            public int? CurrentIndex
+            {
+                get => currentIndex;
+                protected set => 
+                    currentIndex = value.HasValue && value.Value.IsInRange(end: Count - 1) ?
+                    value : null;
+            }
 
             /// <summary>
             /// Индекс инструкции, которая будет выполнена на следующем шаге,
             /// либо null, если задано поведение по умолчанию
             /// </summary>
             public int? NextIndex { get; set; }
+
+            /// <summary>
+            /// Набор определений инструкций, используемый для их выполнения
+            /// </summary>
+            public InstructionDefinitions Definitions { get; set; }
+      
+            int? currentIndex;
 
             #endregion
 
@@ -255,9 +262,9 @@ namespace AbstractDevelop.Machines
             /// <summary>
             /// Переход на инструкцию с указанным индексом
             /// </summary>
-            /// <param name="operationIndex">Индекс инструкции для перехода</param>
-            public void Goto(int operationIndex)
-                => NextIndex = operationIndex != -1 ? operationIndex.Do(v => OnGoto?.Invoke(operationIndex)) : null as int?;
+            /// <param name="index">Индекс инструкции для перехода</param>
+            public void Goto(int? index)
+                => NextIndex = index.Do(OnGoto.OrEmpty().Invoke);
 
             /// <summary>
             /// Переходит ко следующей по порядку или заданной инструкции
@@ -266,7 +273,7 @@ namespace AbstractDevelop.Machines
             public Instruction GotoNext()
             {
                 // выбор следующего индекса исходя из заданного значения NextIndex
-                CurrentIndex = NextIndex ?? CurrentIndex + 1;
+                CurrentIndex = NextIndex ?? ((CurrentIndex ?? -1) + 1);
                 // сброс на поведение по умолчанию
                 NextIndex = null;
 
@@ -469,6 +476,9 @@ namespace AbstractDevelop.Machines
 
         #region [Методы]
 
+        protected virtual bool GotoNextInstruction()
+            => Instructions.Do(i => i.GotoNext()).CurrentIndex.HasValue;
+
         protected override bool PrepareToStop(StopReason reason)
         {
             if (reason != StopReason.BreakPoint)
@@ -477,34 +487,15 @@ namespace AbstractDevelop.Machines
             return base.PrepareToStop(reason);
         }
 
+        protected override ExecutionAction OnBeforeStep(EventArgs args, bool breakpointsActive)
+            => base.OnBeforeStep(args, breakpointsActive).Do(action => 
+                action.Check(CanContinue).Decision(@true: GotoNextInstruction));
+
         /// <summary>
         /// Выполняет шаг (единичную инструкцию) работы машины
         /// </summary>
-        /// <returns></returns>
-        public override bool Step()
-        {
-            // переход ко следующей инструкции
-            var currentInstruction = Instructions.GotoNext();
-            var args = new InstructionEventArgs(currentInstruction);
-            var isSucceded = false;
-            // проверка на возможность выполнения
-            if (currentInstruction == default(Instruction))
-            {
-                IsActive = true;
-                Stop(StopReason.WrongCommand);
-                return false;
-            }
-            try
-            {
-                OnBeforeStep(args);
-                isSucceded = Instructions.Execute(currentInstruction);
-                OnAfterStep(args, isSucceded);
-            }
-            // во время выполнения возникло исключение, порожденное частью абстрактной машины
-            catch (AbstractMachineException ex) { Stop(StopReason.Exception, ex.Message); }
-
-            return isSucceded;
-        }
+        protected override bool PerformStep()
+            => Instructions.Execute(Instructions.Current);
 
         public override void Activate()
         {

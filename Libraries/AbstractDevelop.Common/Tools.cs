@@ -61,6 +61,9 @@ namespace AbstractDevelop
             return local.ToString();
         }
 
+        public static string GetAndClear(this StringBuilder sb)
+            => sb.ToString().Do(v => sb.Clear());
+
         /// <summary>
         /// Удаляет все вхождения символов, соответствующие данному шаблону
         /// </summary>
@@ -178,8 +181,21 @@ namespace AbstractDevelop
         public static T Last<T>(this IList<T> source)
             => source[source.Count - 1];
 
-        public static void Apply<T>(this IEnumerable<T> source, Action<T> action)
-            => source?.Try(action.ApplyTo);
+        public static bool Apply<T>(this IEnumerable<T> source, Action<T> action)
+            => source?.Try(action.ApplyTo) ?? false;
+
+        public static bool Any<T>(this IEnumerable<T> source, Func<T, bool> predicate, out T value)
+        {
+            foreach (var item in source)
+                if (predicate?.Invoke(item) ?? false)
+                {
+                    value = item;
+                    return true;
+                }
+
+            value = default(T);
+            return false;
+        }
 
         //TODO: сделать описание реализованных функций
         public static IEnumerable<T> WhereNot<T>(this IEnumerable<T> source, Func<T, bool> predicate)
@@ -218,7 +234,7 @@ namespace AbstractDevelop
         }
 
         public static T FirstOfType<T>(this IEnumerable source)
-            => (T)source?.Cast<object>().FirstOrDefault(e => e is T);
+            => (T)source.Try(src => src?.Cast<object>().FirstOrDefault(e => e is T));
 
         #endregion
 
@@ -260,9 +276,13 @@ namespace AbstractDevelop
         /// <returns></returns>
         public static T Do<T>(this T target, Action<T> action)
         {
-            action(target);
+            action?.Invoke(target);
             return target;
         }
+
+        public static T? Do<T>(this T? target, Action<T> action)
+            where T : struct
+            => target.Do(t => { if (t.HasValue) t.Value.Do(action); });
 
         public static bool Execute<T>(this T target, Action<T> action)
         {
@@ -286,7 +306,7 @@ namespace AbstractDevelop
         {
             try
             {
-                value.DynamicInvoke(args);
+                value?.DynamicInvoke(args);
                 return true;
             }
             catch (Exception ex)
@@ -295,10 +315,19 @@ namespace AbstractDevelop
             }
         }
 
-        public static TRet Try<T, TRet>(this T value, Func<T, TRet> func)
+        /// <summary>
+        /// Возвращает пустой делегат, если указанный делегат не задан
+        /// </summary>
+        /// <typeparam name="T">Тип параметра делегата</typeparam>
+        /// <param name="source">Исходный делегат</param>
+        /// <returns></returns>
+        public static Action<T> OrEmpty<T>(this Action<T> source)
+             => source ?? new Action<T>((t) => { });
+
+        public static TRet Try<T, TRet>(this T value, Func<T, TRet> func, TRet defaultValue = default(TRet))
         {
             try { return func(value); }
-            catch { return default(TRet); }
+            catch { return defaultValue; }
         }
 
         public static T TryGet<T>(this IEnumerable<T> source, int index)
@@ -325,10 +354,18 @@ namespace AbstractDevelop
         public static T ToVariable<T>(this T value, out T variable)
             => variable = value;
 
-        public static bool Decision(this bool condition, Action @true, Action @false)
+        public static bool Decision(this bool condition, Action @true = null, Action @false = null)
         {
-            if (condition) @true();
-            else @false();
+            if (condition) @true?.Invoke();
+            else @false?.Invoke();
+
+            return condition;
+        }
+
+        public static bool Decision<T>(this bool condition, Func<T> @true = null, Func<T> @false = null)
+        {
+            if (condition) @true?.Invoke();
+            else @false?.Invoke();
 
             return condition;
         }

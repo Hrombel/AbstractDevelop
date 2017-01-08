@@ -31,7 +31,7 @@ namespace AbstractDevelop.Controls
         {
             try
             {
-                var value = Machines.RiscMachine.GetNumberValue(input.Text);
+                Value = Machines.RiscMachine.GetNumberValue(input.Text);
                 DialogResult = true;
             }
             catch

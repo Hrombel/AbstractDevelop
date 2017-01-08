@@ -17,6 +17,7 @@ using System.Windows.Shapes;
 
 using static ScintillaNET.Style;
 using EditColor = System.Drawing.Color;
+using WKeys = System.Windows.Forms.Keys;
 
 namespace AbstractDevelop
 {
@@ -26,6 +27,7 @@ namespace AbstractDevelop
     public partial class CodeEditor :
         UserControl
     {
+
         #region [События]
 
         /// <summary>
@@ -42,32 +44,26 @@ namespace AbstractDevelop
 
         #region [Свойства и Поля]
 
-        public Scintilla Component => editorComponent;
+        public List<int> BreakPoints
+        {
+            get => breakpoints;
+            set
+            {
+                if (value != null)
+                {
+                    // TODO: сделать очистку текстового поля
+                    breakpoints.Clear();
 
-        public string[] Lines =>
-            Component.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var bp in value)
+                        ToggleBreakPoint(FindLine(bp + 1)?.Index ?? -1);
+                }
+            }
+        }
+
+        public Scintilla Component => editorComponent;
 
         public ScintillaNET.Line CurrentLine =>
             editorComponent.Lines[editorComponent.CurrentLine];
-
-        public bool IsReadonly
-        {
-            get
-            {
-                return (bool)GetValue(IsReadonlyProperty);
-            }
-            set
-            {
-                editorComponent.ReadOnly = value;
-                SetValue(IsReadonlyProperty, value);
-            }
-        }
-        
-        // Using a DependencyProperty as the backing store for IsReadonly.  This enables animation, styling, binding, etc...
-        public static readonly DependencyProperty IsReadonlyProperty =
-            DependencyProperty.Register("IsReadonly", typeof(bool), typeof(CodeEditor), new PropertyMetadata(false));
-
-        int executionLine = -1;
 
         public int ExecutionLine
         {
@@ -89,29 +85,35 @@ namespace AbstractDevelop
             }
         }
 
+        public int InstructionCount { get; protected set; }
+
+        public bool IsReadonly
+        {
+            get
+            {
+                return (bool)GetValue(IsReadonlyProperty);
+            }
+            set
+            {
+                editorComponent.ReadOnly = value;
+                SetValue(IsReadonlyProperty, value);
+            }
+        }
+
+        public string[] Lines => Component.Text.Split(new string[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         public string Text
         {
             get => editorComponent.Text;
             set => editorComponent.Text = value;
         }
 
-        List<int> breakpoints = new List<int>();
+        // Using a DependencyProperty as the backing store for IsReadonly.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty IsReadonlyProperty =
+            DependencyProperty.Register("IsReadonly", typeof(bool), typeof(CodeEditor), new PropertyMetadata(false));
 
-        public List<int> BreakPoints
-        {
-            get => breakpoints;
-            set
-            {
-                if (value != null)
-                {
-                    // TODO: сделать очистку текстового поля
-                    breakpoints.Clear();
-                    
-                    foreach (var bp in value)
-                        ToggleBreakPoint(FindLine(bp + 1)?.Index ?? -1);
-                }
-            }
-        }
+        List<int> breakpoints = new List<int>();
+        int executionLine = -1;
+        char[] whitespace = new char[] { ' ' };
 
         #endregion
 
@@ -167,7 +169,12 @@ namespace AbstractDevelop
 
             BreakPointToggled?.Invoke(this, EventArgs.Empty);
         }
-        
+
+
+        internal void Refresh(string input)
+        {
+            editorComponent.Refresh();
+        }
 
         private void codeBox_TextChanged(object sender, EventArgs e)
         {
@@ -267,10 +274,6 @@ namespace AbstractDevelop
             editorComponent.Markers[3].SetBackColor(EditColor.Orange);
         }
 
-        char[] whitespace = new char[] { ' ' };
-
-        public int InstructionCount { get; protected set; }
-
         private void TextChangedHandler(object sender, EventArgs e)
         {
 
@@ -309,8 +312,35 @@ namespace AbstractDevelop
             editorComponent.Delete += LinesAmountChanged;
             editorComponent.KeyDown += (o, e) =>
             {
-                if (e.KeyCode == System.Windows.Forms.Keys.F9)
-                    ToggleBreakPoint(editorComponent.CurrentLine);
+                e.SuppressKeyPress = true;
+                if (e.Modifiers == WKeys.Control)
+                {
+                   
+                    switch (e.KeyCode)
+                    {
+                        case WKeys.S: (e.Shift? ApplicationCommands.SaveAs : ApplicationCommands.Save).Execute(null, MainWindow.Instance); break;
+                        case WKeys.O: ApplicationCommands.Open.Execute(null, MainWindow.Instance); break;
+                        case WKeys.Z: ApplicationCommands.Undo.Execute(null, MainWindow.Instance); break;
+                        case WKeys.Y: ApplicationCommands.Redo.Execute(null, MainWindow.Instance); break;
+
+                        default: e.SuppressKeyPress = false; break;
+                    }
+                }
+                else
+                {
+                    switch (e.KeyCode)
+                    {
+                        case WKeys.F1: ApplicationCommands.Help.Execute(null, MainWindow.Instance); break;
+
+                        case WKeys.F5: CustomCommands.DebugStartStop.Execute(null, MainWindow.Instance); break;
+                        case WKeys.F6: CustomCommands.DebugStep.Execute(null, MainWindow.Instance); break;
+                        case WKeys.F7: CustomCommands.DebugPause.Execute(null, MainWindow.Instance); break;
+                        case WKeys.F9: CustomCommands.DebugBreakpoint.Execute(null, MainWindow.Instance); break;
+
+                        default: e.SuppressKeyPress = false; break;
+                    }
+                }
+
             };
 
             editorComponent.TextChanged += TextChangedHandler;
@@ -318,5 +348,6 @@ namespace AbstractDevelop
         }
 
         #endregion
+
     }
 }

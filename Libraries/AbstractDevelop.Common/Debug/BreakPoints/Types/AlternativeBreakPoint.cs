@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace AbstractDevelop.Debug.BreakPoints
 {
-    class DataBreakPoint :
+    class AlternativeBreakPoint :
         BreakPoint
     {
-        public DataBreakPoint(IBreakPointCollection master) : base(master)
-        {
-        }
-
+        public override BreakPointType Type
+            => BreakPointType.PostAction;
+               
         public override bool IsReached
         {
             get

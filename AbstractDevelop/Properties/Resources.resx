@@ -198,4 +198,7 @@
   <data name="UnsavedDataMessage" xml:space="preserve">
     <value>Сохранить текущий проект?</value>
   </data>
+  <data name="TestSystemTranslationError" xml:space="preserve">
+    <value>Не удалось транслировать исходный код. Исправьте ошибки и попробуйте снова</value>
+  </data>
 </root>

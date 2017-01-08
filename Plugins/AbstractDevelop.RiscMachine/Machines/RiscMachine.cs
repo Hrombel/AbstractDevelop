@@ -23,7 +23,7 @@ namespace AbstractDevelop.Machines
            {
                Validator = (arg, state) =>
                    arg?.Type == DataReferenceType.Label &&
-                   (state as RiscTranslationState).Labels.ContainsValue(arg)
+                   (state as InstructionTranslationState).Labels.ContainsValue(arg)
            },
            // количество
            count = source;
@@ -91,7 +91,7 @@ namespace AbstractDevelop.Machines
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        DataReference ConvertToReference(string token, RiscTranslationState state, IArgumentDefinition argument)
+        DataReference ConvertToReference(string token, InstructionTranslationState state, IArgumentDefinition argument)
         {
             if (string.IsNullOrEmpty(token))
                 throw new ArgumentNullException(nameof(token));
@@ -156,6 +156,9 @@ namespace AbstractDevelop.Machines
 
         #region [Методы]
 
+        protected override bool PrepareToStart()
+            => base.PrepareToStart() && (Instructions.CurrentIndex.HasValue || (AccessTimer = 0) == 0);
+ 
         /// <summary>
         /// Производит сдвиг операнда на определенное количество позиций
         /// </summary>
@@ -181,8 +184,11 @@ namespace AbstractDevelop.Machines
         /// <param name="instuctionIndex"></param>
         void Subprocedure(int instuctionIndex)
         {
-            ExecutionStack.Push(Instructions.CurrentIndex);
-            Instructions.Goto(instuctionIndex);
+            if (Instructions.CurrentIndex.HasValue)
+            {
+                ExecutionStack.Push(Instructions.CurrentIndex.Value);
+                Instructions.Goto(instuctionIndex);
+            }
         }
 
         #endregion
@@ -203,27 +209,27 @@ namespace AbstractDevelop.Machines
             // список доступных операций (реализация по техническому документу)
             Instructions.Definitions = instructionsBase = instructionsBase ?? new InstructionDefinitions()
             {
-                ["in"] = (RiscInstructionCode.ReadInput, args => args[0].Value = ReadInput(), inputOperation),
-                ["out"] = (RiscInstructionCode.WriteOutput, args => WriteOutput(args[0]), outputOperation),
+                ["in"]  = (RiscInstructionCode.ReadInput,   args => args[0].Value = args[0].Owner.ReadInput(), inputOperation),
+                ["out"] = (RiscInstructionCode.WriteOutput, args => args[0].Owner.WriteOutput(args[0]), outputOperation),
 
-                ["ror"] = (RiscInstructionCode.ShiftRight, args => args[2].Value = Shift(args[0], +args[1]), shiftOperation),
-                ["rol"] = (RiscInstructionCode.ShiftLeft, args => args[2].Value = Shift(args[0], -args[1]), shiftOperation),
+                ["ror"] = (RiscInstructionCode.ShiftRight,  args => args[2].Value = Shift(args[0], +args[1]), shiftOperation),
+                ["rol"] = (RiscInstructionCode.ShiftLeft,   args => args[2].Value = Shift(args[0], -args[1]), shiftOperation),
 
-                ["nor"] = (RiscInstructionCode.NotOr, args => args[2].Value = (DataType)~(args[0] | args[1]), binaryOperation),
-                ["xor"] = (RiscInstructionCode.Xor, args => args[2].Value = (DataType)(args[0] ^ args[1]), binaryOperation),
-                ["or"] = (RiscInstructionCode.Or, args => args[2].Value = (DataType)(args[0] | args[1]), binaryOperation),
-                ["and"] = (RiscInstructionCode.And, args => args[2].Value = (DataType)(args[0] & args[1]), binaryOperation),
-                ["nand"] = (RiscInstructionCode.NotAnd, args => args[2].Value = (DataType)~(args[0] & args[1]), binaryOperation),
-                ["add"] = (RiscInstructionCode.Addition, args => args[2].Value = (DataType)(args[0] + args[1]), binaryOperation),
+                ["nor"] = (RiscInstructionCode.NotOr,       args => args[2].Value = (DataType)~(args[0] | args[1]), binaryOperation),
+                ["xor"] = (RiscInstructionCode.Xor,         args => args[2].Value = (DataType)(args[0] ^ args[1]), binaryOperation),
+                ["or"]  = (RiscInstructionCode.Or,          args => args[2].Value = (DataType)(args[0] | args[1]), binaryOperation),
+                ["and"] = (RiscInstructionCode.And,         args => args[2].Value = (DataType)(args[0] & args[1]), binaryOperation),
+                ["nand"]= (RiscInstructionCode.NotAnd,      args => args[2].Value = (DataType)~(args[0] & args[1]), binaryOperation),
+                ["add"] = (RiscInstructionCode.Addition,    args => args[2].Value = (DataType)(args[0] + args[1]), binaryOperation),
                 ["sub"] = (RiscInstructionCode.Subtraction, args => args[2].Value = (DataType)(args[0] - args[1]), binaryOperation),
 
-                ["not"] = (RiscInstructionCode.Not, args => args[1].Value = (DataType)~args[0], unaryOperation),
+                ["not"] = (RiscInstructionCode.Not,         args => args[1].Value = (DataType)~args[0], unaryOperation),
 
-                ["jo"] = (RiscInstructionCode.JumpIfTrue, args => Instructions.Goto(args[0] == 0xFF ? args[1] : -1), labelOperation),
-                ["jz"] = (RiscInstructionCode.JumpIfFalse, args => Instructions.Goto(args[0] == 0x00 ? args[1] : -1), labelOperation),
+                ["jo"]  = (RiscInstructionCode.JumpIfTrue,  args => Instructions.Goto(args[0] == 0xFF ? args[1] : -1), labelOperation),
+                ["jz"]  = (RiscInstructionCode.JumpIfFalse, args => Instructions.Goto(args[0] == 0x00 ? args[1] : -1), labelOperation),
 
-                ["call"] = (RiscInstructionCode.Call, args => Subprocedure(args[0]), subprocedureOperation),
-                ["ret"] = (RiscInstructionCode.Return, args => Instructions.Goto(ExecutionStack.Pop()), noArgOperation)
+                ["call"]= (RiscInstructionCode.Call,        args => Subprocedure(args[0]), subprocedureOperation),
+                ["ret"] = (RiscInstructionCode.Return,      args => Instructions.Goto(ExecutionStack.Pop()), noArgOperation)
             }; Instructions.Definitions.Rebuild();
 
             // увеличение счетчика времени доступа\работы
@@ -231,7 +237,9 @@ namespace AbstractDevelop.Machines
             Instructions.OnGoto += (index) => AccessTimer += 8;
 
             // стандартный транслятор инструкций 
-            Translator = new RiscTranslator() { Convert = ConvertToReference };
+            Translator = new InstuctionTranslator() { Convert = ConvertToReference }
+                .Do(it => it.Validation.CommentSigns = new string[] { ";" })
+                .Do(it => it.DefaultDefinitions = Instructions.Definitions);
         }
 
         #endregion

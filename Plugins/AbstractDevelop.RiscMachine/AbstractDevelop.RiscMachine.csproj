@@ -121,7 +121,6 @@
     </Compile>
     <Compile Include="Properties\SettingsBinding.cs" />
     <Compile Include="RiscPlatform.cs" />
-    <Compile Include="Machines\RiscTranslator.cs" />
     <Compile Include="Testing\RiscTest.cs" />
     <Compile Include="Testing\RiscTestSystem.cs" />
     <Compile Include="Testing\TestSource.cs" />

@@ -9,15 +9,20 @@ namespace AbstractDevelop.Debug.BreakPoints
     public class ActionBreakPoint :
         BreakPoint
     {
+        private int index;
+        private Func<int> p;
+
         public int ActionIndex { get; }
 
-        public override bool IsReached =>
-              MasterCollection.Owner.Context.CurrentIndex == ActionIndex;
+        public Func<int> Source { get; }
 
-        protected ActionBreakPoint(int actionIndex, IBreakPointCollection master) : 
-            base(master)
+        public override bool IsReached =>
+              Source() == ActionIndex;
+
+        public ActionBreakPoint(int index, Func<int> source)
         {
-            ActionIndex = actionIndex;
+            ActionIndex = index;
+            Source = source;
         }
     }
 }
