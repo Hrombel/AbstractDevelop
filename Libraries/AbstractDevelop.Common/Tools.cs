@@ -266,6 +266,14 @@ namespace AbstractDevelop
          => checkingType.IsSubclassOf(baseType) || checkingType.GetInterfaces().Any(interfaceType => interfaceType == baseType);
         
         #endregion
+   
+        public static T[] Replace<T>(this T[] source, int index, T value)
+        {
+            if (index < source.Length)
+                source[index] = value;
+      
+            return source;
+        }
 
         /// <summary>
         /// Производит указанное действие над объектом и возвращает его
@@ -296,10 +304,25 @@ namespace AbstractDevelop
                 action(e);
         }
 
+        public static FileStream OpenFile(this string source, FileMode mode = FileMode.OpenOrCreate)
+            => File.Open(source, mode);
+
+        public static TOut UsingFile<TOut>(this string source, Func<FileStream, TOut> processing, FileMode mode = FileMode.OpenOrCreate)
+            => OpenFile(source).Using(processing);
+
+        public static TOut UsingFile<P1, TOut>(this string source, Func<FileStream, P1, TOut> processing, P1 param1, FileMode mode = FileMode.OpenOrCreate)
+            => OpenFile(source).Using(processing, param1);
+
         public static T Using<TSource, T>(this TSource target, Func<TSource, T> convert)
             where TSource: IDisposable
         {
             using (target) return convert(target);
+        }
+
+        public static T Using<TSource, P1, T>(this TSource target, Func<TSource, P1, T> convert, P1 param1)
+            where TSource : IDisposable
+        {
+            using (target) return convert(target, param1);
         }
 
         public static bool Try(this Delegate value, Func<Exception, bool> onError = null, params object[] args)

@@ -5,7 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AbstractDevelop"
         mc:Ignorable="d"
-        Title="Запрос ввода" SizeToContent="WidthAndHeight" WindowStyle="ToolWindow" WindowStartupLocation="CenterOwner">
+        Title="Запрос ввода" SizeToContent="WidthAndHeight" ResizeMode="NoResize"
+        WindowStyle="None" WindowStartupLocation="CenterOwner" Loaded="Window_Loaded"
+        FontSize="20" BorderThickness="3">
+    <Window.BorderBrush>
+        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+            <GradientStop Color="Black" Offset="0"/>
+            <GradientStop Color="#FF11566A" Offset="1"/>
+        </LinearGradientBrush>
+    </Window.BorderBrush>
     <Window.CommandBindings>
         <CommandBinding Command="{x:Static local:CustomCommands.SaveValue}" Executed="SaveValueExecuted"/>
     </Window.CommandBindings>

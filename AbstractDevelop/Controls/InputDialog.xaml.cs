@@ -39,5 +39,10 @@ namespace AbstractDevelop.Controls
                 MessageBox.Show("Введено недопустимое значение, попробуйте ввести еще раз");
             }
         }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            input.Focus();
+        }
     }
 }

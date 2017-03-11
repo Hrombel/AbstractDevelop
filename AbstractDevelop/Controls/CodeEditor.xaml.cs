@@ -253,8 +253,7 @@ namespace AbstractDevelop
      
         private void MarginClickHandler(object sender, MarginClickEventArgs e)
         {
-            int i = editorComponent.LineFromPosition(e.Position);
-            ToggleBreakPoint(i);
+            CustomCommands.DebugBreakpoint.Execute(editorComponent.LineFromPosition(e.Position), MainWindow.Instance);
         }
 
         /// <summary>
@@ -293,6 +292,11 @@ namespace AbstractDevelop
                     InstructionCount = c++;
                 }
             }
+        }
+
+        internal void Clear()
+        {
+            editorComponent.ClearAll();
         }
 
         #endregion

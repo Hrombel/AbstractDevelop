@@ -60,12 +60,8 @@ namespace AbstractDevelop.Projects
         /// <param name="source">Поток, из которого необходимо загрузить проект</param>
         /// <param name="formatProvider">Поставщик формата для данных</param>
         public static AbstractProject Load(Stream source, IDataFormatProvider formatProvider)
-        {
-            var project = formatProvider?.Deserialize<AbstractProject>(source);
-
-            project.formatProvider = formatProvider;
-            return project;
-        }
+            => formatProvider?.Deserialize<AbstractProject>(source).
+               Do(project => project.SetFormatProvider(formatProvider));
 
         /// <summary>
         /// Загружает проект из указанного файла и ассоциирует этот файл с проектом.
@@ -73,7 +69,7 @@ namespace AbstractDevelop.Projects
         /// <param name="fileName">Имя файла для загрузки.</param>
         /// <returns>Загруженный проект.</returns>
         public static AbstractProject Load(string filePath, IDataFormatProvider formatProvider)
-            => Load(File.OpenRead(filePath), formatProvider);
+            => filePath.UsingFile(Load, formatProvider);
 
         /// <summary>
         /// Сохраняет проект в указанный поток при помощи поставщика формата
@@ -94,9 +90,9 @@ namespace AbstractDevelop.Projects
         /// </summary>
         /// <typeparam name="MachineType">Тип абстрактной машины для создания</typeparam>
         /// <returns>Экземлпяр абстрактной машины указанного типа</returns>
-        public MachineType CreateMachine<MachineType>()
+        public virtual MachineType CreateMachine<MachineType>()
             where MachineType : AbstractMachine
-            => Platform.CreateMachine(this) as MachineType;
+            => Platform.CreateMachine(typeof(MachineType), this) as MachineType;
 
         #endregion
 
@@ -157,8 +153,7 @@ namespace AbstractDevelop.Projects
                     path = lookup.rest;
                     lookup = current.GetLookup(ref path);
                     // файл необходимо заменять
-                    if (lookup.type == EntryType.File)
-                        break;
+                    if (lookup.type == EntryType.File) break;
                     // поиск\создание необходимых папок
                     else if (!current.Contains(path, EntryType.Directory))
                         current.Add(new ProjectDirectory(path));

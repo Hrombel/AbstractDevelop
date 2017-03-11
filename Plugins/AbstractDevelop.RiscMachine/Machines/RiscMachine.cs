@@ -40,7 +40,7 @@ namespace AbstractDevelop.Machines
             noArgOperation = { };
 
         /// <summary>
-        /// Определеня доступных для использования команд
+        /// Определения доступных для использования команд
         /// </summary>
         static InstructionDefinitions instructionsBase;
 
@@ -167,7 +167,7 @@ namespace AbstractDevelop.Machines
         /// <returns></returns>
         DataType Shift(DataType input, int count)
         {
-            const int dataTypeSize = 8;
+            const int dataTypeSize = sizeof(DataType);
             var countMod = Math.Abs(count % dataTypeSize);
 
             if (count > 0) // сдвиг вправо
@@ -189,6 +189,8 @@ namespace AbstractDevelop.Machines
                 ExecutionStack.Push(Instructions.CurrentIndex.Value);
                 Instructions.Goto(instuctionIndex);
             }
+            // TODO: выбрасывать ошибку о том, что машина еще не запущена
+            else throw new InvalidOperationException(""); 
         }
 
         #endregion
@@ -207,7 +209,7 @@ namespace AbstractDevelop.Machines
             Memory = CreateMemory<RiscMemory>(new DataType[memorySize]);
             Registers = CreateMemory<RiscRegister>(new DataType[registerCount]);
             // список доступных операций (реализация по техническому документу)
-            Instructions.Definitions = instructionsBase = instructionsBase ?? new InstructionDefinitions()
+            (Instructions.Definitions = instructionsBase = instructionsBase ?? new InstructionDefinitions()
             {
                 ["in"]  = (RiscInstructionCode.ReadInput,   args => args[0].Value = args[0].Owner.ReadInput(), inputOperation),
                 ["out"] = (RiscInstructionCode.WriteOutput, args => args[0].Owner.WriteOutput(args[0]), outputOperation),
@@ -230,16 +232,23 @@ namespace AbstractDevelop.Machines
 
                 ["call"]= (RiscInstructionCode.Call,        args => Subprocedure(args[0]), subprocedureOperation),
                 ["ret"] = (RiscInstructionCode.Return,      args => Instructions.Goto(ExecutionStack.Pop()), noArgOperation)
-            }; Instructions.Definitions.Rebuild();
+            }).Rebuild();
 
             // увеличение счетчика времени доступа\работы
             Instructions.OnExecution += (instruction) => AccessTimer++;
             Instructions.OnGoto += (index) => AccessTimer += 8;
 
             // стандартный транслятор инструкций 
-            Translator = new InstuctionTranslator() { Convert = ConvertToReference }
-                .Do(it => it.Validation.CommentSigns = new string[] { ";" })
-                .Do(it => it.DefaultDefinitions = Instructions.Definitions);
+            Translator = new InstuctionTranslator()
+            {
+                Convert = ConvertToReference,
+                DefaultDefinitions = Instructions.Definitions,
+                Validation = new InstuctionTranslator.ValidationRules()
+                {
+                    CommentSigns = new string[] { ";" }
+
+                }
+            };
         }
 
         #endregion

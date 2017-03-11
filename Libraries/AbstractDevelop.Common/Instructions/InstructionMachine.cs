@@ -45,6 +45,15 @@ namespace AbstractDevelop.Machines
 
         }
 
+        public interface IInstructionDefinition
+        {
+
+
+            InstructionCode Code { get; }
+            Action<ArgumentType[]> Handler { get; }
+            IArgumentDefinition[] Arguments { get; }
+        }
+
         /// <summary>
         /// Определение набора инструкций абстрактной машины
         /// </summary>
@@ -120,9 +129,8 @@ namespace AbstractDevelop.Machines
             bool Load(IEnumerable source);
 
             /// <summary>
-            /// Загружает набор инструкций в данную коллекцию
+            /// Сбрасывает параметры выполнения инструкций в состояние по умолчанию
             /// </summary>
-            /// <param name="source">Набор инструкций для загрузки</param>
             /// <returns></returns>
             void Reset();
 
@@ -150,6 +158,8 @@ namespace AbstractDevelop.Machines
             /// Идентификатор типа операции
             /// </summary>
             public virtual InstructionCode Type { get; protected set; }
+
+            public virtual (InstructionCode Code, Action<ArgumentType[]> Handler, IArgumentDefinition[] Arguments) Definition { get; }
 
             #endregion
 
@@ -405,13 +415,25 @@ namespace AbstractDevelop.Machines
             #endregion
 
         }
-
+        
         /// <summary>
         /// Предстваляет аргумент инструкции
         /// </summary>
         public class Argument :
             IArgumentDefinition
         {
+             public static readonly Argument[] 
+                NoArgOperation      = new Argument[0],
+                OneArgOperation     = new Argument[1],
+                TwoArgsOperation    = new Argument[2],
+                ThreeArgsOpertaion  = new Argument[3],
+                FourArgsOperation   = new Argument[4],
+                FiveArgsOperation   = new Argument[5];
+
+            public static readonly Argument
+                Basic = new Argument(),
+                Optional = new Argument(isOptional: true);
+
             #region [Свойства и Поля]
 
             /// <summary>
@@ -433,8 +455,25 @@ namespace AbstractDevelop.Machines
             /// Функция проверки значения аргумента на допустимость
             /// </summary>
             public Func<ArgumentType, TranslationState, bool> Validator { get; set; }
-
+            
             #endregion
+
+            /// <summary>
+            /// Контруктор по умолчанию для экземпляра аргумента
+            /// </summary>
+            /// <param name="defaultValue"></param>
+            /// <param name="isOptional"></param>
+            /// <param name="parser"></param>
+            /// <param name="validator"></param>
+            public Argument(ArgumentType defaultValue = default(ArgumentType), bool isOptional = false, 
+                Func<string, TranslationState, IArgumentDefinition, ArgumentType> parser = null, 
+                Func<ArgumentType, TranslationState, bool> validator = null)
+            {
+                DefaultValue = defaultValue;
+                IsOptional = isOptional;
+                Parser = parser;
+                Validator = validator;
+            }
         }
 
         #endregion

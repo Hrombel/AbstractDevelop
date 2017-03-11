@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:AbstractDevelop"
         mc:Ignorable="d"
-        Title="Содержание" Height="300" Width="300" WindowStyle="ToolWindow">
+        Title="Содержание" Height="600" Width="600" WindowStyle="ToolWindow" Loaded="Window_Loaded">
     <Grid>
-        <Label VerticalAlignment="Center" HorizontalAlignment="Center" Content="(unable to load content)" />
+        <FlowDocumentScrollViewer x:Name="document"/>
     </Grid>
 </Window>

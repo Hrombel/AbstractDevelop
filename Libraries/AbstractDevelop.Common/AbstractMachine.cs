@@ -195,10 +195,11 @@ namespace AbstractDevelop.Machines
         {
             try
             {
-                return OnBeforeStep(EventArgs.Empty, breakpointsActive).Check(CanContinue) && 
-                    PerformStep().Do(result => OnAfterStep(EventArgs.Empty, result, breakpointsActive).Check(CanContinue)).
-                    Decision(@false: () => Stop(StopReason.Result));
+                return OnBeforeStep(EventArgs.Empty, breakpointsActive).Check(CanContinue) &&
+                       PerformStep().Decision(@false: () => Stop(StopReason.Result)).ToVariable(out var result) &&
+                       OnAfterStep(EventArgs.Empty, breakpointsActive, result).Check(CanContinue);
             }
+
             // во время выполнения возникло исключение, порожденное частью абстрактной машины
             catch (AbstractMachineException ex)
             {

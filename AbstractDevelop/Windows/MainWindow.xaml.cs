@@ -144,16 +144,26 @@ namespace AbstractDevelop
 
         private void DebugBreakpointCommandExecuted(object sender, System.Windows.Input.ExecutedRoutedEventArgs e)
         {
-            if (int.TryParse(codeEditor.CurrentLine.MarginText, out var index))
-            {
+            int index = -1;
+
+            if (e.Parameter is int line)
+                index = line;
+
+            if (int.TryParse(codeEditor.CurrentLine.MarginText, out index))
                 index--;
 
+            if (index >= 0)
+            {
                 if (Machine.BreakPoints.Any(bp => bp is ActionBreakPoint actionBP && actionBP.ActionIndex == index, out var value))
                     Machine.BreakPoints.Remove(value);
                 else
                     PlaceBreakpoint(index);
 
-                codeEditor.ToggleBreakPoint(codeEditor.CurrentLine);
+                // TODO: переделать определение индекса
+                if (e.Parameter is int)
+                    codeEditor.ToggleBreakPoint(index);
+                else
+                    codeEditor.ToggleBreakPoint(codeEditor.CurrentLine);
             }
         }
 
@@ -185,6 +195,8 @@ namespace AbstractDevelop
             if (Machine.Instructions.CurrentIndex.HasValue || TranslateInstructions())
             {
                 codeEditor.ExecutionLine = -1;
+                StepMode = false;
+
                 Machine.Start();
             }
         }
@@ -199,11 +211,23 @@ namespace AbstractDevelop
             if (Machine.Instructions.Count == 0)
                 TranslateInstructions();
 
-            if (codeEditor.ExecutionLine == -1)
-                Machine.AccessTimer = 0;
+            StepMode = true;
 
-            menuDebugStop.Visibility = toolbarDebugStop.Visibility = Visibility.Visible;
-            Machine.Step(breakpointsActive: false);
+            if (Machine.IsActive)
+            {
+                if (!Machine.Step(breakpointsActive: false))
+                    Machine.Stop(StopReason.Result);
+            }
+            else
+            {
+                Machine.AccessTimer = 0;
+                Machine.Instructions.Reset();
+
+                Machine.Activate();
+
+                codeEditor.ExecutionLine = 0;
+                menuDebugStop.Visibility = toolbarDebugStop.Visibility = Visibility.Visible;
+            }
         }
 
         private void FileCloseCanExecute(object sender, System.Windows.Input.CanExecuteRoutedEventArgs e)
@@ -252,6 +276,8 @@ namespace AbstractDevelop
                 Project = AbstractProject.Load(FilePath, jsonFormat);
                 Machine = CreateMachine(Project);
 
+
+                codeEditor.Clear();
                 codeEditor.Text = DeserializeResource<string>("code").Do(codeEditor.Refresh);
                 (codeEditor.BreakPoints = DeserializeResource<List<int>>("breakpoints")).Apply(PlaceBreakpoint);
 
@@ -403,7 +429,7 @@ namespace AbstractDevelop
 
             ClearAllCommandExecuted(sender, e);
         }
-       
+
         RiscMachine CreateMachine(AbstractProject source = null)
             => (Platform.CreateMachine(Project = (source ?? CreateProject(DefaultProjectTitle).Do(project => FilePath = $"{project.Title}.adp"))) as RiscMachine).
                 // подписка на события
@@ -444,9 +470,17 @@ namespace AbstractDevelop
                         codeEditor.ExecutionLine = machine.Instructions.CurrentIndex ?? 0;
                     };
 
-                    machine.BeforeStep += (o, e) =>
+                    machine.AfterStep += (o, e) =>
                     {
-                        if (StepMode) codeEditor.ExecutionLine = machine.Instructions.CurrentIndex ?? 0;
+                        if (StepMode)
+                        {
+                            if (machine.Instructions.NextIndex.HasValue)
+                                codeEditor.ExecutionLine = machine.Instructions.NextIndex.Value;
+                            else if (machine.Instructions.CurrentIndex.HasValue)
+                                codeEditor.ExecutionLine = machine.Instructions.CurrentIndex.Value + 1;
+                            else
+                                codeEditor.ExecutionLine = -1;
+                        }
                     };
                 });
 

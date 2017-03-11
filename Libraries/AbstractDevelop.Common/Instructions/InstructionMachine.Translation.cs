@@ -92,7 +92,7 @@ namespace AbstractDevelop.Machines
                         new SymbolGroup(UnicodeCategory.OtherPunctuation)
                     }.ToSymbolSet();
 
-                public bool IsValid { get; protected internal set; }
+                public bool IsValid { get; protected set; }
 
                 public virtual bool IsCommented(string token)
                     => CommentSigns.Any(token.StartsWith);
@@ -165,11 +165,11 @@ namespace AbstractDevelop.Machines
             /// </summary>
             public Func<string, InstructionTranslationState, IArgumentDefinition, ArgumentType> Convert { get; set; }
 
-            public virtual ValidationRules Validation { get; } = new ValidationRules();
+            public ValidationRules Validation { get; set; } = new ValidationRules();
 
-            public virtual InstructionDefinitions DefaultDefinitions { get; set; }
+            public InstructionDefinitions DefaultDefinitions { get; set; }
 
-            protected InstructionTranslationState State;
+            public InstructionTranslationState State { get; set; }
   
             TranslationState ISourceTranslator.State => State;
 
@@ -253,7 +253,7 @@ namespace AbstractDevelop.Machines
                 }
 
                 // исключение ошибок, исправленных во время трансляции автоматически
-                // (рарешение ссылок на метки)
+                // (разрешение ссылок на метки)
                 State.Exceptions.RemoveAll(ex =>
                     ex is Exceptions.InvalidArgumentException argEx &&
                     ValidateValue(Parse(argEx.Token, argEx.Argument), argEx.Argument));

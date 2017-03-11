@@ -15,3 +15,5 @@ C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libra
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\obj\Debug\AbstractDevelop.Common.dll
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\obj\Debug\AbstractDevelop.Common.pdb
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\obj\Debug\AbstractDevelop.Properties.CommonResources.resources
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\bin\Debug\Newtonsoft.Json.dll
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Libraries\AbstractDevelop.Common\bin\Debug\Newtonsoft.Json.xml

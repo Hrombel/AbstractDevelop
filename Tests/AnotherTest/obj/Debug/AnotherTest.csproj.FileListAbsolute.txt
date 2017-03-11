@@ -12,3 +12,5 @@ C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\Gu.Localization.xml
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\obj\Debug\AnotherTest.exe
 C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\obj\Debug\AnotherTest.pdb
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\AbstractDevelop.RiscMachine.dll.config
+C:\Users\DDarkSniper\Documents\Visual Studio 2015\Projects\AbstractDevelop\Tests\AnotherTest\bin\Debug\Newtonsoft.Json.xml

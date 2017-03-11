@@ -82,6 +82,8 @@
         </ResourceDictionary>
     </Window.Resources>
 
+    <!--#region [I Want To Try Out The Regions]-->
+    
     <Window.CommandBindings>
         <!-- Команды из меню "Файл" -->
         <CommandBinding Command="ApplicationCommands.New" Executed="NewCommandExecuted"/>
@@ -111,6 +113,8 @@
         <CommandBinding Command="ApplicationCommands.Help" Executed="HelpCommandExecuted"/>
     </Window.CommandBindings>
 
+    <!--#endregion-->
+    
     <Grid x:Name="mainGrid">
         <Grid.RowDefinitions>
             <RowDefinition x:Name="menuRow" Height="Auto"/>

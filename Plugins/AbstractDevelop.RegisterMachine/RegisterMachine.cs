@@ -17,31 +17,6 @@ namespace AbstractDevelop.machines.regmachine
     [Serializable]
     public class RegisterMachine : ISerializable
     {
-        /// <summary>
-        /// Генерируется после остановки работы МБР.
-        /// </summary>
-        public event EventHandler<RegisterMachineStoppedEventArgs> OnMachineStopped;
-
-        /// <summary>
-        /// Генерируется после записи значения в устройство вывода.
-        /// </summary>
-        public event EventHandler<RegisterMachineValueOutEventArgs> ValueOut;
-
-        /// <summary>
-        /// Происходит перед чтением очередного значения из устройства ввода.
-        /// </summary>
-        public event EventHandler<RegisterMachineValueInEventArgs> ValueIn;
-
-        /// <summary>
-        /// Происходит после достижения исполнителем точки останова.
-        /// </summary>
-        public event EventHandler BreakPointReached;
-
-        /// <summary>
-        /// Происходит после выполнения машиной одного шага в режиме отладки.
-        /// </summary>
-        public event EventHandler StepCompleted;
-
         private InfiniteRegisters _registers;
 
         [NonSerialized]

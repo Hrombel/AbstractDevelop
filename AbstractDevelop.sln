@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.25920.0
+VisualStudioVersion = 15.0.26127.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Plugins", "Plugins", "{3490F01F-85E3-4F6E-9DA9-C855906F9A8C}"
 EndProject
@@ -122,5 +122,8 @@ Global
 		{DE9B6974-0AB1-44D8-AC96-DDD78A2DA5DE} = {D6D31C76-2D45-4241-A2B8-B4E045BD9889}
 		{1842F254-C252-416B-8C8A-90D02B9C65A1} = {0D43EFE8-CF28-4829-93E2-A3C974507A66}
 		{9177D9A8-2C1F-4385-ADEC-13AA21783F46} = {0D43EFE8-CF28-4829-93E2-A3C974507A66}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		RESX_NeutralResourcesLanguage = ru-RU
 	EndGlobalSection
 EndGlobal
